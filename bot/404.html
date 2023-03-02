@@ -17,6 +17,7 @@
 		<h1>
 			Information about <strong id="path"></strong>
 		</h1>
+		<main id="content"></main>
 		<script>
 			async function load() {
 				const bot = await getBot(location.pathname.split("/").pop())
@@ -25,7 +26,7 @@
 				bot.charts.forEach(chart => {
 					const chartElement = document.createElement("canvas")
 					chartElement.setAttribute("id", chart.name)
-					document.body.appendChild(chartElement)
+					document.getElementById("content").appendChild(chartElement)
 
 					new Chart(chartElement.getContext("2d"), {
 						type: chart.type,

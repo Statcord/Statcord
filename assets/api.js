@@ -35,8 +35,8 @@ const login = async code => {
 	localStorage.setItem("avatar", result.avatar)
 }
 const getAvatar = async id => {
-	let avatar = await get("avatar/" + id)
-	avatar = avatar.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + avatar.a + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
+	const json = await get("avatar/" + id)
+	const avatar = json.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + json.a + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
 	document.getElementById("avatarpreview").src = avatar
 	document.getElementById("addbotbutton").disabled = !json.b
 }
