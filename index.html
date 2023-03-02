@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>DisStat</title>
+		<title>DisStat - Home - Track statistics of your Discord bot</title>
 
 		<script src="./assets/main.js"></script>
 		<script src="./assets/api.js"></script>
@@ -12,10 +12,14 @@
 	<body>
 		<global-navbar></global-navbar>
 
-		<h1>DisStat</h1>
+		<h1>DisStat - Track statistics of your Discord bot</h1>
 
-		<h2>All bots</h2>
-		<main id="bots"></main>
+		<main id="bots">
+			<h2>All bots</h2>
+			<h3>
+				<a href="/me">Add your bot now!</a>
+			</h3>
+		</main>
 		<script>
 			async function load() {
 				const bots = await getBots()
@@ -27,9 +31,5 @@
 			}
 			load()
 		</script>
-
-		<h3>
-			<a href="/me">Add your bot now!</a>
-		</h3>
 	</body>
 </html>

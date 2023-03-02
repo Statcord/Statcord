@@ -16,13 +16,17 @@ img.avatar {
 button {
 	background-color: #3e4dd1;
 	border: none;
-	color: white;
-	padding: 12px 26px;
+	color: #FFF;
+	padding: 12px 25px;
 	border-radius: 7px;
-	font-size: 16px;
+	font-size: 18px;
 	cursor: pointer;
 	transition: .3s;
 }
 button:hover {
-	background-color: #4874d1;
+	background-color: #416bc5;
+}
+button:disabled {
+	background-color: #59609c;
+	cursor: not-allowed;
 }
