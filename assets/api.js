@@ -1,7 +1,7 @@
 const req = async (route, useAuth = false) => {
-	const res = await fetch("" + route, {
+	const res = await fetch("https://disstat.tomatocake.repl.co/api/" + route, {
 		headers: {
-			//Authorization: useAuth ? "Bearer " + localStorage.getItem("token")} : null
+			//Authorization: useAuth ? localStorage.getItem("token") : null
 		}
 	})
 	const json = await res.json()
@@ -9,5 +9,5 @@ const req = async (route, useAuth = false) => {
 	return json
 }
 
-const getBots = async () => req("/api/bots")
-const getBot = async id => req("/api/bots/" + id)
+const getBots = async () => req("bots")
+const getBot = async id => req("bots/" + id)
