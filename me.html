@@ -13,15 +13,17 @@
 	<body>
 		<global-navbar></global-navbar>
 
-		<h1>Your bots</h1>
-		<main id="bots"></main>
+		<main id="bots">
+			<h1>Your bots</h1>
+			<button type="button" onclick="openDialog(document.getElementById('add-dialog'))">Add your Bot</button>
+		</main>
 		<script>
 			const params = new URLSearchParams(location.search)
 			if (localStorage.getItem("token") || params.has("code")) {
 				if (params.has("code")) login(params.get("code"))
 				async function load() {
 					const bots = await getBotsByUser()
-					if (bots.length == 0) return document.getElementById("bots").innerHTML = "<p>You don't have any bots yet. Add one with the button below.</p>"
+					if (bots.length == 0) return document.getElementById("bots").innerHTML = "<p>You don't have any bots yet. Add one with the button above.</p>"
 					bots.forEach(bot => {
 						const botElement = document.createElement("bot-card")
 						botElement.setAttribute("data-bot", JSON.stringify(bot))
@@ -37,7 +39,6 @@
 			}
 		</script>
 
-		<button type="button" onclick="openDialog(document.getElementById('add-dialog'))">Add your Bot</button>
 		<div id="add-dialog" class="dialog">
 			<div class="dialog-content">
 				<span class="close">&times;</span>
