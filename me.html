@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>DisStat</title>
+
+		<script src="./assets/main.js"></script>
+		<script src="./assets/api.js"></script>
+		<link rel="stylesheet" href="./assets/style.css">
+	</head>
+	<body>
+		<global-navbar></global-navbar>
+
+		<script>
+			const params = new URLSearchParams(location.search)
+			if (localStorage.getItem("token") || params.has("code")) {
+				if (params.has("code")) {
+					login(params.get("code"))
+				}
+
+			} else {
+				const redirect_uri = "https://" + location.host + "/me"
+				const scopes = "identify"
+
+				location.href = "https://discord.com/api/oauth2/authorize?client_id=1080913163077308436&redirect_uri=" + encodeURIComponent(redirect_uri) + "&prompt=none&response_type=code&scope=" + encodeURIComponent(scopes)
+			}
+		</script>
+
+		<script src="../assets/instantclick.min.js" data-no-instant></script>
+		<script data-no-instant>InstantClick.init(50);</script>
+	</body>
+</html>

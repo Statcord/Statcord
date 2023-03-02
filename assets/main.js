@@ -6,7 +6,7 @@ class Navbar extends HTMLElement {
 		const wrapper = document.createElement("nav")
 		wrapper.innerHTML =
 			"<a href='/'>Startseite</a>" +
-			"<a href='/about'>Über uns</a>"
+			"<a href='/me'>Dashboard</a>"
 
 		const style = document.createElement("style")
 		style.textContent = `
