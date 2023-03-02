@@ -36,6 +36,7 @@ const login = async code => {
 }
 const getAvatar = async id => {
 	let avatar = await get("avatar/" + id)
-	avatar = avatar ? "https://cdn.discordapp.com/avatars/" + id + "/" + avatar + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
+	avatar = avatar.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + avatar.a + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
 	document.getElementById("avatarpreview").src = avatar
+	document.getElementById("addbotbutton").disabled = !json.b
 }

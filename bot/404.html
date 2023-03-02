@@ -14,7 +14,9 @@
 	<body>
 		<global-navbar></global-navbar>
 
-		<h1>Information about <strong id="path"></strong></h1>
+		<h1>
+			Information about <strong id="path"></strong>
+		</h1>
 		<script>
 			async function load() {
 				const bot = await getBot(location.pathname.split("/").pop())
@@ -25,8 +27,7 @@
 					chartElement.setAttribute("id", chart.name)
 					document.body.appendChild(chartElement)
 
-					const ctx = chartElement.getContext("2d")
-					const myChart = new Chart(ctx, {
+					new Chart(chartElement.getContext("2d"), {
 						type: chart.type,
 						data: {
 							labels: chart.labels,

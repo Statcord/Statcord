@@ -3,3 +3,9 @@ body {
 	font-size: 18px;
 	margin: 0;
 }
+
+img.avatar {
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+}
