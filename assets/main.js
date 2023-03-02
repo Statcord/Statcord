@@ -18,7 +18,7 @@ class Navbar extends HTMLElement {
 				padding: 10px;
 				font-size: 25px;
 				text-decoration: none;
-				color: #226;
+				color: #227;
 			}
 		`
 
@@ -33,6 +33,7 @@ function updateCard(elem) {
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	console.log(bot)
 	shadow.querySelector("div").innerHTML =
+		"<img src='https://cdn.discordapp.com/avatars/" + bot.id + "/" + bot.avatar + ".webp?size=100' width='100' height='100' />" +
 		"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
 }
 class BotCard extends HTMLElement {
@@ -46,7 +47,8 @@ class BotCard extends HTMLElement {
 			div {
 				padding: 15px;
 				border-radius: 5px;
-				background-color: #CCC;
+				background-color: #DDD;
+				display: inline-block;
 			}
 			a {
 				font-size: 25px;
@@ -68,3 +70,13 @@ class BotCard extends HTMLElement {
 	static get observedAttributes() { return ["data-bot"] }
 }
 customElements.define("bot-card", BotCard)
+
+function openDialog(dialog) {
+	dialog.style.display = "block"
+	dialog.getElementsByClassName("close")[0].onclick = function() {
+		dialog.style.display = "none"
+	}
+	window.onclick = function(event) {
+		if (event.target == dialog) dialog.style.display = "none"
+	}
+}

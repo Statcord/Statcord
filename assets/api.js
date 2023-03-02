@@ -34,3 +34,8 @@ const login = async code => {
 	localStorage.setItem("user", result.user)
 	localStorage.setItem("avatar", result.avatar)
 }
+const getAvatar = async id => {
+	let avatar = await get("avatar/" + id)
+	avatar = avatar ? "https://cdn.discordapp.com/avatars/" + id + "/" + avatar + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
+	document.getElementById("avatarpreview").src = avatar
+}

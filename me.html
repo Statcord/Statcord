@@ -8,6 +8,7 @@
 		<script src="./assets/main.js"></script>
 		<script src="./assets/api.js"></script>
 		<link rel="stylesheet" href="./assets/style.css">
+		<link rel="stylesheet" href="./assets/dialog.css">
 	</head>
 	<body>
 		<global-navbar></global-navbar>
@@ -35,6 +36,18 @@
 			}
 		</script>
 
-		<script src="//instant.page/5.1.1" type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+		<button onclick="openDialog(document.getElementById('add-dialog'))">Add your Bot</button>
+		<div id="add-dialog" class="dialog">
+			<div class="dialog-content">
+				<span class="close">&times;</span>
+				<h2 style="font-size: 30px;">Add a bot</h2>
+
+				<label for="botid">Enter the Bot/Application ID</label>
+				<input type="text" id="botid" onchange='getAvatar(this.value)' placeholder="685166801394335819">
+				<img id="avatarpreview" src="https://cdn.discordapp.com/embed/avatars/0.png" width="100" height="100" alt="">
+
+				<button onclick="addBot(document.getElementById('botid').value)">Add</button>
+			</div>
+		</div>
 	</body>
 </html>

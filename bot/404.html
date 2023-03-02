@@ -8,6 +8,8 @@
 		<script src="../assets/main.js"></script>
 		<script src="../assets/api.js"></script>
 		<link rel="stylesheet" href="../assets/style.css">
+
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	</head>
 	<body>
 		<global-navbar></global-navbar>
@@ -17,11 +19,36 @@
 			async function load() {
 				const bot = await getBot(location.pathname.split("/").pop())
 				document.getElementById("path").innerText = bot.name
+
+				bot.charts.forEach(chart => {
+					const chartElement = document.createElement("canvas")
+					chartElement.setAttribute("id", chart.name)
+					document.body.appendChild(chartElement)
+
+					const ctx = chartElement.getContext("2d")
+					const myChart = new Chart(ctx, {
+						type: chart.type,
+						data: {
+							labels: chart.labels,
+							datasets: [{
+								label: chart.label,
+								data: chart.data,
+								backgroundColor: chart.backgroundColor,
+								borderColor: chart.borderColor,
+								borderWidth: 1
+							}]
+						},
+						options: {
+							scales: {
+								y: {
+									beginAtZero: true
+								}
+							}
+						}
+					})
+				})
 			}
 			load()
 		</script>
-
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<script src="//instant.page/5.1.1" type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
 	</body>
 </html>
