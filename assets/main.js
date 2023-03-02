@@ -30,7 +30,7 @@ customElements.define("global-navbar", Navbar)
 
 function updateCard(elem) {
 	const shadow = elem.shadowRoot
-	const bot = JSON.parse(this.getAttribute("data-bot"))
+	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	console.log(bot)
 	shadow.querySelector("div").innerHTML =
 		"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
