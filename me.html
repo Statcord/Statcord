@@ -23,7 +23,7 @@
 				if (params.has("code")) login(params.get("code"))
 				async function load() {
 					const bots = await getBotsByUser()
-					if (bots.length == 0) return document.getElementById("bots").innerHTML = "<p>You don't have any bots yet. Add one with the button above.</p>"
+					if (bots.length == 0) return document.getElementById("bots").innerHTML += "<p>You don't have any bots yet. Add one with the button above.</p>"
 					bots.forEach(bot => {
 						const botElement = document.createElement("bot-card")
 						botElement.setAttribute("data-bot", JSON.stringify(bot))

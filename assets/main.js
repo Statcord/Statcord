@@ -5,7 +5,7 @@ class Navbar extends HTMLElement {
 
 		const wrapper = document.createElement("nav")
 		wrapper.innerHTML =
-			"<a href='/'>Startseite</a>" +
+			"<a href='/'>Home</a>" +
 			"<a href='/me'>Dashboard</a>"
 
 		const style = document.createElement("style")
@@ -67,7 +67,9 @@ class BotCard extends HTMLElement {
 	attributeChangedCallback() {
 		updateCard(this)
 	}
-	static get observedAttributes() { return ["data-bot"] }
+	static get observedAttributes() {
+		return ["data-bot"]
+	}
 }
 customElements.define("bot-card", BotCard)
 
