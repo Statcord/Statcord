@@ -28,6 +28,13 @@ class Navbar extends HTMLElement {
 }
 customElements.define("global-navbar", Navbar)
 
+function updateCard(elem) {
+	const shadow = elem.shadowRoot
+	const bot = JSON.parse(this.getAttribute("data-bot"))
+	console.log(bot)
+	shadow.querySelector("div").innerHTML =
+		"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
+}
 class BotCard extends HTMLElement {
 	constructor() {
 		super()
@@ -52,19 +59,11 @@ class BotCard extends HTMLElement {
 		shadow.appendChild(style)
 		shadow.appendChild(wrapper)
 	}
-	updateStyle(elem) {
-		const shadow = elem.shadowRoot
-		const bot = JSON.parse(this.getAttribute("data-bot"))
-		console.log(bot)
-		shadow.querySelector("div").innerHTML =
-			"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
-
-	}
 	connectedCallback() {
-		if (this.hasAttribute("data-bot")) updateStyle(this)
+		if (this.hasAttribute("data-bot")) updateCard(this)
 	}
 	attributeChangedCallback() {
-		updateStyle(this)
+		updateCard(this)
 	}
 	static get observedAttributes() { return ["data-bot"] }
 }

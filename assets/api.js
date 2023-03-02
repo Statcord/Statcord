@@ -27,7 +27,7 @@ const post = async (route, data = {}) => {
 
 const getBots = async () => await get("bots")
 const getBot = async id => await get("bots/" + id)
-const getBotsByUser = async user => await get("botsByUser" + (user ? "/" + user : ""))
+const getBotsByUser = async user => await get("bots" + (user ? "?user=" + user : ""))
 const login = async code => {
 	const result = await post("login", {code})
 	localStorage.setItem("token", result.token)
