@@ -14,7 +14,8 @@ const post = async (route, data = {}) => {
 		method: "post",
 		body: JSON.stringify(data),
 		headers: {
-			Authorization: localStorage.getItem("token")
+			"Content-Type": "application/json",
+			Authorization: route == "login" ? null : localStorage.getItem("token")
 		}
 	})
 	const json = await res.json()
@@ -24,4 +25,9 @@ const post = async (route, data = {}) => {
 
 const getBots = async () => await get("bots")
 const getBot = async id => await get("bots/" + id)
-const login = async code => await post("login", {code})
+const login = async code => {
+	const result = await post("login", {code})
+	localStorage.setItem("token", result.token)
+	localStorage.setItem("user", result.user)
+	localStorage.setItem("avatar", result.avatar)
+}
