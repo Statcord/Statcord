@@ -32,13 +32,8 @@ class BotCard extends HTMLElement {
 	constructor() {
 		super()
 		const shadow = this.attachShadow({mode: "open"})
-		const bot = JSON.parse(this.getAttribute("data-bot"))
-		console.log(bot)
 
 		const wrapper = document.createElement("div")
-		wrapper.innerHTML =
-			"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
-
 		const style = document.createElement("style")
 		style.textContent = `
 			div {
@@ -57,5 +52,20 @@ class BotCard extends HTMLElement {
 		shadow.appendChild(style)
 		shadow.appendChild(wrapper)
 	}
+	updateStyle(elem) {
+		const shadow = elem.shadowRoot
+		const bot = JSON.parse(this.getAttribute("data-bot"))
+		console.log(bot)
+		shadow.querySelector("div").innerHTML =
+			"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
+
+	}
+	connectedCallback() {
+		if (this.hasAttribute("data-bot")) updateStyle(this)
+	}
+	attributeChangedCallback() {
+		updateStyle(this)
+	}
+	static get observedAttributes() { return ["data-bot"] }
 }
 customElements.define("bot-card", BotCard)

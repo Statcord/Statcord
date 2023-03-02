@@ -5,6 +5,7 @@ const get = async (route, useAuth = false) => {
 		}
 	})
 	const json = await res.json()
+	console.log(json)
 	if (!res.ok) throw new Error(json.message || "Unknown error, status code: " + res.status)
 	return json
 }
@@ -19,12 +20,14 @@ const post = async (route, data = {}) => {
 		}
 	})
 	const json = await res.json()
+	console.log(json)
 	if (!res.ok) throw new Error(json.message || "Unknown error, status code: " + res.status)
 	return json
 }
 
 const getBots = async () => await get("bots")
 const getBot = async id => await get("bots/" + id)
+const getBotsByUser = async user => await get("botsByUser" + (user ? "/" + user : ""))
 const login = async code => {
 	const result = await post("login", {code})
 	localStorage.setItem("token", result.token)

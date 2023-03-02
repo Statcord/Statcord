@@ -16,13 +16,13 @@
 		<script>
 			async function load() {
 				const bot = await getBot(location.pathname.split("/").pop())
-				console.log(bot)
 				document.getElementById("path").innerText = bot.name
 			}
 			load()
 		</script>
 
+		<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 		<script src="../assets/instantclick.min.js" data-no-instant></script>
-		<script data-no-instant>InstantClick.init(50);</script>
+		<script data-no-instant>InstantClick.init();</script>
 	</body>
 </html>

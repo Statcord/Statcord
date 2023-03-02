@@ -12,13 +12,20 @@
 	<body>
 		<global-navbar></global-navbar>
 
+		<main id="bots"></main>
 		<script>
 			const params = new URLSearchParams(location.search)
 			if (localStorage.getItem("token") || params.has("code")) {
-				if (params.has("code")) {
-					login(params.get("code"))
+				if (params.has("code")) login(params.get("code"))
+				async function load() {
+					const bots = await getBotsByUser()
+					bots.forEach(bot => {
+						const botElement = document.createElement("bot-card")
+						botElement.setAttribute("data-bot", JSON.stringify(bot))
+						document.getElementById("bots").appendChild(botElement)
+					})
 				}
-
+				load()
 			} else {
 				const redirect_uri = "https://" + location.host + "/me"
 				const scopes = "identify"
@@ -28,6 +35,6 @@
 		</script>
 
 		<script src="../assets/instantclick.min.js" data-no-instant></script>
-		<script data-no-instant>InstantClick.init(50);</script>
+		<script data-no-instant>InstantClick.init();</script>
 	</body>
 </html>
