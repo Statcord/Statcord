@@ -4,10 +4,25 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>DisStat</title>
+
 		<script src="./assets/main.js"></script>
+		<script src="./assets/api.js"></script>
+		<link rel="stylesheet" href="./assets/style.css">
 	</head>
 	<body>
 		<global-navbar></global-navbar>
+
+		<h1>DisStat</h1>
+
+		<main id="bots"></main>
+		<script>
+			const bots = await getBots()
+			bots.forEach(bot => {
+				const botElement = document.createElement("bot-card")
+				botElement.setAttribute("data-bot", JSON.stringify(bot))
+				document.getElementById("bots").appendChild(botElement)
+			})
+		</script>
 
 		<script src="./assets/instantclick.min.js" data-no-instant></script>
 		<script data-no-instant>InstantClick.init(50);</script>

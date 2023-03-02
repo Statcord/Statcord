@@ -1,0 +1,18 @@
+name: ESLint
+
+on:
+  push:
+
+jobs:
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v3
+
+      - name: "🛸 install eslint html plugins"
+        run: npm i eslint-plugin-html @html-eslint/parser @html-eslint/eslint-plugin
+
+      - name: "🔍 lint code"
+        run: npx eslint --ext .html,.js . --report-unused-disable-directives
