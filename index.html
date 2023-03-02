@@ -15,13 +15,16 @@
 		<h1>DisStat</h1>
 
 		<main id="bots"></main>
-		<script async>
-			const bots = await getBots()
-			bots.forEach(bot => {
-				const botElement = document.createElement("bot-card")
-				botElement.setAttribute("data-bot", JSON.stringify(bot))
-				document.getElementById("bots").appendChild(botElement)
-			})
+		<script>
+			async function load() {
+				const bots = await getBots()
+				bots.forEach(bot => {
+					const botElement = document.createElement("bot-card")
+					botElement.setAttribute("data-bot", JSON.stringify(bot))
+					document.getElementById("bots").appendChild(botElement)
+				})
+			}
+			load()
 		</script>
 
 		<script src="./assets/instantclick.min.js" data-no-instant></script>

@@ -9,7 +9,7 @@ const get = async (route, useAuth = false) => {
 	return json
 }
 const post = async (route, data = {}) => {
-	if (!localStorage.getItem("token")) throw new Error("Not logged in")
+	if (route != "login" && !localStorage.getItem("token")) throw new Error("Not logged in")
 	const res = await fetch("https://node2.chaoshosting.eu:25517/api/" + route, {
 		method: "post",
 		headers: {
