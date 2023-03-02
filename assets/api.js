@@ -12,6 +12,7 @@ const post = async (route, data = {}) => {
 	if (route != "login" && !localStorage.getItem("token")) throw new Error("Not logged in")
 	const res = await fetch("https://node2.chaoshosting.eu:25517/api/" + route, {
 		method: "post",
+		body: JSON.stringify(data),
 		headers: {
 			Authorization: localStorage.getItem("token")
 		}
