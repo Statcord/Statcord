@@ -9,7 +9,7 @@ const get = async (route, useAuth = false) => {
 	if (!res.ok) throw new Error(json.message || "Unknown error, status code: " + res.status)
 	return json
 }
-const post = async (route, data = {}) => {
+const post = async (route, data = {}, returnError = false) => {
 	if (route != "login" && !localStorage.getItem("token")) throw new Error("Not logged in")
 	const res = await fetch("https://node2.chaoshosting.eu:25517/api/" + route, {
 		method: "post",
@@ -21,7 +21,10 @@ const post = async (route, data = {}) => {
 	})
 	const json = await res.json()
 	console.log(json)
-	if (!res.ok) throw new Error(json.message || "Unknown error, status code: " + res.status)
+	if (!res.ok) {
+		if (returnError) console.error(json.message || "Unknown error, status code: " + res.status)
+		else throw new Error(json.message || "Unknown error, status code: " + res.status)
+	}
 	return json
 }
 
@@ -35,13 +38,14 @@ const login = async code => {
 	localStorage.setItem("avatar", result.avatar)
 }
 const getAvatar = async id => {
+	if (!/^[0-9]{17,21}$/.test(id)) return
 	const json = await get("avatar/" + id, true)
 	const avatar = json.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + json.a + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
 	document.getElementById("avatarpreview").src = avatar
 	document.getElementById("addbotbutton").disabled = !json.b
 }
 const addBot = async id => {
-	const result = await post("bots", {id})
+	const result = await post("bots", {id}, true)
 	if (result.success) location.reload()
 	else alert(result.message)
 }

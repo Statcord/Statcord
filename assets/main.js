@@ -33,8 +33,8 @@ function updateCard(elem) {
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	console.log(bot)
 	shadow.querySelector("div").innerHTML =
-		"<img src='https://cdn.discordapp.com/avatars/" + bot.id + "/" + bot.avatar + ".webp?size=100' width='100' height='100' />" +
-		"<a href='/bot/" + bot.id + "'>" + bot.name + "</a>"
+		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=70' width='70' height='70' />" +
+		"<a href='/bot/" + encode(bot.id) + "'>" + encode(bot.name) + "</a>"
 }
 class BotCard extends HTMLElement {
 	constructor() {
@@ -72,6 +72,8 @@ class BotCard extends HTMLElement {
 	}
 }
 customElements.define("bot-card", BotCard)
+
+const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
 function openDialog(dialog) {
 	dialog.style.display = "block"
