@@ -39,7 +39,7 @@
 					chartElement.setAttribute("aria-label", "Chart for " + chart.name)
 					chartElement.setAttribute("role", "img")
 					chartElement.setAttribute("width", screen.width / 2 - 20)
-					//chartElement.style.width = "45%"
+					chartElement.style.width = "45%"
 					document.getElementById("charts").appendChild(chartElement)
 
 					new Chart(chartElement.getContext("2d"), {

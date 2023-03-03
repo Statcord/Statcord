@@ -4,10 +4,16 @@
 	justify-content: center;
 }
 .card {
-	padding: 0 20px;
+	padding: 20px;
 	border-radius: 10px;
 	background-color: #b2b7fd;
 	margin-right: 10px;
+}
+.card h2 {
+	margin-top: 0;
+}
+.card p {
+	margin-bottom: 0;
 }
 
 #charts {
