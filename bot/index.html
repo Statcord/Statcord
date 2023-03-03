@@ -55,15 +55,32 @@
 									beginAtZero: true
 								}
 							},
-							plugins: {
-								title: {
-									display: true,
-									text: chart.name
-								}
+							layout: {
+								padding: 20
+							}
+						},
+						plugins: {
+							title: {
+								display: true,
+								text: chart.name
+							},
+							colors: {
+								enabled: false
 							}
 						}
 					})
 				})
+
+				for (const key in bot.cards) {
+					const card = bot.cards[key]
+					const cardElement = document.createElement("div")
+					cardElement.setAttribute("class", "card")
+					cardElement.innerHTML =
+						"<h2>" + key + "</h2>" +
+						"<p>" + card + "</p>"
+
+					document.getElementById("content").appendChild(cardElement)
+				}
 			}
 			load()
 		</script>

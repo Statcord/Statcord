@@ -29,7 +29,7 @@ const post = async (route, data = {}, returnError = false) => {
 }
 
 const getBots = async () => await get("bots")
-const getBot = async id => await get("bots/" + id)
+const getBot = async id => await get("bots/" + id + "?timezone=" + Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language)
 const getBotsByUser = async user => await get("bots" + (user ? "?user=" + user : ""))
 const login = async code => {
 	const result = await post("login", {code})
