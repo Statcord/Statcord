@@ -3,12 +3,13 @@ const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g,
 class Navbar extends HTMLElement {
 	constructor() {
 		super()
-
+	}
+	connectedCallback() {
 		this.innerHTML =
 			"<nav>" +
 			"<a href='/'>Home</a>" +
 			"<a href='/me'>Dashboard</a>" +
-			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>"
+			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>" +
 			"</nav>"
 	}
 }
