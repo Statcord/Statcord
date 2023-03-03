@@ -1,0 +1,14 @@
+.link {
+	color: #3e4dd1;
+	text-decoration: none;
+	font-size: 22px;
+}
+.link:visited {
+	color: #3e4dd1;
+}
+
+#bots {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-gap: 20px;
+}
