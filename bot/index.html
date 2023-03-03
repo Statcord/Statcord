@@ -34,13 +34,16 @@
 				document.querySelector("title").innerText = "DisStat - View statistics of " + bot.name
 
 				bot.charts.forEach(chart => {
+					const parentElement = document.createElement("div")
+					parentElement.setAttribute("width", "100%")
+
 					const chartElement = document.createElement("canvas")
 					chartElement.setAttribute("id", chart.name)
 					chartElement.setAttribute("aria-label", "Chart for " + chart.name)
 					chartElement.setAttribute("role", "img")
-					chartElement.setAttribute("width", screen.width / 2 - 20)
-					chartElement.style.width = "45%"
-					document.getElementById("charts").appendChild(chartElement)
+
+					parentElement.appendChild(chartElement)
+					document.getElementById("charts").appendChild(parentElement)
 
 					new Chart(chartElement.getContext("2d"), {
 						type: chart.type,
