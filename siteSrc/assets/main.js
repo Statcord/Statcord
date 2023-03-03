@@ -3,29 +3,14 @@ const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g,
 class Navbar extends HTMLElement {
 	constructor() {
 		super()
-
-		const wrapper = document.createElement("nav")
-		wrapper.innerHTML =
+	}
+	connectedCallback() {
+		this.innerHTML =
+			"<nav>" +
 			"<a href='/'>Home</a>" +
 			"<a href='/me'>Dashboard</a>" +
-			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>"
-
-		const style = document.createElement("style")
-		style.textContent = `
-			nav {
-				background-color: #CCC;
-				padding: 15px;
-			}
-			a {
-				padding: 10px;
-				font-size: 25px;
-				text-decoration: none;
-				color: #227;
-			}
-		`
-
-		this.appendChild(wrapper)
-		this.appendChild(style)
+			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>" +
+			"</nav>"
 	}
 }
 customElements.define("global-navbar", Navbar)
@@ -33,7 +18,6 @@ customElements.define("global-navbar", Navbar)
 function updateCard(elem) {
 	const shadow = elem.shadowRoot
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
-	console.log(bot)
 	shadow.querySelector("div").innerHTML =
 		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.name) + "' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.id % 5) + ".png\"' />" +
 		"<a href='/bot/" + encode(bot.id) + "'>" + encode(bot.name) + "</a>"

@@ -1,1 +1,2 @@
-/bot/:id /bot?id=:id 301
+/bot/:id /bot/?id=:id 301
+/bot/:id/edit /bot/edit/?id=:id 301

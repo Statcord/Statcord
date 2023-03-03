@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Modify tracking settings of a Discord bot.">
+		<title>DisStat - Modify settings of a bot</title>
+
+		<link rel="preconnect" href="https://apids.tomatenkuchen.eu/" crossorigin>
+		<link rel="dns-prefetch" href="https://apids.tomatenkuchen.eu/">
+
+		<script src="../assets/main.js"></script>
+		<script src="../assets/api.js"></script>
+		<link rel="stylesheet" href="../assets/style.css">
+	</head>
+	<body>
+		<global-navbar></global-navbar>
+
+		<main id="content">
+			<h1>
+				Edit <strong id="botname"></strong>
+			</h1>
+		</main>
+		<script>
+			async function load() {
+				const params = new URLSearchParams(location.search)
+				if (!params.has("id")) return location.href = "/"
+				const bot = await getBot(params.get("id"))
+				if (!bot.name) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
+
+				document.getElementById("botname").innerText = bot.name
+				document.querySelector("title").innerText = "DisStat - Modify settings of " + bot.name
+			}
+			load()
+		</script>
+
+		<script src="https://instant.page/5.1.1" type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
+	</body>
+</html>

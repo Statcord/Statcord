@@ -51,13 +51,12 @@
 				<input type="text" id="botid" pattern="[0-9]{17,21}" oninput="getAvatar(this.value)" placeholder="685166801394335819">
 				<img class="avatar" id="avatarpreview" src="https://cdn.discordapp.com/embed/avatars/0.png" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="Bot avatar preview">
 
-				<label for="botpublic">Should the bot be public?</label>
-				<input type="checkbox" id="botpublic" checked>
-
 				<br>
 				<br>
-				<button type="button" id="addbotbutton" onclick="addBot(document.getElementById('botid').value, document.getElementById('botpublic').checked)">Add bot</button>
+				<button type="button" id="addbotbutton" onclick="addBot(document.getElementById('botid').value)">Add bot</button>
 			</div>
 		</div>
+
+		<script src="https://instant.page/5.1.1" type="module" integrity="sha384-MWfCL6g1OTGsbSwfuMHc8+8J2u71/LA8dzlIN3ycajckxuZZmF+DNjdm7O6H3PSq"></script>
 	</body>
 </html>
