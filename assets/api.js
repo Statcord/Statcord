@@ -1,5 +1,5 @@
 const get = async (route, useAuth = false) => {
-	const res = await fetch("https://node2.chaoshosting.eu:25517/api/" + route, {
+	const res = await fetch("https://apids.tomatenkuchen.eu/api/" + route, {
 		headers: {
 			Authorization: useAuth ? localStorage.getItem("token") : null
 		}
@@ -10,8 +10,8 @@ const get = async (route, useAuth = false) => {
 	return json
 }
 const post = async (route, data = {}, returnError = false) => {
-	if (route != "login" && !localStorage.getItem("token")) throw new Error("Not logged in")
-	const res = await fetch("https://node2.chaoshosting.eu:25517/api/" + route, {
+	if (route != "login" && !localStorage.getItem("token")) return alert("You are not logged in!")
+	const res = await fetch("https://apids.tomatenkuchen.eu/api/" + route, {
 		method: "post",
 		body: JSON.stringify(data),
 		headers: {
