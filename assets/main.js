@@ -5,9 +5,11 @@ class Navbar extends HTMLElement {
 		super()
 
 		this.innerHTML =
+			"<nav>" +
 			"<a href='/'>Home</a>" +
 			"<a href='/me'>Dashboard</a>" +
 			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>"
+			"</nav>"
 	}
 }
 customElements.define("global-navbar", Navbar)
@@ -15,7 +17,6 @@ customElements.define("global-navbar", Navbar)
 function updateCard(elem) {
 	const shadow = elem.shadowRoot
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
-	console.log(bot)
 	shadow.querySelector("div").innerHTML =
 		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.name) + "' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.id % 5) + ".png\"' />" +
 		"<a href='/bot/" + encode(bot.id) + "'>" + encode(bot.name) + "</a>"
