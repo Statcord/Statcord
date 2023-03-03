@@ -4,19 +4,22 @@
 	justify-content: center;
 }
 .card {
-	padding: 10px 20px;
+	padding: 15px 20px;
 	border-radius: 15px;
 	background-color: #b2b7fd;
 	margin-right: 20px;
 }
-.card h2 {
-	margin-top: 0;
-}
 .card p {
-	margin-bottom: 0;
+	margin: 0;
+	font-size: 30px;
+}
+.card p.val {
+	font-size: 40px;
+	text-align: center;
 }
 
 #charts {
+	margin: 15px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 20px;
@@ -28,7 +31,6 @@
 }
 
 canvas {
-	margin: 10px;
 	border-radius: 10px;
 	background-color: #d1e6f7;
 }
