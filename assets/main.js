@@ -4,28 +4,10 @@ class Navbar extends HTMLElement {
 	constructor() {
 		super()
 
-		const wrapper = document.createElement("nav")
-		wrapper.innerHTML =
+		this.innerHTML =
 			"<a href='/'>Home</a>" +
 			"<a href='/me'>Dashboard</a>" +
 			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>"
-
-		const style = document.createElement("style")
-		style.textContent = `
-			nav {
-				background-color: #CCC;
-				padding: 15px;
-			}
-			a {
-				padding: 10px;
-				font-size: 25px;
-				text-decoration: none;
-				color: #227;
-			}
-		`
-
-		this.appendChild(wrapper)
-		this.appendChild(style)
 	}
 }
 customElements.define("global-navbar", Navbar)
