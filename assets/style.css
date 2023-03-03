@@ -9,8 +9,8 @@ main {
 }
 
 img.avatar {
-	width: 70px;
-	height: 70px;
+	width: 64px;
+	height: 64px;
 	border-radius: 50%;
 }
 button {

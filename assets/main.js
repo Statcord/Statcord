@@ -33,7 +33,7 @@ function updateCard(elem) {
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	console.log(bot)
 	shadow.querySelector("div").innerHTML =
-		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=70' width='70' height='70' />" +
+		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=64' />" +
 		"<a href='/bot/" + encode(bot.id) + "'>" + encode(bot.name) + "</a>"
 }
 class BotCard extends HTMLElement {
@@ -48,13 +48,18 @@ class BotCard extends HTMLElement {
 				padding: 15px;
 				border-radius: 5px;
 				background-color: #DDD;
-				display: inline-block;
+				display: flex;
+				align-items: center;
 			}
 			a {
 				font-size: 25px;
+				text-decoration: none;
 			}
-			a:hover {
-				text-decoration: underline;
+			img {
+				border-radius: 50%;
+				margin-right: 10px;
+				width: 64px;
+				height: 64px;
 			}
 		`
 

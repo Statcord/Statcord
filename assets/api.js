@@ -1,7 +1,7 @@
 const get = async (route, useAuth = false) => {
 	const res = await fetch("https://node2.chaoshosting.eu:25517/api/" + route, {
 		headers: {
-			//Authorization: useAuth ? localStorage.getItem("token") : null
+			Authorization: useAuth ? localStorage.getItem("token") : null
 		}
 	})
 	const json = await res.json()
@@ -40,12 +40,12 @@ const login = async code => {
 const getAvatar = async id => {
 	if (!/^[0-9]{17,21}$/.test(id)) return
 	const json = await get("avatar/" + id, true)
-	const avatar = json.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + json.a + ".webp?size=100" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
+	const avatar = json.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + json.a + ".webp?size=64" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
 	document.getElementById("avatarpreview").src = avatar
 	document.getElementById("addbotbutton").disabled = !json.b
 }
 const addBot = async id => {
 	const result = await post("bots", {id}, true)
-	if (result.success) location.reload()
+	if (result.success) location.href = "/bot/" + id
 	else alert(result.message)
 }
