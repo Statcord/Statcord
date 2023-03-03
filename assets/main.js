@@ -1,3 +1,5 @@
+const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+
 class Navbar extends HTMLElement {
 	constructor() {
 		super()
@@ -77,8 +79,6 @@ class BotCard extends HTMLElement {
 	}
 }
 customElements.define("bot-card", BotCard)
-
-const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
 function openDialog(dialog) {
 	dialog.style.display = "block"

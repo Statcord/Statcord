@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="View statistics of a Discord bot.">
 		<title>DisStat - View statistics of a bot</title>
 
 		<script src="../assets/main.js"></script>
@@ -23,14 +24,17 @@
 			async function load() {
 				const params = new URLSearchParams(location.search)
 				if (!params.has("id")) return location.href = "/"
-
 				const bot = await getBot(params.id)
+				if (!bot.name) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
+
 				document.getElementById("botname").innerText = bot.name
 				document.querySelector("title").innerText = "DisStat - View statistics of " + bot.name
 
 				bot.charts.forEach(chart => {
 					const chartElement = document.createElement("canvas")
 					chartElement.setAttribute("id", chart.name)
+					chartElement.setAttribute("aria-label", "Chart for " + chart.name)
+					chartElement.setAttribute("role", "img")
 					document.getElementById("content").appendChild(chartElement)
 
 					new Chart(chartElement.getContext("2d"), {
@@ -38,11 +42,10 @@
 						data: {
 							labels: chart.labels,
 							datasets: [{
-								label: chart.label,
+								label: chart.name,
 								data: chart.data,
-								backgroundColor: chart.backgroundColor,
-								borderColor: chart.borderColor,
-								borderWidth: 1
+								backgroundColor: chart.borderColor,
+								borderColor: chart.borderColor
 							}]
 						},
 						options: {
@@ -50,8 +53,14 @@
 								y: {
 									beginAtZero: true
 								}
+							},
+							plugins: {
+								title: {
+									display: true,
+									text: chart.name
+								}
 							}
-						}
+						},
 					})
 				})
 			}
