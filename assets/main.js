@@ -3,12 +3,12 @@ const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g,
 class Navbar extends HTMLElement {
 	constructor() {
 		super()
-		const shadow = this.attachShadow({mode: "open"})
 
 		const wrapper = document.createElement("nav")
 		wrapper.innerHTML =
 			"<a href='/'>Home</a>" +
-			"<a href='/me'>Dashboard</a>"
+			"<a href='/me'>Dashboard</a>" +
+			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>"
 
 		const style = document.createElement("style")
 		style.textContent = `
@@ -24,8 +24,8 @@ class Navbar extends HTMLElement {
 			}
 		`
 
-		shadow.appendChild(style)
-		shadow.appendChild(wrapper)
+		this.appendChild(wrapper)
+		this.appendChild(style)
 	}
 }
 customElements.define("global-navbar", Navbar)

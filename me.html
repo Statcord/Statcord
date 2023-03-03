@@ -4,7 +4,10 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="Manage your existing and add new bots here.">
-		<title>DisStat</title>
+		<title>DisStat Dashboard - Manage your bots and add new ones</title>
+
+		<link rel="preconnect" href="https://apids.tomatenkuchen.eu/" crossorigin>
+		<link rel="dns-prefetch" href="https://apids.tomatenkuchen.eu/">
 
 		<script src="./assets/main.js"></script>
 		<script src="./assets/api.js"></script>
@@ -48,9 +51,12 @@
 				<input type="text" id="botid" pattern="[0-9]{17,21}" oninput="getAvatar(this.value)" placeholder="685166801394335819">
 				<img class="avatar" id="avatarpreview" src="https://cdn.discordapp.com/embed/avatars/0.png" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" alt="Bot avatar preview">
 
+				<label for="botpublic">Should the bot be public?</label>
+				<input type="checkbox" id="botpublic" checked>
+
 				<br>
 				<br>
-				<button type="button" id="addbotbutton" onclick="addBot(document.getElementById('botid').value)">Add bot</button>
+				<button type="button" id="addbotbutton" onclick="addBot(document.getElementById('botid').value, document.getElementById('botpublic').checked)">Add bot</button>
 			</div>
 		</div>
 	</body>

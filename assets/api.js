@@ -44,8 +44,9 @@ const getAvatar = async id => {
 	document.getElementById("avatarpreview").src = avatar
 	document.getElementById("addbotbutton").disabled = !json.b
 }
-const addBot = async id => {
-	const result = await post("bots", {id}, true)
-	if (result.success) location.href = "/bot/" + id
+const addBot = async (id, public = true) => {
+	if (!/^[0-9]{17,21}$/.test(id)) return
+	const result = await post("bots", {id, public}, true)
+	if (result.success) location.href = "/bot/" + encode(id)
 	else alert(result.message)
 }
