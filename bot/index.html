@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>DisStat</title>
+		<title>DisStat - View statistics of a bot</title>
 
 		<script src="../assets/main.js"></script>
 		<script src="../assets/api.js"></script>
@@ -14,14 +14,19 @@
 	<body>
 		<global-navbar></global-navbar>
 
-		<h1>
-			Information about <strong id="path"></strong>
-		</h1>
-		<main id="content"></main>
+		<main id="content">
+			<h1>
+				Information about <strong id="botname"></strong>
+			</h1>
+		</main>
 		<script>
 			async function load() {
-				const bot = await getBot(location.pathname.split("/").pop())
-				document.getElementById("path").innerText = bot.name
+				const params = new URLSearchParams(location.search)
+				if (!params.has("id")) return location.href = "/"
+
+				const bot = await getBot(params.id)
+				document.getElementById("botname").innerText = bot.name
+				document.querySelector("title").innerText = "DisStat - View statistics of " + bot.name
 
 				bot.charts.forEach(chart => {
 					const chartElement = document.createElement("canvas")

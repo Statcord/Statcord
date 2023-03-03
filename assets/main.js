@@ -33,7 +33,7 @@ function updateCard(elem) {
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	console.log(bot)
 	shadow.querySelector("div").innerHTML =
-		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=64' />" +
+		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.name) + "' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.id % 5) + ".png\"' />" +
 		"<a href='/bot/" + encode(bot.id) + "'>" + encode(bot.name) + "</a>"
 }
 class BotCard extends HTMLElement {
