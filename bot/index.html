@@ -20,6 +20,8 @@
 			<h1>
 				Information about <strong id="botname"></strong>
 			</h1>
+			<div id="cards"></div>
+			<div id="charts"></div>
 		</main>
 		<script>
 			async function load() {
@@ -36,7 +38,7 @@
 					chartElement.setAttribute("id", chart.name)
 					chartElement.setAttribute("aria-label", "Chart for " + chart.name)
 					chartElement.setAttribute("role", "img")
-					document.getElementById("content").appendChild(chartElement)
+					document.getElementById("charts").appendChild(chartElement)
 
 					new Chart(chartElement.getContext("2d"), {
 						type: chart.type,
@@ -57,7 +59,8 @@
 							},
 							layout: {
 								padding: 20
-							}
+							},
+							maintainAspectRatio: false
 						},
 						plugins: {
 							title: {
@@ -79,7 +82,7 @@
 						"<h2>" + key + "</h2>" +
 						"<p>" + card + "</p>"
 
-					document.getElementById("content").appendChild(cardElement)
+					document.getElementById("cards").appendChild(cardElement)
 				}
 			}
 			load()

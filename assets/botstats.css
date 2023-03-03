@@ -1,3 +1,25 @@
+#cards {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.card {
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #b2b7fd;
+}
+
+#charts {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 20px;
+}
+@media screen and (max-width: 768px) {
+	#charts {
+		grid-template-columns: 1fr;
+	}
+}
+
 canvas {
 	margin: 10px;
 	border-radius: 10px;
