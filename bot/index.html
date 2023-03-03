@@ -9,6 +9,7 @@
 		<script src="../assets/main.js"></script>
 		<script src="../assets/api.js"></script>
 		<link rel="stylesheet" href="../assets/style.css">
+		<link rel="stylesheet" href="../assets/botstats.css">
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	</head>
@@ -24,7 +25,7 @@
 			async function load() {
 				const params = new URLSearchParams(location.search)
 				if (!params.has("id")) return location.href = "/"
-				const bot = await getBot(params.id)
+				const bot = await getBot(params.get("id"))
 				if (!bot.name) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
 				document.getElementById("botname").innerText = bot.name
@@ -44,8 +45,8 @@
 							datasets: [{
 								label: chart.name,
 								data: chart.data,
-								backgroundColor: chart.borderColor,
-								borderColor: chart.borderColor
+								borderColor: chart.borderColor,
+								backgroundColor: chart.borderColor
 							}]
 						},
 						options: {
@@ -60,7 +61,7 @@
 									text: chart.name
 								}
 							}
-						},
+						}
 					})
 				})
 			}
