@@ -3,7 +3,7 @@ version: "3"
 volumes:
   config:
     external: true
-  cache:
+  cacheData:
     external: true
 
 services:
@@ -16,12 +16,12 @@ services:
     ports:
       - 8090:8090
 
-cache:
-  restart: unless-stopped
-  image: redis:7.0.7-alpine
-  ports:
-    - '6379:6379'
-  command: redis-server --loglevel warning
-  volumes:
-    - cache:/data
-  container_name: Cache
+  cache:
+    restart: unless-stopped
+    image: redis:7.0.7-alpine
+    ports:
+      - '6379:6379'
+    command: redis-server --loglevel warning
+    volumes:
+      - cacheData:/data
+    container_name: Cache
