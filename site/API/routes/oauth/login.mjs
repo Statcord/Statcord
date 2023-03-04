@@ -8,6 +8,7 @@ export const route = {
             redirect_to: { type: 'string' },
         },
         response: {
+            302: {}
         }
     },
     handler: (request, reply) => {

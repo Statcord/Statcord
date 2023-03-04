@@ -10,6 +10,10 @@ import {route as botAdd} from './bots/add.mjs'
 import {route as botList} from './bots/list.mjs'
 import {route as botGet} from './bots/get.mjs'
 
+import {route as devGetBot} from './devRoutes/get.mjs'
+import {route as devUpdateBot} from './devRoutes/update.mjs'
+import {route as devPostCmd} from './devRoutes/cmd.mjs'
+
 import {route as userGetAPIKey} from './user/getAPIKey.mjs'
 import {route as userRegenAPIKey} from './user/regenAPIKey.mjs'
 
@@ -23,6 +27,9 @@ export default [
     botAdd,
     botList,
     botGet,
+    devGetBot,
+    devUpdateBot,
+    devPostCmd,
     userGetAPIKey,
     userRegenAPIKey
 ]

@@ -16,7 +16,7 @@ export const route = {
                     username: { type: 'string' },
                     avatar: { type: 'string' },
                     discriminator: { type: 'string' },
-                    locale: { type: 'string' },
+                    locale: { type: 'string' }
                 }
             }
         }

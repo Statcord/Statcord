@@ -5,8 +5,8 @@ export const route = {
 	url: '/api/bots/:id',
 	schema: {
 		querystring: {
-			locale: { type: 'string' },
-			timezone: { type: 'string' }
+			locale: { type: 'string', default: 'en-US' },
+			timezone: { type: 'string', default: 'UTC' }
 		},
         response: {
 			400: {

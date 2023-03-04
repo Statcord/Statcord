@@ -5,7 +5,7 @@ export const route = {
 	url: '/api/bots',
 	schema: {
         querystring: {
-            user: { type: 'string' },
+            user: { type: 'string' }
         },
         response: {
             200: {

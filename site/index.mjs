@@ -17,7 +17,7 @@ API.register(fastifySession, {
         path: "/",
         secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000
-    },
+    }
 });
 
 await Promise.all(
