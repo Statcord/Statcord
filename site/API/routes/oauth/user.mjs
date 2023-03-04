@@ -18,7 +18,6 @@ export const route = {
                     avatar: { type: 'string' },
                     discriminator: { type: 'string' },
                     locale: { type: 'string' },
-                    avatarURL: { type: 'string' }
                 }
             }
         }
