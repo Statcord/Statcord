@@ -30,6 +30,9 @@ button:disabled {
 	background-color: #59609c;
 	cursor: not-allowed;
 }
+button.danger {
+	background-color: #d64242;
+}
 
 nav {
 	background-color: #CCC;
