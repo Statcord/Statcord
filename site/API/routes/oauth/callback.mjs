@@ -1,4 +1,4 @@
-import { tokenRequest, getUser } from '../../utils/oauth.mjs'
+import { tokenRequest, getUser } from '../../../utils/oauth2/oauth.mjs'
 
 export const route = {
     method: 'GET',

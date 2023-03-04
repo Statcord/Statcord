@@ -7,7 +7,7 @@ import fastifySession from '@fastify/session'
 import redis from './utils/redis.mjs';
 import redisStore from './utils/redisSession.mjs';
 
-const { cookieSecret } = await import(process.env.NODE_ENV === "production" ? '/config/settings.mjs' : './config/settings.mjs');
+const { cookieSecret } = await import(process.env.NODE_ENV === "production" ? '/config/config.mjs' : './config/config.mjs');
 
 const API = fastify();
 API.register(fastifyCookie);
