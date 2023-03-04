@@ -4,6 +4,9 @@
 		"node": true,
 		"es2022": true
 	},
+	"parserOptions": {
+		"sourceType": "module"
+	},
 	"plugins": ["html", "@html-eslint"],
 	"overrides": [
 		{

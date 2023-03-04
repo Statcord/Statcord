@@ -18,9 +18,9 @@ export const route = {
         }
 	},
 	handler: (request, reply) => {
-		if (!request.get("Authorization")) return reply.status(401).send({message: "You need to be logged in to add a bot!"})
-		if (!tokens.has(request.get("Authorization"))) return reply.status(401).send({message: "Your token is invalid!"})
+		if (!request.headers.Authorization) return reply.status(401).send({message: "You need to be logged in to add a bot!"})
+		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
 
-		reply.send({key: disstatUser.get(tokens.get(request.get("Authorization")).id).apikey})
+		reply.send({key: disstatUser.get(tokens.get(request.headers.Authorization).id).apikey})
 	}
 }

@@ -31,11 +31,11 @@ export const route = {
         }
 	},
 	handler: (request, reply) => {
-		if (!request.get("Authorization")) return reply.status(401).send({message: "You need to be logged in!"})
-		if (!tokens.has(request.get("Authorization"))) return reply.status(401).send({message: "Your token is invalid!"})
+		if (!request.headers.Authorization) return reply.status(401).send({message: "You need to be logged in!"})
+		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
 
 		const newkey = "DS-" + getUUID().replace(/-/gi, "").slice(10)
-		disstatUser.set(tokens.get(request.get("Authorization")).id, newkey, "apikey")
+		disstatUser.set(tokens.get(request.headers.Authorization).id, newkey, "apikey")
 		reply.send({key: newkey})
 	}
 }
