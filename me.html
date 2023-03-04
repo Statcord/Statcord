@@ -20,6 +20,7 @@
 		<main id="bots">
 			<h1>Your bots</h1>
 			<button type="button" onclick="openDialog(document.getElementById('add-dialog'))">Add your bot</button>
+			<button type="button" onclick="getKey();openDialog(document.getElementById('apikey-dialog'))">View API key</button>
 			<br>
 		</main>
 		<script>
@@ -40,6 +41,13 @@
 				location.href = "https://discord.com/api/oauth2/authorize?client_id=1080913163077308436&redirect_uri=" +
 					encodeURIComponent("https://disstat.pages.dev/me") + "&prompt=none&response_type=code&scope=indentify"
 			}
+
+			function copyKey() {
+				const key = document.getElementById("botapikey")
+				key.select()
+				key.setSelectionRange(0, 99999)
+  				navigator.clipboard.writeText(key.value)
+			}
 		</script>
 
 		<div id="add-dialog" class="dialog">
@@ -54,6 +62,21 @@
 				<br>
 				<br>
 				<button type="button" id="addbotbutton" onclick="addBot(document.getElementById('botid').value)">Add bot</button>
+			</div>
+		</div>
+
+		<div id="apikey-dialog" class="dialog">
+			<div class="dialog-content">
+				<span class="close">&times;</span>
+				<h2 style="font-size: 32px;">Add your bot</h2>
+
+				<label for="botid">View your API key</label>
+				<input type="text" id="botapikey" disabled>
+				<button type="button" id="regenbutton" onclick="copyKey()">Copy key</button>
+
+				<br>
+				<br>
+				<button type="button" id="regenbutton" onclick="regenKey()">Regenerate key</button>
 			</div>
 		</div>
 

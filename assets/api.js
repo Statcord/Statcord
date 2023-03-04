@@ -50,3 +50,7 @@ const addBot = async id => {
 	if (result.success) location.href = "/bot/?id=" + encode(id)
 	else alert(result.message)
 }
+const getKey = async () => {
+	const result = await get("key", true)
+	document.getElementById("botapikey").value = result.key
+}
