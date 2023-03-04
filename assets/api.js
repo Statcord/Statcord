@@ -54,3 +54,7 @@ const getKey = async () => {
 	const result = await get("key", true)
 	document.getElementById("botapikey").value = result.key
 }
+const regenKey = async () => {
+	const result = await post("key")
+	document.getElementById("botapikey").value = result.key
+}

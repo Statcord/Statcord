@@ -24,8 +24,8 @@
 			<br>
 		</main>
 		<script>
-			const params = new URLSearchParams(location.search)
-			if (localStorage.getItem("token") || params.has("code")) {
+			if (localStorage.getItem("token") || new URLSearchParams(location.search).has("code")) {
+				const params = new URLSearchParams(location.search)
 				if (params.has("code")) login(params.get("code"))
 				async function load() {
 					const bots = await getBotsByUser()
