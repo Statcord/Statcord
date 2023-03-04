@@ -1,3 +1,5 @@
+import { getBot } from '../../../utils/postgres.mjs'
+
 export const route = {
 	method: 'GET',
 	url: '/api/bots/:id',
@@ -32,22 +34,22 @@ export const route = {
             }
         }
 	},
-	handler: (request, reply) => {
+	handler: async (request, reply) => {
 		if (!request.params.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
 		if (!disstat.has(request.params.id)) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
 
-		const bot = disstat.get(request.params.id)
+		const bot = await getBot(request.params.id)
 		bot.charts = [{
 			name: "Guild count",
 			type: "line",
 			data: Object.entries(bot.raw).map(([date, data]) => [new Date(date).getTime(), data.guilds]),
-			labels: Object.entries(bot.raw).map(([date, data]) => new Date(date).toLocaleDateString(request.query.locale || "en-US", {timeZone: request.query.timezone || "UTC"})),
+			labels: Object.entries(bot.raw).map(([date]) => new Date(date).toLocaleDateString(request.query.locale || "en-US", {timeZone: request.query.timezone || "UTC"})),
 			borderColor: "rgb(255, 99, 132)"
 		},{
 			name: "Command usage",
 			type: "line",
 			data: Object.entries(bot.raw).map(([date, data]) => [new Date(date).getTime(), data.cmds]),
-			labels: Object.entries(bot.raw).map(([date, data]) => new Date(date).toLocaleDateString(request.query.locale || "en-US", {timeZone: request.query.timezone || "UTC"})),
+			labels: Object.entries(bot.raw).map(([date]) => new Date(date).toLocaleDateString(request.query.locale || "en-US", {timeZone: request.query.timezone || "UTC"})),
 			borderColor: "rgb(255, 99, 132)"
 		}]
 		bot.cards = {

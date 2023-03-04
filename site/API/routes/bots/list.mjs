@@ -1,3 +1,5 @@
+import sql from '../../../utils/postgres.mjs'
+
 export const route = {
 	method: 'GET',
 	url: '/api/bots',
@@ -19,16 +21,11 @@ export const route = {
             }
         }
 	},
-	handler: (request, reply) => {
-		if (request.query.user) reply.send(disstat.array().filter(bot => bot.owner == request.query.user)).map(bot => ({
-			id: bot.id,
-			name: bot.name,
-			avatar: bot.avatar
-		}))
-		else reply.send(disstat.array().map(bot => ({
-			id: bot.id,
-			name: bot.name,
-			avatar: bot.avatar
-		})))
+	handler: async (request, reply) => {
+		let result = []
+		if (request.query.user) result = await sql`SELECT * FROM bots WHERE public = true AND owner = ${request.query.user}`
+		else result = await sql`SELECT * FROM bots WHERE public = true`
+
+		reply.send(result)
 	}
 }

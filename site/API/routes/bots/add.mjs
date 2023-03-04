@@ -1,3 +1,5 @@
+import { updateBot } from "../../../utils/postgres.mjs"
+
 export const route = {
 	method: 'POST',
 	url: '/api/bots',
@@ -45,11 +47,11 @@ export const route = {
 
 		const botres = await fetch("https://discord.com/api/v10/applications/" + request.body.id + "/rpc", {headers: {"Authorization": "Bot " + token}})
 		if (!botres.ok) return reply.status(400).send({message: "The bot with the specified ID does not exist!"})
-		const json = await botres.json()
-
 		reply.status(201).send({success: true, message: "The bot has been added to the database!"})
 
-		disstat.set(json.id, {
+		const json = await botres.json()
+
+		updateBot(json.id, {
 			id: json.id,
 			name: json.name,
 			avatar: json.icon,
