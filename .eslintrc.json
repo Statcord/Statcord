@@ -1,6 +1,7 @@
 {
 	"env": {
 		"browser": true,
+		"node": true,
 		"es2022": true
 	},
 	"plugins": ["html", "@html-eslint"],
@@ -50,6 +51,7 @@
 		"no-div-regex": 2,
 		"no-floating-decimal": 2,
 		"no-eq-null": 2,
+		"no-extra-semi": 2,
 		"no-extra-bind": 2,
 		"no-extend-native": 2,
 		"no-empty-pattern": 2,

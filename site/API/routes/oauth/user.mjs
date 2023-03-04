@@ -2,9 +2,8 @@ export const route = {
     method: 'GET',
     url: '/api/discordOauth/user',
     schema: {
-
         response: {
-            401:{
+            401: {
                 type: 'object',
                 properties: {
                     error: { type: 'boolean' }

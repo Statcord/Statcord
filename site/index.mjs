@@ -1,4 +1,3 @@
-
 import fastify from 'fastify'
 import routes from './API/routes/apiRoutes.mjs'
 import fastifyCookie from '@fastify/cookie'
@@ -27,7 +26,7 @@ await Promise.all(
     })
 )
 
-API.listen({ port: 8090, host: "0.0.0.0" }, (err, address) => {
-    console.log(`API live on http://0.0.0.0:8090`)
+API.listen({ port: 8090, host: "0.0.0.0" }, err => {
     if (err) throw err
+    console.log(`API live on http://0.0.0.0:8090`)
 });
