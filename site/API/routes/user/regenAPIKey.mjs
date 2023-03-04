@@ -1,5 +1,5 @@
-function getUUID() {
-	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+function getKey() {
+	return "xxxxxxxxxxxx4xxxyxxxxxxxx".replace(/[xy]/g, c => {
 		const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8)
 		return v.toString(16)
 	})
@@ -34,7 +34,7 @@ export const route = {
 		if (!request.headers.Authorization) return reply.status(401).send({message: "You need to be logged in!"})
 		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
 
-		const newkey = "DS-" + getUUID().replace(/-/gi, "").slice(10)
+		const newkey = "DS-" + getKey()
 		disstatUser.set(tokens.get(request.headers.Authorization).id, newkey, "apikey")
 		reply.send({key: newkey})
 	}

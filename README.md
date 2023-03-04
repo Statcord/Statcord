@@ -1,5 +1,5 @@
 # DisStat
-A in-progress project by TomatoCake, which aims to replace Statcord with a more stable and better updated alternative.
+A in-progress project by TomatoCake and numselli, which aims to replace [Statcord](https://statcord.com) with a more stable and better updated alternative due to it being offline.
 
 You can find it's API docs [here](https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0), packages for npm etc. should get added soon.
 
