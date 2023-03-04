@@ -1,3 +1,5 @@
+import { getUser } from '../../utils/postgres.mjs'
+
 export const route = {
 	method: 'GET',
 	url: '/api/key',
@@ -21,6 +23,6 @@ export const route = {
 		if (!request.headers.Authorization) return reply.status(401).send({message: "You need to be logged in to add a bot!"})
 		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
 
-		reply.send({key: disstatUser.get(tokens.get(request.headers.Authorization).id).apikey})
+		reply.send({key: getUser().apikey})
 	}
 }

@@ -21,7 +21,6 @@ export const tokenRequest = (options = {}) => {
 		client_secret: oauth2.clientSecret,
 		grant_type: "authorization_code",
 		code: options.code,
-		refresh_token: undefined,
 		redirect_uri: options.redirectUri,
 		scope: "identify"
 	};
@@ -33,7 +32,7 @@ export const tokenRequest = (options = {}) => {
 	});
 }
 
-export const getUser = (access_token) => {
+export const getDiscordUser = (access_token) => {
 	return requestHandler.request("GET", "/users/@me", undefined, {
 		auth: {
 			type: "Bearer",

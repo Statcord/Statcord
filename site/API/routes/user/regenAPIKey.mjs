@@ -1,9 +1,4 @@
-function getKey() {
-	return "xxxxxxxxxxxx4xxxyxxxxxxxx".replace(/[xy]/g, c => {
-		const r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8)
-		return v.toString(16)
-	})
-}
+import { genKey, updateUser } from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'POST',
@@ -34,8 +29,8 @@ export const route = {
 		if (!request.headers.Authorization) return reply.status(401).send({message: "You need to be logged in!"})
 		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
 
-		const newkey = "DS-" + getKey()
-		disstatUser.set(tokens.get(request.headers.Authorization).id, newkey, "apikey")
+		const newkey = "DS-" + genKey()
 		reply.send({key: newkey})
+		updateUser(tokens.get(request.headers.Authorization).id, {apikey: newkey})
 	}
 }
