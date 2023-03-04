@@ -17,11 +17,12 @@
 	<body>
 		<global-navbar></global-navbar>
 
-		<main id="bots">
-			<h1>Your bots</h1>
+		<main>
 			<button type="button" onclick="openDialog(document.getElementById('add-dialog'))">Add your bot</button>
 			<button type="button" onclick="getKey();openDialog(document.getElementById('apikey-dialog'))">View API key</button>
 			<br>
+			<h1>Your bots</h1>
+			<div id="bots"></div>
 		</main>
 		<script>
 			if (localStorage.getItem("token") || new URLSearchParams(location.search).has("code")) {

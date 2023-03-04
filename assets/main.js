@@ -5,10 +5,11 @@ class Navbar extends HTMLElement {
 		super()
 	}
 	connectedCallback() {
+		const current = window.location.pathname
 		this.innerHTML =
 			"<nav>" +
-			"<a href='/'>Home</a>" +
-			"<a href='/me'>Dashboard</a>" +
+			(current == "/" ? "<span>Home</span>" : "<a href='/'>Home</a>") +
+			(current == "/me" ? "<span>Dashboard</span>" : "<a href='/me'>Dashboard</a>") +
 			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>" +
 			"</nav>"
 	}

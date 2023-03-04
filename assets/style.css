@@ -31,16 +31,31 @@ button:disabled {
 	cursor: not-allowed;
 }
 button.danger {
-	background-color: #d64242;
+	background-color: #ec3f3f;
 }
 
 nav {
 	background-color: #CCC;
 	padding: 15px;
 }
-nav a {
+nav a, nav span {
 	padding: 10px;
 	font-size: 25px;
 	text-decoration: none;
 	color: #227;
+}
+
+.link {
+	color: #3e4dd1;
+	text-decoration: none;
+	font-size: 22px;
+}
+.link:visited {
+	color: #3e4dd1;
+}
+
+#bots {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-gap: 20px;
 }
