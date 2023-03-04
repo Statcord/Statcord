@@ -6,7 +6,7 @@ function getUUID() {
 }
 
 export const route = {
-	method: 'GET',
+	method: 'POST',
 	url: '/api/key',
 	schema: {
 		header: {
