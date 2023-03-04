@@ -17,7 +17,7 @@
 	"settings": {
 		"html/html-extensions": [".html"]
 	},
-	"ignorePatterns": ["assets/instantclick.min.js"],
+	"ignorePatterns": ["siteSrc/assets/instantclick.min.js"],
 	"rules": {
 		"array-bracket-spacing": 2,
 		"array-callback-return": 2,
