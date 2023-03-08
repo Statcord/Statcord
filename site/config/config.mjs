@@ -6,3 +6,5 @@ export const oauth2 = {
     "redirectUri": "https://local.numselli.xyz/",
     "apihost": "https://local.numselli.xyz/api"
 }
+
+export const bot_token = "sadfsalkdfa"

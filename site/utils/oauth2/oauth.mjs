@@ -1,6 +1,6 @@
 import RequestHandler from './RequestHandler.mjs'
 
-const { oauth2 } = await import(process.env.NODE_ENV === "production" ? '/config/config.mjs' : '../../config/config.mjs')
+const { oauth2, bot_token } = await import(process.env.NODE_ENV === "production" ? '/config/config.mjs' : '../../config/config.mjs')
 
 const requestHandler = new RequestHandler()
 
@@ -40,4 +40,15 @@ export const getUser = (access_token) => {
 			creds: access_token,
 		},
 	});
+}
+
+export const getBot = async(botId) => {
+	const botData = await requestHandler.request("GET", `/users/${botId}`, undefined, {
+		auth: {
+			type: "Bot",
+			creds: bot_token,
+		},
+	});
+
+	return botData.bot ? botData : undefined
 }
