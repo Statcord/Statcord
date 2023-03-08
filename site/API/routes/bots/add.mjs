@@ -11,12 +11,6 @@ export const route = {
 			}
         },
 		response: {
-            400: {
-                type: 'object',
-                properties: {
-                    message: { type: 'string', default: 'Please specify the bot ID as a parameter!' }
-                }
-            },
             401: {
                 type: 'object',
                 properties: {

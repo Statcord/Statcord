@@ -5,7 +5,8 @@ export const route = {
 	url: '/api/bots',
 	schema: {
         querystring: {
-            user: { type: 'string' }
+            user: { type: 'string' },
+			page: { type: 'number', default: 1 }
         },
         response: {
             200: {
@@ -23,8 +24,8 @@ export const route = {
 	},
 	handler: async (request, reply) => {
 		let result = []
-		if (request.query.user) result = await sql`SELECT * FROM bots WHERE public = true AND owner = ${request.query.user}`
-		else result = await sql`SELECT * FROM bots WHERE public = true`
+		if (request.query.user) result = await sql`SELECT * FROM bots WHERE public = true AND owner = ${request.query.user} LIMIT 30 OFFSET ${request.query.page * 30 - 30}`
+		else result = await sql`SELECT * FROM bots WHERE public = true LIMIT 30 OFFSET ${request.query.page * 30 - 30}`
 
 		reply.send(result)
 	}

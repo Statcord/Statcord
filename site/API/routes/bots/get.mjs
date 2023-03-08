@@ -9,12 +9,6 @@ export const route = {
 			timezone: { type: 'string', default: 'UTC' }
 		},
         response: {
-			400: {
-				type: 'object',
-				properties: {
-					message: { type: 'string', default: 'Please specify the bot ID as a parameter!' }
-				}
-			},
 			404: {
 				type: 'object',
 				properties: {
@@ -35,7 +29,6 @@ export const route = {
         }
 	},
 	handler: async (request, reply) => {
-		if (!request.params.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
 		if (!disstat.has(request.params.id)) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
 
 		const bot = await getBot(request.params.id)
