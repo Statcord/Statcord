@@ -86,8 +86,8 @@
 					const cardElement = document.createElement("div")
 					cardElement.setAttribute("class", "card")
 					cardElement.innerHTML =
-						"<p>" + key + "</p>" +
-						"<p class='val'>" + card + "</p>"
+						"<p>" + encode(key) + "</p>" +
+						"<p class='val'>" + encode(card) + "</p>"
 
 					document.getElementById("cards").appendChild(cardElement)
 				}

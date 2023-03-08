@@ -21,17 +21,7 @@ export const route = {
 					message: { type: 'string', default: 'The bot with the specified ID does not exist!' }
 				}
 			},
-            200: {
-                type: 'array',
-                items: {
-					type: 'object',
-					properties: {
-						id: { type: 'string' },
-						name: { type: 'string' },
-						avatar: { type: 'string' }
-					}
-				}
-            }
+            201: {}
         }
 	},
 	handler: async (request, reply) => {
@@ -41,5 +31,6 @@ export const route = {
 		updateBot(request.params.id, {
 			public: request.body.public
 		})
+		reply.status(201).end()
 	}
 }
