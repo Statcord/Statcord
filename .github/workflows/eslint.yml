@@ -15,4 +15,4 @@ jobs:
         run: npm i eslint-plugin-html @html-eslint/parser @html-eslint/eslint-plugin
 
       - name: "🔍 lint code"
-        run: npx eslint --ext .html,.js . --report-unused-disable-directives
+        run: npx eslint --ext .html,.js,.mjs . --report-unused-disable-directives

@@ -1,7 +1,11 @@
 {
 	"env": {
 		"browser": true,
+		"node": true,
 		"es2022": true
+	},
+	"parserOptions": {
+		"sourceType": "module"
 	},
 	"plugins": ["html", "@html-eslint"],
 	"overrides": [
@@ -17,15 +21,13 @@
 	"settings": {
 		"html/html-extensions": [".html"]
 	},
-	"ignorePatterns": ["siteSrc/assets/instantclick.min.js"],
+	"ignorePatterns": ["siteSrc/assets/instantclick.min.js", "site/utils/oauth2/*.mjs"],
 	"rules": {
 		"array-bracket-spacing": 2,
 		"array-callback-return": 2,
-		"arrow-parens": [2, "as-needed"],
 		"arrow-spacing": 2,
 		"block-scoped-var": 2,
-		"brace-style": 2,
-		"comma-dangle": 2,
+		"comma-dangle": 1,
 		"comma-style": 2,
 		"computed-property-spacing": 2,
 		"default-case-last": 2,
@@ -50,6 +52,7 @@
 		"no-div-regex": 2,
 		"no-floating-decimal": 2,
 		"no-eq-null": 2,
+		"no-extra-semi": 2,
 		"no-extra-bind": 2,
 		"no-extend-native": 2,
 		"no-empty-pattern": 2,
@@ -114,8 +117,7 @@
 		"no-whitespace-before-property": 2,
 		"object-shorthand": 2,
 		"prefer-arrow-callback": 2,
-		"prefer-const": 1,
-        "quotes": [2, "double", { "allowTemplateLiterals": false, "avoidEscape": true }],
+		"prefer-const": 2,
 		"use-isnan": 2,
 		"valid-typeof": 2,
 
