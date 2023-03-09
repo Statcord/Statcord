@@ -21,7 +21,7 @@ export const route = {
         }
 	},
 	handler: async (request, reply) => {
-		if (!request.headers.Authorization) return reply.status(401).send({message: "You need to be logged in to add a bot!"})
+		if (!request.session.discordAccessToken) return reply.code(401).send({error: true, message: "You need to be logged in to add a bot!"});
 		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
 
 		await sql`DELETE FROM bots WHERE id = ${request.params.id}`
