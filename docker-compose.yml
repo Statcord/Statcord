@@ -7,7 +7,7 @@ volumes:
     external: true
 
 services:
-  apu:
+  api:
     restart: unless-stopped
     build: ./apiSrc
     container_name: api
