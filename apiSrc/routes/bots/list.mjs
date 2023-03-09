@@ -1,4 +1,4 @@
-import sql from '../../../utils/postgres.mjs'
+import sql from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'GET',

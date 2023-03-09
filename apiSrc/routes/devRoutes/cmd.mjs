@@ -1,4 +1,4 @@
-import { getBot, updateBot } from '../../../utils/postgres.mjs'
+import { getBot, updateBot } from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'POST',

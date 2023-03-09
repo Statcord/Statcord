@@ -1,4 +1,4 @@
-import { genKey, updateUser } from '../../../utils/postgres.mjs'
+import { genKey, updateUser } from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'POST',

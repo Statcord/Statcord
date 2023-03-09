@@ -1,5 +1,5 @@
 import fastify from 'fastify'
-import routes from './API/routes/apiRoutes.mjs'
+import routes from './routes/apiRoutes.mjs'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
 
