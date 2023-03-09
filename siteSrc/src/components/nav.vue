@@ -29,7 +29,7 @@
         <li><router-link to="/privacy" class="white-text">Privacy</router-link></li>
     </ul>
     <ul id="dropdown1" class="dropdown-content black">
-        <li><a href="/user" class="white-text">User</a></li>
+        <li><a href="/me" class="white-text">User</a></li>
         <li class="divider"></li>
         <li><a href="/logout" class="red-text darken-3">Logout</a></li>
     </ul>
@@ -54,7 +54,7 @@ export default {
 
         this.ajaxdataok = ajaxdata.ok
         this.username = `${ajaxdataJSON.username}#${ajaxdataJSON.discriminator}`
-        this.avatarURL = `https://cdn.discordapp.com/avatars/${ajaxdata.ok ? `${id}/${ajaxdataJSON.avatar}` : "0"}.png?size=32`
+        this.avatarURL = `https://cdn.discordapp.com/avatars/${ajaxdata.ok ? `${ajaxdataJSON.id}/${ajaxdataJSON.avatar}` : "0"}.png?size=32`
     },
     methods: {
         hideLogin() {

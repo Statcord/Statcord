@@ -1,10 +1,8 @@
 <template>
   <main>
     <br>
-    <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons right">add</i>Add your
-      bot</div>
-    <div class="waves-effect waves-light btn-large" @click="showKeyModal"><i class="material-icons right">vpn_key</i>View
-      API key</div>
+    <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons right">add</i>Add your bot</div>
+    <div class="waves-effect waves-light btn-large" @click="showKeyModal"><i class="material-icons right">vpn_key</i>View API key</div>
 
     <!-- <h1>Your bots</h1> -->
     <!-- <div id="bots"></div> -->
@@ -58,6 +56,10 @@ export default {
     closeKeyModal() {
       this.isKeyModalVisible = false;
     }
+  },
+  async mounted() {
+    const ajaxdata = await fetch(`/api/discordOauth/user`).catch(err => console.error);
+    if (ajaxdata.status === 401) return window.location.href = `/api/discordOauth/login`;
   },
 }
 </script>

@@ -6,8 +6,6 @@ export default {
   name: 'support',
   created() {
     window.location.href = 'https://discord.gg/qsHxVUnXqr';
-  },
-  setup() {
   }
 }
 </script>

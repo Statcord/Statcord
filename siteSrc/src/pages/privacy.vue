@@ -19,8 +19,6 @@
 
 <script>
 export default {
-  name: 'privacy',
-  setup() {
-  }
+  name: 'privacy'
 }
 </script>

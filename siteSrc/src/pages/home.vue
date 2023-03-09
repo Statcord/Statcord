@@ -24,8 +24,6 @@ export default {
   },
   async mounted() {
 
-  },
-  setup() {
   }
 }
 </script>

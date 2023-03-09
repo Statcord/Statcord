@@ -7,8 +7,6 @@ export default {
     fetch("/api/discordOauth/logout").then(() => {
       window.location.pathname = "/"
     })
-  },
-  setup() {
   }
 }
 </script>
