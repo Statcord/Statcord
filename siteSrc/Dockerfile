@@ -1,9 +1,10 @@
 FROM node:19.6.1-alpine3.16 as build-stage
+
 WORKDIR /app
-COPY ../apiSrc .
+COPY . /app
+
 RUN npm install
 RUN npm run build
-
 
 FROM nginx as production-stage
 RUN mkdir /app

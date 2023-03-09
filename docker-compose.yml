@@ -26,9 +26,9 @@ services:
       - cacheData:/data
     container_name: Cache
     
-  nginx:
+  site:
     restart: unless-stopped
-    build: ./nginx
-    container_name: nginx
+    build: ./siteSrc
+    container_name: site
     ports:
       - 80:80
