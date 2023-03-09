@@ -8,3 +8,12 @@ export const oauth2 = {
 }
 
 export const bot_token = "sadfsalkdfa"
+
+export const pgConfig = {
+    "host": "postgres",
+	"port": 5432,
+	"database": "disstat",
+	"username": "disstat",
+	"password": "AQwrMb4WzngykR9v",
+	"idle_timeout": 1
+}
