@@ -7,10 +7,10 @@ volumes:
     external: true
 
 services:
-  site:
+  apu:
     restart: unless-stopped
-    build: ./site
-    container_name: site
+    build: ./apiSrc
+    container_name: api
     volumes:
       - config:/config
     ports:
