@@ -2,8 +2,6 @@ import fastify from 'fastify'
 import routes from './API/routes/apiRoutes.mjs'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
-import fastifyStatic from '@fastify/static'
-import path from 'path'
 
 import redis from './utils/redis.mjs';
 import RedisStore from './utils/redisSession.mjs';
@@ -21,10 +19,6 @@ API.register(fastifySession, {
         maxAge: 7 * 24 * 60 * 60 * 1000
     }
 });
-
-API.register(fastifyStatic, {
-    root: path.join(path.resolve('../'), 'siteSrc'),
-})
 
 await Promise.all(
     routes.map(async endpoint => {
