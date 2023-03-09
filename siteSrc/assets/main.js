@@ -10,7 +10,7 @@ class Navbar extends HTMLElement {
 			"<nav>" +
 			(current == "/" ? "<span>Home</span>" : "<a href='/'>Home</a>") +
 			(current == "/me" ? "<span>Dashboard</span>" : "<a href='/me'>Dashboard</a>") +
-			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.0' target='_blank' rel='noopener'>Docs</a>" +
+			"<a href='https://app.swaggerhub.com/apis-docs/DisStat/DisStat/1.0.1' target='_blank' rel='noopener'>Docs</a>" +
 			"</nav>"
 	}
 }
