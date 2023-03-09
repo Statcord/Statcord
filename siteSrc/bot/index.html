@@ -22,6 +22,7 @@
 			<h1>
 				Information about <strong id="botname"></strong>
 			</h1>
+			<ul id="status"></ul>
 			<div id="cards"></div>
 			<div id="charts"></div>
 		</main>
@@ -87,10 +88,15 @@
 					cardElement.setAttribute("class", "card")
 					cardElement.innerHTML =
 						"<p>" + encode(key) + "</p>" +
-						"<p class='val'>" + encode(card) + "</p>"
+						"<p class='val'>" + encode(card.toString()) + "</p>"
 
 					document.getElementById("cards").appendChild(cardElement)
 				}
+
+				const statusElement = document.getElementById("status")
+				statusElement.innerHTML =
+					"<li>Last connection to API: " + (bot.lastConnect ? new Date(bot.lastConnect).toLocaleString(navigator.language,
+						{timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone}) : "Never") + "</li>"
 			}
 			load()
 		</script>
