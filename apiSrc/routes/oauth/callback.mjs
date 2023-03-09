@@ -19,7 +19,7 @@ export const route = {
 
         const tokens = await tokenRequest({
             code,
-            redirectURI: oauth2.apihost + "/discordOauth/callback"
+            redirectUri: oauth2.apihost + "/discordOauth/callback"
         });
         request.session.discordAccessToken = tokens.access_token;
         request.session.discordUserInfo = await getDiscordUser(tokens.access_token);

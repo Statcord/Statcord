@@ -15,7 +15,7 @@ function encode(obj) {
 	return string.substring(1);
 }
 
-export const tokenRequest = (options = {}) => {
+export const tokenRequest = (options) => {
 	const obj = {
 		client_id: oauth2.clientID,
 		client_secret: oauth2.clientSecret,
