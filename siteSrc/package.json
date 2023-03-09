@@ -1,0 +1,20 @@
+{
+  "name": "disstat",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@vueuse/head": "^0.9.8",
+    "chart.js": "^3.9.1",
+    "vue": "^3.2.41",
+    "vue-chartjs": "^4.1.2",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-service": "~5.0.8"
+  }
+}
