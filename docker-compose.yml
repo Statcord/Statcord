@@ -13,6 +13,9 @@ services:
     restart: unless-stopped
     build: ./apiSrc
     container_name: api
+    depends_on:
+      - postgres
+      - cache
     volumes:
       - config:/config
     ports:
@@ -46,5 +49,7 @@ services:
     restart: unless-stopped
     build: ./siteSrc
     container_name: site
+    depends_on:
+      - api
     ports:
       - 80:80
