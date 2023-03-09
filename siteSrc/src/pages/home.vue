@@ -11,7 +11,14 @@
     </p>
     <router-link to="/me">Add your bot now!</router-link>
     <h2>All currently tracked, public bots</h2>
-    <div id="bots"></div>
+    <div>
+      <div v-for="bot in publicBotList">
+        <span>{{ bot.username }}</span>
+        <span>{{bot.botid}}</span>
+        <img :src="'https://cdn.discordapp.com/avatars/'+bot.botid+'/'+bot.avatar+'.png'" alt="">
+      </div>
+
+    </div>
   </main>
 </template>
 
@@ -20,10 +27,12 @@ export default {
   name: 'home',
   data() {
     return {
+      publicBotList: []
     }
   },
   async mounted() {
-
+    const rawBots = await fetch("/api/bots")
+    this.publicBotList = await rawBots.json()
   }
 }
 </script>

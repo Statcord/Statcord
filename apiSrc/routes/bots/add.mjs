@@ -1,8 +1,10 @@
-import { updateBot } from "../../utils/postgres.mjs"
+import db from "../../utils/postgres.mjs"
+import {getBot} from '../../utils/oauth2/oauth.mjs'
+import genKey from '../../utils/genKey.mjs'
 
 export const route = {
 	method: 'POST',
-	url: '/api/bots',
+	url: '/api/bots/add',
 	schema: {
         body: {
 			type: 'object',
@@ -35,30 +37,17 @@ export const route = {
 	handler: async (request, reply) => {
 		if (!request.session.discordAccessToken) return reply.code(401).send({error: true, message: "You need to be logged in to add a bot!"});
 
-		if (!tokens.has(request.headers.Authorization)) return reply.status(401).send({message: "Your token is invalid!"})
-
 		if (!request.body.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
-		if (disstat.has(request.body.id)) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
+		const botExisits = await db`SELECT botid from botlist WHERE botid = ${request.body.id}`.catch(err=>{})
+		if (botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
 
-		const botres = await fetch("https://discord.com/api/v10/applications/" + request.body.id + "/rpc", {headers: {"Authorization": "Bot " + token}})
-		if (!botres.ok) return reply.status(400).send({message: "The bot with the specified ID does not exist!"})
+		const bot = await getBot(request.body.id)
+		console.log(bot)
+
+		db`INSERT INTO botlist(botid, ownerid) VALUES (${request.body.id}, ${request.session.discordUserInfo.id})`.catch(err=>{})
+		db`INSERT INTO owners(username, ownerid) VALUES (${request.session.discordUserInfo.username}, ${request.session.discordUserInfo.id})`.catch(err=>{})
+		db`INSERT INTO bots(botid, username, avatar, token) VALUES (${request.body.id}, ${bot.username}, ${bot.avatar}, ${genKey()})`.catch(err=>{})
+
 		reply.status(201).send({success: true, message: "The bot has been added to the database!"})
-
-		const json = await botres.json()
-
-		updateBot(json.id, {
-			id: json.id,
-			name: json.name,
-			avatar: json.icon,
-			owner: tokens.get(request.headers.Authorization).id,
-			public: json.bot_public,
-			verified: (json.flags & 65536) == 65536,
-			added: Date.now(),
-			lastConnect: 0,
-			cmds: 0,
-			raw: {}, // Entry for every day, which includes the guild count, shard count etc
-			pending: [], // List of pending entries for raw, which will be added to raw on midnight
-			pendingCmd: []
-		})
 	}
 }

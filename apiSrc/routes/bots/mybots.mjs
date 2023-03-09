@@ -2,7 +2,7 @@ import sql from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'GET',
-	url: '/api/bots',
+	url: '/api/mybots',
 	schema: {
         querystring: {
 			page: { type: 'number', default: 0 }
@@ -22,6 +22,8 @@ export const route = {
         }
 	},
 	handler: async (request, reply) => {
-		reply.send(await sql`SELECT username, avatar, botid FROM bots WHERE public = true LIMIT 30 OFFSET 30*${request.query.page ?? 0}`.catch(err=>{}))
+        if (!request.session.discordAccessToken) return reply.send([]);
+
+		reply.send(await sql`SELECT username, avatar, bots.botid FROM bots INNER JOIN botlist ON botlist.botid = bots.botid WHERE botlist.ownerid = ${request.session.discordUserInfo.id} LIMIT 30 OFFSET 30*${request.query.page ?? 0}`.catch(err=>{}))
 	}
 }

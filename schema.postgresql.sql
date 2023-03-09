@@ -37,8 +37,9 @@ ALTER TABLE ONLY public.owners
 CREATE TABLE public.bots (
     botid character varying NOT NULL,
     username character varying NOT NULL,
-    icon character varying NOT NULL,
-    token character varying NOT NULL
+    avatar character varying NOT NULL,
+    token character varying NOT NULL,
+    public boolean DEFAULT true 
 );
 ALTER TABLE public.bots OWNER TO disstat;
 ALTER TABLE ONLY public.bots

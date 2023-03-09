@@ -8,6 +8,7 @@ import {route as oauthUser} from './oauth/user.mjs'
 
 import {route as botAdd} from './bots/add.mjs'
 import {route as botList} from './bots/list.mjs'
+import {route as mybots } from './bots/mybots.mjs'
 import {route as botGet} from './bots/get.mjs'
 
 import {route as devGetBot} from './devRoutes/get.mjs'
@@ -26,6 +27,7 @@ export default [
     oauthUser,
     botAdd,
     botList,
+    mybots,
     botGet,
     devGetBot,
     devUpdateBot,
