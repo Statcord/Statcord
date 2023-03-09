@@ -17,41 +17,16 @@ class Navbar extends HTMLElement {
 customElements.define("global-navbar", Navbar)
 
 function updateCard(elem) {
-	const shadow = elem.shadowRoot
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
-	shadow.querySelector("div").innerHTML =
+	elem.innerHTML =
+		"<div class='botcard'>" +
 		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.id) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.name) + "' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.id % 5) + ".png\"' />" +
-		"<a href='/bot/" + encode(bot.id) + "'>" + encode(bot.name) + "</a>"
+		"<a href='/bot/?id=" + encode(bot.id) + "'>" + encode(bot.name) + "</a>" +
+		"</div>"
 }
 class BotCard extends HTMLElement {
 	constructor() {
 		super()
-		const shadow = this.attachShadow({mode: "open"})
-
-		const wrapper = document.createElement("div")
-		const style = document.createElement("style")
-		style.textContent = `
-			div {
-				padding: 15px;
-				border-radius: 5px;
-				background-color: #DDD;
-				display: flex;
-				align-items: center;
-			}
-			a {
-				font-size: 25px;
-				text-decoration: none;
-			}
-			img {
-				border-radius: 50%;
-				margin-right: 10px;
-				width: 64px;
-				height: 64px;
-			}
-		`
-
-		shadow.appendChild(style)
-		shadow.appendChild(wrapper)
 	}
 	connectedCallback() {
 		if (this.hasAttribute("data-bot")) updateCard(this)

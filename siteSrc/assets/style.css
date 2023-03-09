@@ -185,3 +185,22 @@ canvas {
 .dialog input:invalid, .dialog input:out-of-range {
 	box-shadow: 0 0 6px 2px #F00;
 }
+
+/* Bot cards */
+.botcard {
+	padding: 15px;
+	border-radius: 5px;
+	background-color: #DDD;
+	display: flex;
+	align-items: center;
+}
+.botcard a {
+	font-size: 25px;
+	text-decoration: none;
+}
+.botcard img {
+	border-radius: 50%;
+	margin-right: 10px;
+	width: 64px;
+	height: 64px;
+}
