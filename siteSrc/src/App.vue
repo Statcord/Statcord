@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import navbar from './components/headerFooter/nav.vue'
+import navbar from './components/nav.vue'
 
 export default {
   name: 'App',
