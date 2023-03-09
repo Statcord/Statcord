@@ -30,7 +30,6 @@
     },
     methods: {
       close() {
-        console.log(this.$props)
         this.$emit('close');
       },
     },

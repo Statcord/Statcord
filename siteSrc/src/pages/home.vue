@@ -11,20 +11,19 @@
     </p>
     <router-link to="/me">Add your bot now!</router-link>
     <h2>All currently tracked, public bots</h2>
-    <div>
-      <div v-for="bot in publicBotList">
-        <span>{{ bot.username }}</span>
-        <span>{{bot.botid}}</span>
-        <img :src="'https://cdn.discordapp.com/avatars/'+bot.botid+'/'+bot.avatar+'.png'" alt="">
-      </div>
 
-    </div>
+    <botlist :bots="publicBotList"></botlist>
   </main>
 </template>
 
 <script>
+import botlist from '@/components/botlist.vue'
+
 export default {
   name: 'home',
+  components: {
+    botlist
+  },
   data() {
     return {
       publicBotList: []

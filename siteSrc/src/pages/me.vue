@@ -3,13 +3,7 @@
     <br>
     <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons right">add</i>Add your bot</div>
     <h1>Your bots</h1>
-    <div>
-      <div v-for="bot in botList">
-        <span>{{ bot.username }}</span>
-        <span>{{bot.botid}}</span>
-        <img :src="'https://cdn.discordapp.com/avatars/'+bot.botid+'/'+bot.avatar+'.png'" alt="">
-      </div>
-    </div>
+    <botlist :bots="botList"></botlist>
   </main>
 
   <modal v-show="isAddModalVisible" header="Add your bot" @close="closeAddModal">
@@ -23,15 +17,17 @@
 
 <script>
 import modal from '../components/modal.vue';
+import botlist from '@/components/botlist.vue'
 
 export default {
   name: 'me',
   components: {
     modal,
+    botlist
   },
   data() {
     return {
-      botList:[],
+      botList: [],
       isAddModalVisible: false
     };
   },
