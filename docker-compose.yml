@@ -25,3 +25,10 @@ services:
     volumes:
       - cacheData:/data
     container_name: Cache
+    
+  nginx:
+    restart: unless-stopped
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - 80:80
