@@ -89,8 +89,6 @@ export default {
                 headers: {'Content-Type': 'application/json'}
             }).catch(err => console.error);
             if (ajaxdata.status === 201) {
-                M.toast({html: 'Bot has been deleted'});
-                this.deleteModelVisible = false;
                 return window.location.href = `/me`
             }
         }
