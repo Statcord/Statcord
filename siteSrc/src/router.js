@@ -6,8 +6,8 @@ import privacy from './pages/privacy.vue'
 import login from './pages/authentication/login.vue'
 import logout from './pages/authentication/logout.vue'
 import me from './pages/me.vue'
-import botPage from './pages/bot.vue'
-import manageBot from './pages/manageBot.vue'
+import botPage from './pages/bots/bot.vue'
+import manageBot from './pages/bots/manageBot.vue'
 
 const routes = [
     { path: '/',component: home},
