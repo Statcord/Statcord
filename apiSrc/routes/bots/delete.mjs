@@ -14,20 +14,20 @@ export const route = {
             401: {
                 type: 'object',
                 properties: {
-                    message: { type: 'string', default: 'You need to be logged in!' }
+                    message: { type: 'string' }
                 }
             },
             404: {
                 type: 'object',
                 properties: {
-                    message: { type: 'string', default: 'The bot with the specified ID does not exist!' }
+                    message: { type: 'string' }
                 }
             },
 			201: {
 				type: 'object',
 				properties: {
-					success: { type: 'boolean', default: true },
-					message: { type: 'string', default: 'The bot has been deleted' }
+					success: { type: 'boolean' },
+					message: { type: 'string'}
 				}
 			}
 		}
@@ -36,8 +36,9 @@ export const route = {
 		if (!request.session.discordAccessToken) return reply.code(401).send({error: true, message: "You need to be logged in to add a bot!"});
 
 		if (!request.body.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
-		const botExisits = await db`SELECT botid from bots WHERE botid = ${request.body.id}`.catch(err=>{})
+		const botExisits = await db`SELECT ownerid from bots WHERE botid = ${request.body.id}`.catch(err=>{})
 		if (!botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID does not exist!"})
+		if (botExisits[0].ownerid !== request.session.discordUserInfo.id)return reply.status(401).send({message: "You do not have permission to delete this bot"})
 
 		db`DELETE FROM bots WHERE botid = ${request.body.id}`.catch(err=>{})
 
