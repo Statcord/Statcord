@@ -42,7 +42,6 @@ export const route = {
 		if (botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
 
 		const bot = await getBot(request.body.id)
-		console.log(bot)
 
 		db`INSERT INTO owners(username, ownerid) VALUES (${request.session.discordUserInfo.username}, ${request.session.discordUserInfo.id})`.catch(err=>{})
 		db`INSERT INTO bots(botid, username, avatar, token, ownerid) VALUES (${request.body.id}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${request.session.discordUserInfo.id})`.catch(err=>{})
