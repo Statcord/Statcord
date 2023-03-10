@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import botlist from '@/components/botlist.vue'
+import botlist from '../components/botlist.vue'
 
 export default {
   name: 'home',

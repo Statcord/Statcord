@@ -17,15 +17,6 @@ SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
-CREATE TABLE public.botlist (
-    botid character varying NOT NULL,
-    ownerid character varying NOT NULL
-);
-ALTER TABLE public.botlist OWNER TO disstat;
-ALTER TABLE ONLY public.botlist
-    ADD CONSTRAINT botlist_pkey PRIMARY KEY (botid, ownerid);
-
-
 CREATE TABLE public.owners (
     ownerid character varying NOT NULL,
     username character varying NOT NULL
@@ -39,7 +30,8 @@ CREATE TABLE public.bots (
     username character varying NOT NULL,
     avatar character varying NOT NULL,
     token character varying NOT NULL,
-    public boolean DEFAULT true 
+    public boolean DEFAULT true,
+    ownerid character varying NOT NULL
 );
 ALTER TABLE public.bots OWNER TO disstat;
 ALTER TABLE ONLY public.bots

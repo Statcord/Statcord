@@ -17,7 +17,7 @@
 
 <script>
 import modal from '../components/modal.vue';
-import botlist from '@/components/botlist.vue'
+import botlist from '../components/botlist.vue'
 
 export default {
   name: 'me',
