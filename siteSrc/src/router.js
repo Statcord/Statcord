@@ -9,6 +9,8 @@ import me from './pages/me.vue'
 import botPage from './pages/bots/bot.vue'
 import manageBot from './pages/bots/manageBot.vue'
 
+import eroor404 from './pages/errors/404.vue'
+
 const routes = [
     { path: '/',component: home},
     { path: '/support', component: support},
@@ -18,7 +20,7 @@ const routes = [
     { path: '/me', component: me},
     { path: '/bots/:botid', component: botPage},
     { path: '/bots/:botid/manage', component: manageBot},
-    { path: "/:pathMatch(.*)", component: home},
+    { path: "/:pathMatch(.*)", component: eroor404},
 ]
 const router = createRouter({
     history: createWebHistory(),
