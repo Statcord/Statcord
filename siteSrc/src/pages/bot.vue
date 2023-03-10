@@ -8,6 +8,8 @@
                 </div>
 
                 <h5>Made by: {{ owner }}</h5>
+                
+                <router-link v-if="isOwner" :to="'/bots/'+botid+'/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
             </div>
         </div>
 
@@ -26,7 +28,8 @@ export default {
             botName: "",
             avatar: "",
             owner: "",
-            public: false
+            public: false,
+            isOwner: false
         }
     },
     async mounted() {
@@ -41,6 +44,7 @@ export default {
         this.avatar = botJson.avatar
         this.owner = botJson.ownername
         this.public = botJson.public
+        this.isOwner = botJson.isOwner
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <main>
     <br>
-    <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons right">add</i>Add your bot</div>
+    <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons left">add</i>Add your bot</div>
     <h1>Your bots</h1>
     <botlist :bots="botList"></botlist>
   </main>
