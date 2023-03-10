@@ -38,7 +38,6 @@ export default {
         body: JSON.stringify({id:this.$refs.botid.value}),
         headers: {'Content-Type': 'application/json'}
       }).catch(err => console.error);
-      console.log(ajaxdata)
       if (ajaxdata.status === 201) return window.location.href = `/bots/${this.$refs.botid.value}`;
       else alert("error adding bot")
     },

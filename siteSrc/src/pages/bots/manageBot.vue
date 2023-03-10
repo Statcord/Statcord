@@ -80,10 +80,19 @@ export default {
 
 
         sync() {
-            alert("bot is syncing")
+            M.toast({html: 'bot is syncing'})
         },
-        confirmedDelete(){
-            alert("bot confirmedDelete")
+        async confirmedDelete(){
+            const ajaxdata = await fetch(`/api/bots/delete`, {
+                method: 'delete',
+                body: JSON.stringify({id:this.botid}),
+                headers: {'Content-Type': 'application/json'}
+            }).catch(err => console.error);
+            if (ajaxdata.status === 201) {
+                M.toast({html: 'Bot has been deleted'});
+                this.deleteModelVisible = false;
+                return window.location.href = `/me`
+            }
         }
     }
 }
