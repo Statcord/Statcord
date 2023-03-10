@@ -24,7 +24,8 @@ export const route = {
 					avatar: { type: 'string' },
 					ownername: { type: 'string' },
 					ownerid: { type: 'string' },
-					public: {type: "boolean"}
+					public: {type: "boolean"},
+					isOwner: {type: "boolean"}
 				}
             }
         }
@@ -33,7 +34,7 @@ export const route = {
         const bot = await db`SELECT bots.username, avatar, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${request.params.id}`.catch(err=>{})
 
         if (!bot[0]) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
-        if (bot[0].public && request.session.discordUserInfo && bot[0].ownerid !== request.session.discordUserInfo.id) return reply.status(401).send({message: "You do not have permission to see this bot"})
+        if (!bot[0].public && request.session.discordUserInfo && bot[0].ownerid !== request.session.discordUserInfo.id) return reply.status(401).send({message: "You do not have permission to see this bot"})
 
 		reply.send({...bot[0], isOwner: bot[0].ownerid === request.session.discordUserInfo?.id})
 	}
