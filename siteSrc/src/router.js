@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import home from './pages/home.vue'
 import support from './pages/support.vue'
+import docs from './pages/docs.vue'
 import privacy from './pages/privacy.vue'
 import login from './pages/authentication/login.vue'
 import logout from './pages/authentication/logout.vue'
@@ -18,6 +19,7 @@ const routes = [
     { path: '/login', component: login},
     { path: '/logout', component: logout},
     { path: '/me', component: me},
+    { path: '/docs', component: docs},
     { path: '/bots/:botid', component: botPage},
     { path: '/bots/:botid/manage', component: manageBot},
     { path: "/:pathMatch(.*)", component: eroor404},

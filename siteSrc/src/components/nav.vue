@@ -17,6 +17,7 @@
             </a>
             <ul class="left hide-on-med-and-down">
                 <li><router-link to="/">Home</router-link></li>
+                <li><router-link to="/docs">Docs</router-link></li>
                 <li><router-link to="/support">Support</router-link></li>
                 <li><router-link to="/privacy">Privacy</router-link></li>
             </ul>
