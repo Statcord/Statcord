@@ -21,7 +21,7 @@ export const route = {
             409: {
                 type: 'object',
                 properties: {
-                    message: { type: 'string', default: 'The bot with the specified ID already exists!' }
+                    message: { type: 'string', default: 'The bot with the specified ID does not exist!' }
                 }
             },
 			201: {
