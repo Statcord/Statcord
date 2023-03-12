@@ -53,8 +53,10 @@ export default {
 
         const rawBotFetch = await fetch(`/api/bots/${this.botid}`)
         if (rawBotFetch.status === 401) return window.location.href = `/`;
-        if (!rawBotFetch.ok) return alert("error")
-        // const botJson = await rawBotFetch.json()
+        if (!rawBotFetch.ok) return window.location.href = `/`;
+
+        const botJson = await rawBotFetch.json()
+        if (!botJson.isOwner) return window.location.href = `/`;
 
         // this.botName = botJson.username
         // this.avatar = botJson.avatar
