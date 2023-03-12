@@ -7,6 +7,8 @@ volumes:
     external: true
   dbData:
     external: true
+  influxdbData:
+    external: true
     
 services:
   api:
@@ -62,3 +64,15 @@ services:
     ports:
       - 8080:8080
     container_name: swagger
+
+  influxdb:
+    image: influxdb:1.8.10-alpine
+    ports:
+      - '8086:8086'
+    container_name: influxdb
+    volumes:
+      - influxdbData:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
