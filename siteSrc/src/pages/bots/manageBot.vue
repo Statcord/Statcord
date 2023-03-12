@@ -14,11 +14,11 @@
     </div>
 
     <modal v-show="APIkeyModelVisible" header="API key" @close="closeAPIkeyModel">
-        <label for="botid">Enter the Bot ID</label>
-        <input type="text" ref="botid" pattern="[0-9]{17,21}" placeholder="685166801394335819">
-        <br>
-        <br>
-        <button @click="submitBot" type="button" id="addbotbutton">Add bot</button>
+        <div class="waves-effect waves-light btn" @click="reGenKey">Regenerate API key<i class="material-icons left">autorenew</i></div>
+        <div v-if="apiKey">
+            <div class="waves-effect waves-light btn" @click="copyKey">copy<i class="material-icons left">content_copy</i></div>
+            <input type="text" disabled :value="apiKey">
+        </div>
     </modal>
 
     <modal v-show="deleteModelVisible" header="Are you sure?" @close="closeDeleteModel">
@@ -38,14 +38,9 @@ export default {
     data() {
         return {
             botid: "",
-
             APIkeyModelVisible: false,
-            deleteModelVisible: false
-            // botName: "",
-            // avatar: "",
-            // owner: "",
-            // public: false,
-            // isOwner: false
+            deleteModelVisible: false,
+            apiKey: undefined
         }
     },
     async mounted() {
@@ -57,12 +52,6 @@ export default {
 
         const botJson = await rawBotFetch.json()
         if (!botJson.isOwner) return window.location.href = `/`;
-
-        // this.botName = botJson.username
-        // this.avatar = botJson.avatar
-        // this.owner = botJson.ownername
-        // this.public = botJson.public
-        // this.isOwner = botJson.isOwner
     },
     methods: {
         showAPIkeyModel() {
@@ -77,10 +66,20 @@ export default {
         closeDeleteModel() {
             this.deleteModelVisible = false;
         },
-
-
-
-
+        async reGenKey(){
+            const ajaxdata = await fetch(`/api/bots/genKey`, {
+                method: 'post',
+                body: JSON.stringify({id:this.botid}),
+                headers: {'Content-Type': 'application/json'}
+            }).catch(err => console.error);
+            if (ajaxdata.status === 201) {
+                const keyJson = await ajaxdata.json()
+                this.apiKey = keyJson.key
+            }
+        },
+        copyKey(){
+            navigator.clipboard.writeText(this.apiKey);
+        },
         async sync() {
             M.toast({html: 'bot is syncing'})
             const ajaxdata = await fetch(`/api/bots/sync`, {
