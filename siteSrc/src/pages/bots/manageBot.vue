@@ -79,8 +79,16 @@ export default {
 
 
 
-        sync() {
+        async sync() {
             M.toast({html: 'bot is syncing'})
+            const ajaxdata = await fetch(`/api/bots/sync`, {
+                method: 'post',
+                body: JSON.stringify({id:this.botid}),
+                headers: {'Content-Type': 'application/json'}
+            }).catch(err => console.error);
+            if (ajaxdata.status === 201) {
+                M.toast({html: 'bot has synced'})
+            }
         },
         async confirmedDelete(){
             const ajaxdata = await fetch(`/api/bots/delete`, {
