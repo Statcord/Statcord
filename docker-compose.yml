@@ -60,7 +60,7 @@ services:
     image: swaggerapi/swagger-ui
     environment:
     - BASE_URL=/docs
-    #   - API_URL: /kraken-api/
+    - API_URL=/api/docs/json
     ports:
       - 8080:8080
     container_name: swagger

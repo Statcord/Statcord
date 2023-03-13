@@ -9,7 +9,8 @@ import {route as mybots } from './bots/mybots.mjs'
 import {route as getbot} from './bots/getbot.mjs'
 import {route as deleteBot} from './bots/delete.mjs'
 import {route as syncBot} from './bots/sync.mjs'
-import { route as  genKey} from './bots/genKey.mjs'
+import {route as  genKey} from './bots/genKey.mjs'
+import { route as docsJson } from './docs/json.mjs'
 
 export default [
     oauthCallback,
@@ -22,5 +23,6 @@ export default [
     getbot,
     deleteBot,
     syncBot,
-    genKey
+    genKey,
+    docsJson
 ]
