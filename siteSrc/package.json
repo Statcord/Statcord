@@ -8,9 +8,8 @@
   },
   "dependencies": {
     "@vueuse/head": "^0.9.8",
-    "chart.js": "^3.9.1",
+    "chart.js": "^4.2.1",
     "vue": "^3.2.41",
-    "vue-chartjs": "^4.1.2",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
