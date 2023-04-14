@@ -8,20 +8,32 @@
                 </div>
 
                 <h5>Made by: {{ owner }}</h5>
-                
-                <router-link v-if="isOwner" :to="'/bots/'+botid+'/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
+
+                <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
             </div>
         </div>
 
         <div class="col s9">
             <span>content</span>
+
+            <div class="row">
+                <div v-for="stat in stats" class="col s12 l4">
+                    <h1>{{ stat.name }}</h1>
+                    <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
+                </div>
+            </div>
         </div>
     </div>
 </template>
   
 <script>
+import lineChart from '../../components/lineChart.vue'
+
 export default {
-    name: 'server',
+    name: 'bot',
+    components: {
+        lineChart
+    },
     data() {
         return {
             botid: "",
@@ -29,7 +41,9 @@ export default {
             avatar: "",
             owner: "",
             public: false,
-            isOwner: false
+            isOwner: false,
+            stats: [],
+            customStats: [],
         }
     },
     async mounted() {
@@ -45,6 +59,13 @@ export default {
         this.owner = botJson.ownername
         this.public = botJson.public
         this.isOwner = botJson.isOwner
+
+        const rawDefualtStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}`)
+        if (!rawDefualtStatsFetch.ok) return alert("error")
+        this.stats = await rawDefualtStatsFetch.json()
+   
+        this.customStats = [
+        ]
     }
 }
 </script>

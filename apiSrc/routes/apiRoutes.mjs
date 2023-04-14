@@ -5,12 +5,16 @@ import {route as oauthUser} from './oauth/user.mjs'
 
 import {route as botAdd} from './bots/add.mjs'
 import {route as botList} from './bots/list.mjs'
-import {route as mybots } from './bots/mybots.mjs'
+import {route as mybots} from './bots/mybots.mjs'
 import {route as getbot} from './bots/getbot.mjs'
 import {route as deleteBot} from './bots/delete.mjs'
 import {route as syncBot} from './bots/sync.mjs'
 import {route as  genKey} from './bots/genKey.mjs'
-import { route as docsJson } from './docs/json.mjs'
+
+import {route as docsJson} from './docs/json.mjs'
+
+// import {route as postBotStats} from './stats/post.mjs'
+import {route as getDefault} from './stats/post.mjs'
 
 export default [
     oauthCallback,
@@ -24,5 +28,7 @@ export default [
     deleteBot,
     syncBot,
     genKey,
-    docsJson
+    docsJson,
+    // postBotStats,
+    getDefault
 ]
