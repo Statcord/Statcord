@@ -62,8 +62,13 @@ export default {
 
         const rawDefualtStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}`)
         if (!rawDefualtStatsFetch.ok) return alert("error")
-        this.stats = await rawDefualtStatsFetch.json()
-   
+        const defaultStatsJson = await rawDefualtStatsFetch.json()
+
+        this.stats = defaultStatsJson.data.map(item=>{
+            item.data.labels=defaultStatsJson.labels
+            return item
+        })
+
         this.customStats = [
         ]
     }

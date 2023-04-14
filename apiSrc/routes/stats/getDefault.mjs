@@ -41,100 +41,114 @@ export const route = {
 				{
 					name: "guilds",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				},
 				{
 					name: "users",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				},
 				{
 					name: "members",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				},
 				{
 					name: "shards",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				},
 				{
 					name: "topCommands(pie chart)",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				},
 				{
 					name: "ram",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				},
 				{
 					name: "cpu",
 					type: "line",
-					data: [
-						{
-							label: "This week",
-							data: [12, 19, 10, 17, 6, 3, 7],
-							backgroundColor: "rgba(224, 248, 255, 0.4)",
-							borderColor: "#5cddff",
-							lineTension: 0,
-							pointBackgroundColor: "#5cddff",
-						}
-					]
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [12, 19, 10, 17, 6, 3, 7],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
 				}
 			]
 		})
