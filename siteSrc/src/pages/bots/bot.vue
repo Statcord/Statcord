@@ -14,13 +14,14 @@
         </div>
 
         <div class="col s9">
-            <span>content</span>
-
-            <div class="row">
+            <div v-if="stats.length>0" class="row">
                 <div v-for="stat in stats" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
                 </div>
+            </div>
+            <div v-else>
+                <span>no data</span>
             </div>
         </div>
     </div>
@@ -64,8 +65,37 @@ export default {
         if (!rawDefualtStatsFetch.ok) return alert("error")
         const defaultStatsJson = await rawDefualtStatsFetch.json()
 
-        this.stats = defaultStatsJson.data.map(item=>{
-            item.data.labels=defaultStatsJson.labels
+        const data = []
+		const labels = []
+		defaultStatsJson.map(row=>{
+			labels.push(new Date(row.time).toLocaleString())
+            const keys = Object.keys(row)
+            keys.shift()
+			keys.map(key=>{
+				const idkIndex = data.findIndex((a)=>a.name===key)
+				if (idkIndex=== -1) data.push({
+					name: key,
+					type: "line",
+					data: {
+						datasets: [
+							{
+								label: "This week",
+								data: [row[key]],
+								backgroundColor: "rgba(224, 248, 255, 0.4)",
+								borderColor: "#5cddff",
+								lineTension: 0,
+								pointBackgroundColor: "#5cddff",
+							}
+						]
+					}
+				})
+				else data[idkIndex].data.datasets[0].data.push(row[key])
+			})
+		})
+
+        this.stats = data.map(item=>{
+            item.data.labels=labels
+            
             return item
         })
 
