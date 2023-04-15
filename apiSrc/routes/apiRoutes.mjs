@@ -13,8 +13,8 @@ import {route as  genKey} from './bots/genKey.mjs'
 
 import {route as docsJson} from './docs/json.mjs'
 
-// import {route as postBotStats} from './stats/post.mjs'
-import {route as getDefault} from './stats/post.mjs'
+import {route as postBotStats} from './stats/post.mjs'
+import {route as getDefault} from './stats/getDefault.mjs'
 
 export default [
     oauthCallback,
@@ -29,6 +29,6 @@ export default [
     syncBot,
     genKey,
     docsJson,
-    // postBotStats,
+    postBotStats,
     getDefault
 ]

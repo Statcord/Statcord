@@ -3,8 +3,8 @@
     "@fastify/cookie": "^8.3.0",
     "@fastify/session": "^10.1.1",
     "@fastify/swagger": "^8.3.1",
-    "@influxdata/influxdb-client": "^1.33.2",
     "fastify": "^4.14.0",
+    "influx": "^5.9.3",
     "ioredis": "^5.3.1",
     "postgres": "^3.3.3"
   }

@@ -17,3 +17,11 @@ export const pgConfig = {
 	"password": "AQwrMb4WzngykR9v",
 	"idle_timeout": 1
 }
+
+export const influxConfig = {
+    host: "influxdb",
+    database: "db0",
+    username: "disstat",
+    password: "6#Le0zTjR0Q2",
+    timeout: 10 * 1000  
+}

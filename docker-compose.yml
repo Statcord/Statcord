@@ -74,5 +74,7 @@ services:
       - influxdbData:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=db0
+      - INFLUXDB_USERNAME=disstat
+      - 'INFLUXDB_PASSWORD=6#Le0zTjR0Q2'
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
       - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
