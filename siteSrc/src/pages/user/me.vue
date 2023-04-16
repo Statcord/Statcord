@@ -2,6 +2,7 @@
   <main>
     <br>
     <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons left">add</i>Add your bot</div>
+    <router-link class="waves-effect waves-light btn-large" to="/me/settings"><i class="material-icons left">settings</i>User Settings</router-link>
     <h1>Your bots</h1>
     <botlist :bots="botList"></botlist>
   </main>
@@ -16,8 +17,8 @@
 </template>
 
 <script>
-import modal from '../components/modal.vue';
-import botlist from '../components/botlist.vue'
+import modal from '../../components/modal.vue';
+import botlist from '../../components/botlist.vue'
 
 export default {
   name: 'me',
