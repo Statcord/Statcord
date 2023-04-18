@@ -4,6 +4,10 @@ import formatInfluxResponse from '../../structures/formatInfluxResponse.mjs'
 export const route = {
 	method: 'GET',
 	url: '/api/stats/getDefault/:id',
+	querystring: {
+		start: { type: 'number' },
+		end: { type: 'number' }
+	},
 	schema: {
         response: {
 			404: {
@@ -39,8 +43,15 @@ export const route = {
         }
 	},
 	handler: async (request, reply) => {
-		const statsData = await influx.query(`SELECT commandsRun, cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid ORDER BY time DESC`, {
-			placeholders: {
+		const statsData = await influx.query(
+			(request.query.star && request.query.end) ? 
+			`SELECT commandsRun, cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid AND time >= $startDate AND time <= $endDate ORDER BY time DESC` : 
+			`SELECT commandsRun, cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid ORDER BY time DESC`, {
+			placeholders:(request.query.star && request.query.end) ? {
+				botid: request.params.id,
+				startDate: new Date(request.query.start).toISOString(),
+				endDate: new Date(request.query.end).toISOString()
+			} : {
 				botid: request.params.id
 			}
 		})
