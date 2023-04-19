@@ -71,16 +71,16 @@ export default {
 
         M.FormSelect.init(this.$refs.allTimeOrDateRange);
         this.getData()
-        // const rawBotFetch = await fetch(`/api/bots/${ this.botid}`)
-        // if (rawBotFetch.status === 401) return window.location.href = `/`;
-        // if (!rawBotFetch.ok) return alert("error")
-        // const botJson = await rawBotFetch.json()
+        const rawBotFetch = await fetch(`/api/bots/${ this.botid}`)
+        if (rawBotFetch.status === 401) return window.location.href = `/`;
+        if (!rawBotFetch.ok) return alert("error")
+        const botJson = await rawBotFetch.json()
 
-        // this.botName = botJson.username
-        // this.avatar = botJson.avatar
-        // this.owner = botJson.ownername
-        // this.public = botJson.public
-        // this.isOwner = botJson.isOwner
+        this.botName = botJson.username
+        this.avatar = botJson.avatar
+        this.owner = botJson.ownername
+        this.public = botJson.public
+        this.isOwner = botJson.isOwner
     },
     methods:{
         dateOrAllTimeChanged(event){
