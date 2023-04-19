@@ -16,29 +16,37 @@ export default new InfluxDB({
                 totalRam: FieldType.FLOAT,
                 cpuUsage: FieldType.FLOAT,
                 members: FieldType.INTEGER,
-                // topCommands: {
-                //     type: 'array',
-                //     items: {
-                //         type: 'object',
-                //         properties: {
-                //             name: FieldType.STRING,
-                //             count: FieldType.INTEGER
-                //         }
-                //     }
-                // },
-                // customCharts: {
-                // 	type: 'array',
-                // 	items: {
-                // 		type: 'object',
-                // 		properties: {
-                // 			count: { type: 'number' FieldType.FLOAT/FieldType.INTEGER}
-                // 		}
-                // 	}
-                // }
             },
             tags: [
                 'botid'
             ]
-        }
+        },
+        {
+            measurement: 'topCommands',
+            fields: {
+                name: FieldType.STRING,
+                count: FieldType.INTEGER
+            },
+            tags: [
+                'botid'
+            ]
+        },
+        // {
+        //     measurement: 'customCharts',
+        //     fields: {
+        //         // customCharts: {
+        //         // 	type: 'array',
+        //         // 	items: {
+        //         // 		type: 'object',
+        //         // 		properties: {
+        //         // 			count: { type: 'number' FieldType.FLOAT/FieldType.INTEGER}
+        //         // 		}
+        //         // 	}
+        //         // }
+        //     },
+        //     tags: [
+        //         'botid'
+        //     ]
+        // }
     ]
 })
