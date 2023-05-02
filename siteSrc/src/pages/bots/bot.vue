@@ -31,7 +31,7 @@
 
         <div class="col s9">
             <div v-if="stats.length>0" class="row">
-                <div v-for="stat in stats" class="col s12 l4">
+                <div v-for="stat in stats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
                 </div>
@@ -45,6 +45,7 @@
   
 <script>
 import lineChart from '../../components/lineChart.vue'
+import { set } from '@vueuse/shared'
 
 export default {
     name: 'bot',
@@ -132,9 +133,10 @@ export default {
             })
 
             this.stats = data.map(item=>{
+                item.id = new Date().getTime()
                 item.data.labels=labels
                 
-                return item
+                set(this.stats, inex, item)
             })
 
             this.customStats = [
