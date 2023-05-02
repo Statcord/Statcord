@@ -11,7 +11,6 @@ export default new InfluxDB({
                 guildCount: FieldType.INTEGER,
                 shardCount: FieldType.INTEGER,
                 userCount: FieldType.INTEGER,
-                commandsRun: FieldType.INTEGER,
                 ramUsage: FieldType.FLOAT,
                 totalRam: FieldType.FLOAT,
                 cpuUsage: FieldType.FLOAT,

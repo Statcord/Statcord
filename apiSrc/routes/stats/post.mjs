@@ -13,7 +13,6 @@ export const route = {
 				guildCount: { type: 'number', default: 0 },
 				shardCount: { type: 'number', default: 0 },
 				userCount: { type: 'number', default: 0 },
-				commandsRun: { type: 'number', default: 0 },
 				ramUsage: { type: 'number', default: 0.0 },
 				totalRam: { type: 'number', default: 0.0 },
 				cpuUsage: { type: 'number', default: 0.0 },
