@@ -132,11 +132,11 @@ export default {
             	})
             })
 
-            this.stats = data.map(item=>{
+            data.map((item, index)=>{
                 item.id = new Date().getTime()
                 item.data.labels=labels
                 
-                set(this.stats, inex, item)
+                set(this.stats, index, item)
             })
 
             this.customStats = [
