@@ -6,14 +6,15 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
-  "dependencies": {
-    "@vueuse/head": "^0.9.8",
-    "chart.js": "^4.2.1",
-    "vue": "^3.2.41",
-    "vue-router": "^4.1.6"
-  },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.8",
     "@vue/cli-service": "~5.0.8"
+  },
+  "dependencies": {
+    "@vueuse/head": "^1.1.26",
+    "@vueuse/shared": "^10.1.2",
+    "chart.js": "^4.3.0",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   }
 }
