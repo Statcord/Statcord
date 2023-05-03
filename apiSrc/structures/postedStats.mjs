@@ -9,7 +9,6 @@ export default class {
             guildCount: postBody.guildCount,
             shardCount: postBody.shardCount,
             userCount: postBody.userCount,
-            commandsRun: postBody.commandsRun,
             ramUsage: postBody.ramUsage,
             totalRam: postBody.totalRam,
             cpuUsage: postBody.cpuUsage,
@@ -23,6 +22,12 @@ export default class {
         return this.#customCharts
     }
     getTopCommands(){
-        return this.#topCommands
+        const test = this.#topCommands.map(item=>{
+			const obj = {}
+			obj[item.name] = item.count
+			return obj
+		})
+        
+        return Object.assign({}, ...test)
     }
 }

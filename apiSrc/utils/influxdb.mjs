@@ -20,16 +20,16 @@ export default new InfluxDB({
                 'botid'
             ]
         },
-        {
-            measurement: 'topCommands',
-            fields: {
-                name: FieldType.STRING,
-                count: FieldType.INTEGER
-            },
-            tags: [
-                'botid'
-            ]
-        },
+        // {
+        //     measurement: 'topCommands',
+        //     fields: {
+        //     //     name: FieldType.STRING,
+        //     //     count: FieldType.INTEGER
+        //     },
+        //     tags: [
+        //         'botid'
+        //     ]
+        // },
         // {
         //     measurement: 'customCharts',
         //     fields: {

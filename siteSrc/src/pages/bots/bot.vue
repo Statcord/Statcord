@@ -35,6 +35,11 @@
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
                 </div>
+
+                <div v-for="stat in commandStats" :key="stat.id" class="col s12 l4">
+                    <h1>{{ stat.name }}</h1>
+                    <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
+                </div>
             </div>
             <div v-else>
                 <span>no data</span>
@@ -61,6 +66,7 @@ export default {
             public: false,
             isOwner: false,
             stats: [],
+            commandStats:[],
             customStats: [],
             showDateRange: false,
             startDate: null,
@@ -106,7 +112,7 @@ export default {
 
             const data = []
             const labels = []
-            defaultStatsJson.map(row=>{
+            defaultStatsJson.mainStats.map(row=>{
             	labels.push(new Date(row.time).toLocaleString())
                 const keys = Object.keys(row)
                 keys.shift()
@@ -120,10 +126,6 @@ export default {
             					{
             						label: "This week",
             						data: [row[key]],
-            						backgroundColor: "rgba(224, 248, 255, 0.4)",
-            						borderColor: "#5cddff",
-            						lineTension: 0,
-            						pointBackgroundColor: "#5cddff",
             					}
             				]
             			}
@@ -138,6 +140,46 @@ export default {
                 
                 set(this.stats, index, item)
             })
+
+            const holder = {};
+            defaultStatsJson.commands.map((d)=> {
+                Object.keys(d).map(key=>{
+                    if (key === "time") return;
+                    if (holder[key]) holder[key]+= d[key]
+                    else holder[key] = d[key]
+                })
+            });
+
+            this.commandStats = [
+                {
+                    name: "Command usage over time",
+                    type: "line",
+                    data: {
+                        labels: defaultStatsJson.commands.flatMap(i=>i.time),
+                        datasets: [
+                            {
+                                label: "This week",
+                                data: defaultStatsJson.commands.flatMap(i=>{
+                                    delete i.time;
+                                    return Object.values(i).reduce((a,b) => a + b, 0)
+                                })
+                            }
+                        ]
+                    }
+                },
+                {
+                    name: "Top commands",
+                    type: "pie",
+                    data: {
+                        labels: Object.keys(holder),
+                        datasets: [
+                            {
+                                data: Object.values(holder)
+                            }
+                        ]
+                    }
+                }
+            ]
 
             this.customStats = [
             ]
