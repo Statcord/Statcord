@@ -9,7 +9,7 @@
       <a href="https://statcord.com" target="_blank" rel="noopener"> Statcord</a>, which went offline recently and didn't
       receive any public updates in a long time.
     </p>
-    <router-link to="/me">Add your bot now!</router-link>
+    <router-link to="/login">Add your bot now!</router-link>
     <h2>All currently tracked, public bots</h2>
 
     <botlist :bots="publicBotList"></botlist>
@@ -31,6 +31,7 @@ export default {
   },
   async mounted() {
     const rawBots = await fetch("/api/bots")
+    if (!rawBots.ok) return;
     this.publicBotList = await rawBots.json()
   }
 }

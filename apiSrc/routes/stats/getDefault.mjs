@@ -1,4 +1,5 @@
 import influx from '../../utils/influxdb.mjs'
+import db from '../../utils/postgres.mjs'
 import formatInfluxResponse from '../../structures/formatInfluxResponse.mjs'
 
 export const route = {
@@ -51,6 +52,10 @@ export const route = {
         }
 	},
 	handler: async (request, reply) => {
+		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${request.params.id}`.catch(err=>{})
+        if (!bot[0]) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
+        if (!bot[0].public && bot[0].ownerid !== request.session.discordUserInfo?.id) return reply.status(401).send({message: "You do not have permission to see this bot"})
+
 		const mainStatsData = await influx.query(
 			(request.query.start && request.query.end) ? 
 			`SELECT cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` : 
@@ -79,8 +84,6 @@ export const route = {
 
 		const formatedInfluxResponse = new formatInfluxResponse(mainStatsData).getResponse()
 		const formatedCommandResponse = new formatInfluxResponse(commandStatsData).getResponse()
-
-		console.log(commandStatsData)
 
 		if (!formatedInfluxResponse || !formatedCommandResponse) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
 

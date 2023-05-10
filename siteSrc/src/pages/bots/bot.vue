@@ -108,6 +108,7 @@ export default {
         },
         async getData(){
             const rawDefualtStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
+            if (!defaultStatsJson.ok) return
             const defaultStatsJson = await rawDefualtStatsFetch.json()
 
             const data = []
@@ -155,7 +156,7 @@ export default {
                     name: "Command usage over time",
                     type: "line",
                     data: {
-                        labels: defaultStatsJson.commands.flatMap(i=>i.time),
+                        labels: defaultStatsJson.commands.flatMap(i=>new Date(i.time).toLocaleString()),
                         datasets: [
                             {
                                 label: "This week",
