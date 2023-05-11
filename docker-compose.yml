@@ -3,14 +3,21 @@ version: "3"
 volumes:
   config:
     external: true
-  cache:
+  cacheData:
     external: true
-
+  dbData:
+    external: true
+  influxdbData:
+    external: true
+    
 services:
-  site:
+  api:
     restart: unless-stopped
-    build: ./site
-    container_name: site
+    build: ./apiSrc
+    container_name: api
+    depends_on:
+      - postgres
+      - cache
     volumes:
       - config:/config
     ports:
@@ -23,5 +30,51 @@ services:
       - '6379:6379'
     command: redis-server --loglevel warning
     volumes:
-      - cache:/data
+      - cacheData:/data
     container_name: Cache
+
+  postgres:
+      restart: unless-stopped
+      image: postgres:15.2-alpine
+      environment:
+        - POSTGRES_USER=disstat
+        - POSTGRES_PASSWORD=AQwrMb4WzngykR9v
+        - POSTGRES_DB=disstat
+      ports:
+        - 5436:5432
+      volumes:
+        - ./schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
+        - dbData:/var/lib/postgresql/data
+      container_name: DB
+      
+  site:
+    restart: unless-stopped
+    build: ./siteSrc
+    container_name: site
+    depends_on:
+      - api
+    ports:
+      - 80:80
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+    - BASE_URL=/docs
+    - API_URL=/api/docs/json
+    ports:
+      - 8080:8080
+    container_name: swagger
+
+  influxdb:
+    image: influxdb:1.8.10-alpine
+    ports:
+      - '8086:8086'
+    container_name: influxdb
+    volumes:
+      - influxdbData:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_USERNAME=disstat
+      - 'INFLUXDB_PASSWORD=6#Le0zTjR0Q2'
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
