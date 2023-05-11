@@ -111,6 +111,8 @@ export default {
             if (!defaultStatsJson.ok) return
             const defaultStatsJson = await rawDefualtStatsFetch.json()
 
+            const timeStamp = new Date().getTime()
+
             const data = []
             const labels = []
             defaultStatsJson.mainStats.map(row=>{
@@ -136,7 +138,7 @@ export default {
             })
 
             data.map((item, index)=>{
-                item.id = new Date().getTime()
+                item.id = timeStamp
                 item.data.labels=labels
                 
                 set(this.stats, index, item)
@@ -153,6 +155,7 @@ export default {
 
             this.commandStats = [
                 {
+                    id: timeStamp,
                     name: "Command usage over time",
                     type: "line",
                     data: {
@@ -169,6 +172,7 @@ export default {
                     }
                 },
                 {
+                    id: timeStamp,
                     name: "Top commands",
                     type: "pie",
                     data: {
