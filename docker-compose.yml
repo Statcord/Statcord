@@ -9,7 +9,7 @@ volumes:
     external: true
   influxdbData:
     external: true
-    
+
 services:
   api:
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
         - ./schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
         - dbData:/var/lib/postgresql/data
       container_name: DB
-      
+
   site:
     restart: unless-stopped
     build: ./siteSrc
