@@ -6,6 +6,7 @@ export const route = {
 	method: 'POST',
 	url: '/api/bots/add',
 	schema: {
+        hide: true,
         body: {
 			type: 'object',
 			properties: {

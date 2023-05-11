@@ -1,7 +1,8 @@
 export const route = {
     method: 'GET',
     url: '/api/discordOauth/user',
-    schema: {
+	schema: {
+        hide: true,
         response: {
             401: {
                 type: 'object',

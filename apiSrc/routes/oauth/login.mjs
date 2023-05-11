@@ -3,7 +3,8 @@ const { oauth2 } = await import(process.env.NODE_ENV === "production" ? '/config
 export const route = {
     method: 'GET',
     url: '/api/discordOauth/login',
-    schema: {
+	schema: {
+        hide: true,
         querystring: {
             redirect_to: { type: 'string' }
         },

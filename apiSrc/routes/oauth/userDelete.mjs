@@ -5,8 +5,8 @@ export const route = {
 	method: 'DELETE',
 	url: '/api/discordOauth/user/delete',
 	schema: {
-        body: {
-        },
+        hide: true,
+        body: {},
 		response: {
             401: {
                 type: 'object',
@@ -31,7 +31,7 @@ export const route = {
 	},
 	handler: async (request, reply) => {
 		if (!request.session.discordAccessToken) return reply.code(401).send({error: true, message: "You need to be logged in to add a bot!"});
-	
+
         const myBots = await db`SELECT botid FROM bots WHERE ownerid = ${request.session.discordUserInfo.id}`.catch(err=>{})
         myBots.map(bot => {
             db`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(err=>{})

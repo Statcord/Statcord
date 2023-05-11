@@ -23,5 +23,5 @@ export const influxConfig = {
     database: "db0",
     username: "disstat",
     password: "6#Le0zTjR0Q2",
-    timeout: 10 * 1000  
+    timeout: 10 * 1000
 }

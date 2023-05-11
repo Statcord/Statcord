@@ -2,8 +2,8 @@ export const route = {
 	method: 'GET',
 	url: '/api/discordOauth/logout',
 	schema: {
-		response: {
-		}
+        hide: true,
+		response: {}
 	},
 	handler: (request, reply) => {
 		if (request.session.discordAccessToken) {
