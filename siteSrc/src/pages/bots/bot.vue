@@ -113,7 +113,7 @@ export default {
             if (!rawDefualtStatsFetch.ok) return
             const defaultStatsJson = await rawDefualtStatsFetch.json()
 
-            const rawChartSettings = await fetch(`http://127.0.0.1:8090/api/stats/types/${this.botid}`)
+            const rawChartSettings = await fetch(`/api/stats/types/${this.botid}`)
             const chartSettings = await rawChartSettings.json()
 
             const timeStamp = new Date().getTime()
