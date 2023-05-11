@@ -1,35 +1,36 @@
 <template>
     <div class="row">
-        <div class="col s3">
-            <div class="container">
-                <div>
-                    <img class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.png'" alt="">
+        <div class="col s12 m2">
+            <div class="row">
+                <div class="col s6 m12">
+                    <img class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.png'" :alt="botName+'\'s icon'">
+                </div>
+                <div class="col s6 m12">
                     <h3>{{ botName }}</h3>
+                    <h5>Made by: {{ owner }}</h5>
                 </div>
+            </div>
 
-                <h5>Made by: {{ owner }}</h5>
+            <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
 
-                <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
+            <div>
+                <select ref="allTimeOrDateRange" :onchange="dateOrAllTimeChanged">
+                    <option value="allTime" selected>All Time</option>
+                    <option value="dateRange">Date Range</option>
+                </select>
+                <label>Select date range</label>
+            </div>
 
-                <div>
-                    <select ref="allTimeOrDateRange" :onchange="dateOrAllTimeChanged">
-                        <option value="allTime" selected>All Time</option>
-                        <option value="dateRange">Date Range</option>
-                    </select>
-                    <label>Select date range</label>
-                </div>
+            <div v-if="showDateRange">
+                <label>Start date:</label>
+                <input type="date" :onChange="updateStartDate">
 
-                <div v-if="showDateRange">
-                    <label>Start date:</label>
-                    <input type="date" :onChange="updateStartDate">
-
-                    <label>End date:</label>
-                    <input type="date" :onChange="updateEndDate">
-                </div>
+                <label>End date:</label>
+                <input type="date" :onChange="updateEndDate">
             </div>
         </div>
 
-        <div class="col s9">
+        <div class="col s12 m10">
             <div v-if="stats.length>0" class="row">
                 <div v-for="stat in stats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
