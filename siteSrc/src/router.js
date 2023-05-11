@@ -22,7 +22,7 @@ const routes = [
     { path: '/me/settings', component: userSettings},
     { path: '/bots/:botid', component: botPage},
     { path: '/bots/:botid/manage', component: manageBot},
-    { path: "/:pathMatch(.*)", component: error404},
+    { path: "/:pathMatch(.*)", component: error404}
 ]
 const router = createRouter({
     history: createWebHistory(),

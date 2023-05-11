@@ -7,21 +7,7 @@
 	"parserOptions": {
 		"sourceType": "module"
 	},
-	"plugins": ["html", "@html-eslint"],
-	"overrides": [
-		{
-			"files": ["*.html"],
-			"parser": "@html-eslint/parser",
-			"extends": ["plugin:@html-eslint/recommended"],
-			"rules": {
-				"@html-eslint/element-newline": 1
-			}
-		}
-	],
-	"settings": {
-		"html/html-extensions": [".html"]
-	},
-	"ignorePatterns": ["siteSrc/assets/instantclick.min.js", "site/utils/oauth2/*.mjs"],
+	"ignorePatterns": ["apiSrc/utils/oauth2/*.mjs"],
 	"rules": {
 		"array-bracket-spacing": 2,
 		"array-callback-return": 2,
@@ -119,22 +105,6 @@
 		"prefer-arrow-callback": 2,
 		"prefer-const": 2,
 		"use-isnan": 2,
-		"valid-typeof": 2,
-
-		"@html-eslint/require-meta-charset": 2,
-		"@html-eslint/require-button-type": 2,
-		"@html-eslint/no-restricted-attrs": 2,
-		"@html-eslint/require-meta-description": 2,
-		"@html-eslint/no-skip-heading-levels": 2,
-		"@html-eslint/require-frame-title": 2,
-		"@html-eslint/no-non-scalable-viewport": 2,
-		"@html-eslint/no-positive-tabindex": 2,
-		"@html-eslint/require-meta-viewport": 2,
-		"@html-eslint/no-abstract-roles": 2,
-		"@html-eslint/no-aria-hidden-body": 2,
-		"@html-eslint/no-accesskey-attrs": 2,
-		"@html-eslint/no-multiple-empty-lines": 2,
-		"@html-eslint/no-trailing-spaces": 2,
-		"@html-eslint/indent": [2, "tab"]
+		"valid-typeof": 2
 	}
 }
