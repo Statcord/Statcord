@@ -14,8 +14,8 @@ ALTER SCHEMA public OWNER TO disstat;
 COMMENT ON SCHEMA public IS 'standard public schema';
 
 SET default_tablespace = '';
-
 SET default_table_access_method = heap;
+
 
 CREATE TABLE public.owners (
     ownerid character varying NOT NULL,
@@ -24,6 +24,7 @@ CREATE TABLE public.owners (
 ALTER TABLE public.owners OWNER TO disstat;
 ALTER TABLE ONLY public.owners
     ADD CONSTRAINT owners_pkey PRIMARY KEY (ownerid);
+
 
 CREATE TABLE public.bots (
     botid character varying NOT NULL,
@@ -36,3 +37,16 @@ CREATE TABLE public.bots (
 ALTER TABLE public.bots OWNER TO disstat;
 ALTER TABLE ONLY public.bots
     ADD CONSTRAINT bots_pkey PRIMARY KEY (botid);
+
+
+CREATE TABLE public.chartsettings (
+    botid character varying,
+    chartid character varying,
+    enabled boolean DEFAULT true,
+    name character varying,
+    label character varying,
+    PRIMARY KEY (chartid, botid)
+);
+
+ALTER TABLE IF EXISTS public.chartsettings
+    OWNER to disstat;

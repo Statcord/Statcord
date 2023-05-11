@@ -84,6 +84,7 @@ export default {
         if (!rawBotFetch.ok) return alert("error")
         const botJson = await rawBotFetch.json()
 
+
         this.botName = botJson.username
         this.avatar = botJson.avatar
         this.owner = botJson.ownername
@@ -109,8 +110,11 @@ export default {
         },
         async getData(){
             const rawDefualtStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
-            if (!defaultStatsJson.ok) return
+            if (!rawDefualtStatsFetch.ok) return
             const defaultStatsJson = await rawDefualtStatsFetch.json()
+
+            const rawChartSettings = await fetch(`http://127.0.0.1:8090/api/stats/types/${this.botid}`)
+            const chartSettings = await rawChartSettings.json()
 
             const timeStamp = new Date().getTime()
 
@@ -121,20 +125,24 @@ export default {
                 const keys = Object.keys(row)
                 keys.shift()
             	keys.map(key=>{
-            		const idkIndex = data.findIndex((a)=>a.name===key)
-            		if (idkIndex=== -1) data.push({
-            			name: key,
-            			type: "line",
-            			data: {
-            				datasets: [
-            					{
-            						label: "This week",
-            						data: [row[key]],
-            					}
-            				]
-            			}
-            		})
-            		else data[idkIndex].data.datasets[0].data.push(row[key])
+                    const indexTwo = chartSettings.findIndex(a=>a.chartid===key)
+                    const thisChartSettings = chartSettings[indexTwo]
+                    if (thisChartSettings.enabled){
+                        const idkIndex = data.findIndex((a)=>a.name===thisChartSettings.name)
+                        if (idkIndex=== -1) data.push({
+                            name: thisChartSettings.name,
+                            type: thisChartSettings.type,
+                            data: {
+                                datasets: [
+                                    {
+                                        label: thisChartSettings.label,
+                                        data: [row[key]],
+                                    }
+                                ]
+                            }
+                        })
+                        else data[idkIndex].data.datasets[0].data.push(row[key])
+                    }
             	})
             })
 

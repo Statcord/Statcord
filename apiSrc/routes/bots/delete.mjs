@@ -40,13 +40,15 @@ export const route = {
 		const botExisits = await db`SELECT ownerid from bots WHERE botid = ${request.body.id}`.catch(err=>{})
 		if (!botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID does not exist!"})
 		if (botExisits[0].ownerid !== request.session.discordUserInfo.id)return reply.status(401).send({message: "You do not have permission to delete this bot"})
-
+		
+		db`DELETE FROM chartsettings WHERE botid = ${request.body.id}`.catch(err=>{})
 		db`DELETE FROM bots WHERE botid = ${request.body.id}`.catch(err=>{})
 		influx.query(`DELETE FROM botStats WHERE botid = $botid`, {
 			placeholders: {
 				botid: request.body.id
 			}
 		})
+
 		reply.status(201).send({success: true, message: "The bot has been deleted"})
 	}
 }

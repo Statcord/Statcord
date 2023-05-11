@@ -15,6 +15,7 @@ import {route as docsJson} from './docs/json.mjs'
 
 import {route as postBotStats} from './stats/post.mjs'
 import {route as getDefault} from './stats/getDefault.mjs'
+import { route as chartTypes } from './stats/chartTypes.mjs'
 
 export default [
     oauthCallback,
@@ -30,5 +31,6 @@ export default [
     genKey,
     docsJson,
     postBotStats,
-    getDefault
+    getDefault,
+    chartTypes
 ]
