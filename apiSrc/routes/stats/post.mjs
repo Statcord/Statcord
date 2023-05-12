@@ -63,13 +63,12 @@ export const route = {
 	},
 	handler: async (request, reply) => {
 		if (!request.body.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
-		const botExisits = await db`SELECT token from bots WHERE botid = ${request.body.id}`.catch(err=>{})
+		const botExisits = await db`SELECT token, maxcustomcharts from bots WHERE botid = ${request.body.id}`.catch(err=>{})
 		if (!botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID does not exist!"})
 		if (request.headers.authorization !== botExisits[0].token) return reply.status(401).send({message: "Incorrect token"})
-		if (request.body.customCharts?.length > 2) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
+		if (request.body.customCharts?.length > botExisits[0].maxcustomcharts) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
 
 		const formattedBody = new postedStats(request.body)
-		// console.log(formattedBody.getTopCommands())		
 
 		influx.writePoints([
 		    {

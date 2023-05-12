@@ -32,7 +32,8 @@ CREATE TABLE public.bots (
     avatar character varying NOT NULL,
     token character varying NOT NULL,
     public boolean DEFAULT true,
-    ownerid character varying NOT NULL
+    ownerid character varying NOT NULL,
+    maxcustomcharts integer DEFAULT 2
 );
 ALTER TABLE public.bots OWNER TO disstat;
 ALTER TABLE ONLY public.bots
