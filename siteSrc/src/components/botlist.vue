@@ -3,7 +3,7 @@
         <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots">
             <div class="card">
                 <div class="card-image">
-                    <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp'" alt="">
+                    <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=1024'" alt="">
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">

@@ -3,7 +3,7 @@
         <div class="col s12 m2">
             <div class="row">
                 <div class="col s6 m12">
-                    <img class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.webp'" :alt="botName+'\'s icon'">
+                    <img v-if="avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.webp'" :alt="botName+'\'s icon'">
                 </div>
                 <div class="col s6 m12">
                     <h3>{{ botName }}</h3>
