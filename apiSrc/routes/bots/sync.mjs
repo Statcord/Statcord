@@ -1,4 +1,4 @@
-import db from "../../utils/postgres.mjs"
+// import db from "../../utils/postgres.mjs"
 import {getBot} from '../../utils/oauth2/oauth.mjs'
 
 export const route = {
@@ -43,7 +43,7 @@ export const route = {
 
 		const bot = await getBot(request.body.id)
 
-		db`UPDATE bots SETnusername =${bot.username}, avatar = ${bot.avatar} WHERE botid = ${request.body.id}`.catch(err=>{})
+		db`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${request.body.id}`.catch(err=>{})
 
 		reply.status(201).send({success: true, message: "The bot has been synced!"})
 	}

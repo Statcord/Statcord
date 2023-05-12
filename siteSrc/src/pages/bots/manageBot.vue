@@ -1,15 +1,180 @@
 <template>
-    <div class="row">
-        <div class="col s3">
-            <div class="container">
-                <div class="waves-effect waves-light btn" @click="showAPIkeyModel">API key<i class="material-icons left">keygen</i></div>
-                <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
-                <div class="waves-effect waves-light btn red accent-3" @click="showDeleteModel">Delete<i class="material-icons left">delete_forever</i></div>
+    <div class="navbar-fixed  red accent-1">
+        <div class="nav-wrapper">
+            <h4 class="center-align">Not all Settings are supported at this time.</h4>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="divider"></div>
+        <div class="section">
+            <h5>Access</h5>
+            <div>
+                <label>
+                    <input type="checkbox" class="filled-in" disabled checked="checked" />
+                    <span>Public</span>
+                </label>
+            </div>
+            <div class="input-field inline">
+                <input id="email_inline" disabled type="email" class="validate">
+                <label for="email_inline">Custom url</label>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+            <div>
+                <h5>Chart Settings</h5>
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col s9">
-            <span>content</span>
+
+
+
+
+
+        <div class="divider"></div>
+        <div class="section">
+            <div>
+                <h5>Custom Chart Settings</h5>
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">Name</label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">label</label>
+                    </div>
+                    <div class="input-field">
+                        <select disabled>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
+                </div>
+
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">Name</label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">label</label>
+                    </div>
+                    <div class="input-field">
+                        <select disabled>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
+                </div>
+
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">Name</label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">label</label>
+                    </div>
+                    <div class="input-field">
+                        <select disabled>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
+                </div>
+
+                <div>
+                    <span>Chart name here</span>
+                    <div>
+                        <label>
+                            <input type="checkbox" class="filled-in" disabled checked="checked" />
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">Name</label>
+                    </div>
+                    <div class="input-field inline">
+                        <input id="email_inline" disabled type="email" class="validate">
+                        <label for="email_inline">label</label>
+                    </div>
+                    <div class="input-field">
+                        <select disabled>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        <div class="section">
+            <div class="waves-effect waves-light btn" @click="showAPIkeyModel">API key<i class="material-icons left">keygen</i></div>
+            <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
+            <div class="waves-effect waves-light btn disabled" @click="sync">Save<i class="material-icons left">save</i></div>
+            <div class="waves-effect waves-light btn red accent-3" @click="showDeleteModel">Delete<i class="material-icons left">delete_forever</i></div>
         </div>
     </div>
 
@@ -46,12 +211,14 @@ export default {
     async mounted() {
         this.botid = this.$route.params.botid
 
-        const rawBotFetch = await fetch(`/api/bots/${this.botid}`)
-        if (rawBotFetch.status === 401) return window.location.href = `/`;
-        if (!rawBotFetch.ok) return window.location.href = `/`;
+        M.FormSelect.init(document.querySelectorAll('select'));
 
-        const botJson = await rawBotFetch.json()
-        if (!botJson.isOwner) return window.location.href = `/`;
+        // const rawBotFetch = await fetch(`/api/bots/${this.botid}`)
+        // if (rawBotFetch.status === 401) return window.location.href = `/`;
+        // if (!rawBotFetch.ok) return window.location.href = `/`;
+
+        // const botJson = await rawBotFetch.json()
+        // if (!botJson.isOwner) return window.location.href = `/`;
     },
     methods: {
         showAPIkeyModel() {
