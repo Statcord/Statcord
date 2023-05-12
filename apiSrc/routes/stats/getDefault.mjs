@@ -57,8 +57,8 @@ export const route = {
         if (!bot[0].public && bot[0].ownerid !== request.session.discordUserInfo?.id) return reply.status(401).send({message: "You do not have permission to see this bot"})
 
 		const mainStatsData = await influx.query(
-			(request.query.start && request.query.end) ? 
-			`SELECT cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` : 
+			(request.query.start && request.query.end) ?
+			`SELECT cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` :
 			`SELECT cpuUsage, guildCount, members, ramUsage, shardCount, totalRam, userCount FROM botStats WHERE botid = $botid ORDER BY time ASC`, {
 			placeholders:(request.query.start && request.query.end) ? {
 				botid: request.params.id,
@@ -70,13 +70,13 @@ export const route = {
 		})
 
 		const commandStatsData = await influx.query(
-			(request.query.start && request.query.end) ? 
-			`SELECT * FROM topCommands WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` : 
+			(request.query.start && request.query.end) ?
+			`SELECT * FROM topCommands WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` :
 			`SELECT * FROM topCommands WHERE botid = $botid ORDER BY time ASC`, {
-			placeholders:(request.query.start && request.query.end) ? {
+			placeholders: request.query.start || request.query.end ? {
 				botid: request.params.id,
-				startdate: new Date(Number(request.query.start)).toISOString(),
-				enddate: new Date(Number(request.query.end)).toISOString()
+				startdate: request.query.start ? new Date(Number(request.query.start)).toISOString() : new Date("2023-04-01").toISOString(),
+				enddate: request.query.end ? new Date(Number(request.query.end)).toISOString() : new Date().toISOString()
 			} : {
 				botid: request.params.id
 			}

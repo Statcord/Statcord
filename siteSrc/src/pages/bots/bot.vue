@@ -3,7 +3,7 @@
         <div class="col s12 m2">
             <div class="row">
                 <div class="col s6 m12">
-                    <img class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.png'" :alt="botName+'\'s icon'">
+                    <img class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.webp'" :alt="botName+'\'s icon'">
                 </div>
                 <div class="col s6 m12">
                     <h3>{{ botName }}</h3>
@@ -23,10 +23,13 @@
 
             <div v-if="showDateRange">
                 <label>Start date:</label>
-                <input type="date" :onChange="updateStartDate">
+                <input type="date" :onChange="updateStartDate" :min="addedOn ? new Date(addedOn).toISOString().substring(0, 10) : '2023-04-01'" :max="new Date().toISOString().substring(0, 10)">
 
                 <label>End date:</label>
-                <input type="date" :onChange="updateEndDate">
+                <input
+                    type="date" :onChange="updateEndDate" :min="addedOn ? new Date(addedOn).toISOString().substring(0, 10) : '2023-04-01'"
+                    :max="new Date().toISOString().substring(0, 10)" :value="new Date().toISOString().substring(0, 10)"
+                >
             </div>
         </div>
 
@@ -48,7 +51,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 import lineChart from '../../components/lineChart.vue'
 import { set } from '@vueuse/shared'
@@ -66,12 +69,13 @@ export default {
             owner: "",
             public: false,
             isOwner: false,
+            addedOn: 0,
             stats: [],
             commandStats:[],
             customStats: [],
             showDateRange: false,
             startDate: null,
-            endDate: null,
+            endDate: Date.now()
         }
     },
     async mounted() {
@@ -109,9 +113,12 @@ export default {
             this.getData()
         },
         async getData(){
-            const rawDefualtStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
-            if (!rawDefualtStatsFetch.ok) return
-            const defaultStatsJson = await rawDefualtStatsFetch.json()
+            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
+            if (!rawDefaultStatsFetch.ok) {
+                if (rawDefaultStatsFetch.status == 404 && (this.startDate || this.endDate)) alert("No chart data has been found for this time period")
+                return
+            }
+            const defaultStatsJson = await rawDefaultStatsFetch.json()
 
             const rawChartSettings = await fetch(`/api/stats/types/${this.botid}`)
             const chartSettings = await rawChartSettings.json()
@@ -149,7 +156,7 @@ export default {
             data.map((item, index)=>{
                 item.id = timeStamp
                 item.data.labels=labels
-                
+
                 set(this.stats, index, item)
             })
 

@@ -55,7 +55,7 @@ export default {
 
         this.ajaxdataok = ajaxdata.ok
         this.username = ajaxdataJSON.username
-        this.avatarURL = ajaxdata.ok ? `https://cdn.discordapp.com/avatars/${ajaxdataJSON.id}/${ajaxdataJSON.avatar}.png?size=32` : "https://cdn.discordapp.com/embed/avatars/0.png"
+        this.avatarURL = ajaxdata.ok ? `https://cdn.discordapp.com/avatars/${ajaxdataJSON.id}/${ajaxdataJSON.avatar}.webp?size=32` : "https://cdn.discordapp.com/embed/avatars/0.png"
     },
     methods: {
         hideLogin() {

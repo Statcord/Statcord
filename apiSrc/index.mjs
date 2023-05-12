@@ -15,7 +15,7 @@ API.register(fastifySwagger, {
 }).after(a=>{
     routes.map(async endpoint => {
         API.route(endpoint)
-    })    
+    })
 })
 API.register(fastifyCookie);
 API.register(fastifySession, {
