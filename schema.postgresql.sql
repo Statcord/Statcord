@@ -33,7 +33,8 @@ CREATE TABLE public.bots (
     token character varying NOT NULL,
     public boolean DEFAULT true,
     ownerid character varying NOT NULL,
-    maxcustomcharts integer DEFAULT 2
+    maxcustomcharts integer DEFAULT 2,
+    addedon timestamp without time zone
 );
 ALTER TABLE public.bots OWNER TO disstat;
 ALTER TABLE ONLY public.bots

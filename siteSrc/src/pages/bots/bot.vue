@@ -23,12 +23,11 @@
 
             <div v-if="showDateRange">
                 <label>Start date:</label>
-                <input type="date" :onChange="updateStartDate" :min="addedOn ? new Date(addedOn).toISOString().substring(0, 10) : '2023-04-01'" :max="new Date().toISOString().substring(0, 10)">
+                <input type="date" :onChange="updateStartDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMin">
 
                 <label>End date:</label>
                 <input
-                    type="date" :onChange="updateEndDate" :min="addedOn ? new Date(addedOn).toISOString().substring(0, 10) : '2023-04-01'"
-                    :max="new Date().toISOString().substring(0, 10)" :value="new Date().toISOString().substring(0, 10)"
+                    type="date" :onChange="updateEndDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMax"
                 >
             </div>
         </div>
@@ -70,6 +69,8 @@ export default {
             public: false,
             isOwner: false,
             addedOn: 0,
+            datePickerMin: new Date(0).toISOString().substring(0, 10),
+            datePickerMax: new Date().toISOString().substring(0, 10),
             stats: [],
             commandStats:[],
             customStats: [],
@@ -88,12 +89,14 @@ export default {
         if (!rawBotFetch.ok) return alert("error")
         const botJson = await rawBotFetch.json()
 
-
         this.botName = botJson.username
         this.avatar = botJson.avatar
         this.owner = botJson.ownername
         this.public = botJson.public
         this.isOwner = botJson.isOwner
+        this.addedOn = botJson.addedon
+
+        this.datePickerMin = new Date(botJson.addedon).toISOString().substring(0, 10)
     },
     methods:{
         dateOrAllTimeChanged(event){
