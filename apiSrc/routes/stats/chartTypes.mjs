@@ -1,7 +1,5 @@
 import db from '../../utils/postgres.mjs'
 
-import { defaultChartSettings } from '../../utils/supportedCharts.mjs'
-
 export const route = {
 	method: 'GET',
 	url: '/api/stats/types/:id',

@@ -1,6 +1,7 @@
 import db from "../../utils/postgres.mjs"
 import {getBot} from '../../utils/oauth2/oauth.mjs'
 import genKey from '../../utils/genKey.mjs'
+import { defaultChartSettings } from '../../utils/supportedCharts.mjs'
 
 export const route = {
 	method: 'POST',
@@ -46,6 +47,11 @@ export const route = {
 
 		db`INSERT INTO owners(username, ownerid) VALUES (${request.session.discordUserInfo.username}, ${request.session.discordUserInfo.id})`.catch(err=>{})
 		db`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon) VALUES (${request.body.id}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${request.session.discordUserInfo.id}, now())`.catch(err=>{})
+
+		Object.keys(defaultChartSettings).map(chartID => {
+			const chart = defaultChartSettings[chartID]
+			db`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${request.body.id}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(err=>{})
+		})
 
 		reply.status(201).send({success: true, message: "The bot has been added to the database!"})
 	}
