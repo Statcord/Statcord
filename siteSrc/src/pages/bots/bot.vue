@@ -43,9 +43,16 @@
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
                 </div>
+
+                <div v-for="stat in customStats" :key="stat.id" class="col s12 l4">
+                    <h1>{{ stat.name }}</h1>
+                    <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
+                </div>
             </div>
             <div v-else>
-                <span>no data</span>
+                <div class="container">
+                    <h3 class="center-align">No chart data has been found for this time period.</h3>
+                </div>
             </div>
         </div>
     </div>
@@ -86,7 +93,7 @@ export default {
         this.getData()
         const rawBotFetch = await fetch(`/api/bots/${ this.botid}`)
         if (rawBotFetch.status === 401) return window.location.href = `/`;
-        if (!rawBotFetch.ok) return alert("error")
+        if (rawBotFetch.status === 404) return window.location.href = `/error/404`;
         const botJson = await rawBotFetch.json()
 
         this.botName = botJson.username
@@ -117,15 +124,12 @@ export default {
         },
         async getData(){
             const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
-            if (!rawDefaultStatsFetch.ok) {
-                if (rawDefaultStatsFetch.status == 404 && (this.startDate || this.endDate)) alert("No chart data has been found for this time period")
-                return
-            }
+            if (!rawDefaultStatsFetch.ok) return;
             const defaultStatsJson = await rawDefaultStatsFetch.json()
 
             const rawChartSettings = await fetch(`/api/stats/types/${this.botid}`)
             const chartSettings = await rawChartSettings.json()
-
+            
             const timeStamp = new Date().getTime()
 
             const data = []
@@ -205,8 +209,44 @@ export default {
                 }
             ]
 
-            this.customStats = [
-            ]
+
+            const customData = []
+            const customLabels = []
+            defaultStatsJson.custom.map(row=>{
+            	customLabels.push(new Date(row.time).toLocaleString())
+                const keys = Object.keys(row)
+                const id = row.customChartID
+                keys.shift()
+                keys.shift()
+                console.log(keys)
+            	keys.map(key=>{
+                    const indexTwo = chartSettings.findIndex(a=>a.chartid===id)
+                    const thisChartSettings = chartSettings[indexTwo]
+                    if (thisChartSettings.enabled){
+                        const idkIndex = customData.findIndex((a)=>a.name===thisChartSettings.name)
+                        if (idkIndex=== -1) customData.push({
+                            name: thisChartSettings.name,
+                            type: thisChartSettings.type,
+                            data: {
+                                datasets: [
+                                    {
+                                        label: thisChartSettings.label,
+                                        data: [row[key]],
+                                    }
+                                ]
+                            }
+                        })
+                        else customData[idkIndex].data.datasets[0].data.push(row[key])
+                    }
+            	})
+            })
+
+            customData.map((item, index)=>{
+                item.id = timeStamp
+                item.data.labels=customLabels
+
+                set(this.customStats, index, item)
+            })
         }
     }
 }
