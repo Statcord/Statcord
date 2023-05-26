@@ -46,6 +46,10 @@ export const route = {
 					commands: {
 						type: "array",
 						contains: { type: "object" }
+					},
+					custom: {
+						type: "array",
+						contains: { type: "object" }
 					}
 				}
             }
@@ -82,14 +86,29 @@ export const route = {
 			}
 		})
 
+		const customStatsData = await influx.query(
+			(request.query.start && request.query.end) ?
+			`SELECT * FROM customCharts WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` :
+			`SELECT * FROM customCharts WHERE botid = $botid ORDER BY time ASC`, {
+			placeholders: request.query.start || request.query.end ? {
+				botid: request.params.id,
+				startdate: request.query.start ? new Date(Number(request.query.start)).toISOString() : new Date("2023-04-01").toISOString(),
+				enddate: request.query.end ? new Date(Number(request.query.end)).toISOString() : new Date().toISOString()
+			} : {
+				botid: request.params.id
+			}
+		})
+
 		const formatedInfluxResponse = new formatInfluxResponse(mainStatsData).getResponse()
 		const formatedCommandResponse = new formatInfluxResponse(commandStatsData).getResponse()
+		const formatedCustomResponse = new formatInfluxResponse(customStatsData).getResponse()
 
-		if (!formatedInfluxResponse || !formatedCommandResponse) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
+		if (!formatedInfluxResponse) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
 
 		reply.send({
 			mainStats: formatedInfluxResponse,
-			commands: formatedCommandResponse
+			commands: formatedCommandResponse,
+			custom: formatedCustomResponse
 		})
 	}
 }
