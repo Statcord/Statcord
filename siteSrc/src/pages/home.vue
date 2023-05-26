@@ -12,7 +12,7 @@
     <router-link to="/login">Add your bot now!</router-link>
     <h2>All currently tracked, public bots</h2>
 
-    <botlist :bots="publicBotList"></botlist>
+    <botlist botListRoute="/api/bots"></botlist>
   </main>
 </template>
 
@@ -23,16 +23,6 @@ export default {
   name: 'home',
   components: {
     botlist
-  },
-  data() {
-    return {
-      publicBotList: []
-    }
-  },
-  async mounted() {
-    const rawBots = await fetch("/api/bots")
-    if (!rawBots.ok) return;
-    this.publicBotList = await rawBots.json()
   }
 }
 </script>

@@ -4,7 +4,7 @@
     <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons left">add</i>Add your bot</div>
     <router-link class="waves-effect waves-light btn-large" to="/me/settings"><i class="material-icons left">settings</i>User Settings</router-link>
     <h1>Your bots</h1>
-    <botlist :bots="botList"></botlist>
+    <botlist botListRoute="/api/mybots"></botlist>
   </main>
 
   <modal v-show="isAddModalVisible" header="Add your bot" @close="closeAddModal">
@@ -28,7 +28,6 @@ export default {
   },
   data() {
     return {
-      botList: [],
       isAddModalVisible: false
     };
   },
@@ -52,9 +51,6 @@ export default {
   async mounted() {
     const ajaxdata = await fetch(`/api/discordOauth/user`).catch(err => console.error);
     if (ajaxdata.status === 401) return window.location.href = `/api/discordOauth/login`;
-
-    const rawBots = await fetch("/api/mybots")
-    this.botList = await rawBots.json()
   },
 }
 </script>
