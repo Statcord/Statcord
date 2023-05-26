@@ -19,33 +19,6 @@ export default new InfluxDB({
             tags: [
                 'botid'
             ]
-        },
-        // {
-        //     measurement: 'topCommands',
-        //     fields: {
-        //     //     name: FieldType.STRING,
-        //     //     count: FieldType.INTEGER
-        //     },
-        //     tags: [
-        //         'botid'
-        //     ]
-        // },
-        // {
-        //     measurement: 'customCharts',
-        //     fields: {
-        //         // customCharts: {
-        //         // 	type: 'array',
-        //         // 	items: {
-        //         // 		type: 'object',
-        //         // 		properties: {
-        //         // 			count: { type: 'number' FieldType.FLOAT/FieldType.INTEGER}
-        //         // 		}
-        //         // 	}
-        //         // }
-        //     },
-        //     tags: [
-        //         'botid'
-        //     ]
-        // }
+        }
     ]
 })

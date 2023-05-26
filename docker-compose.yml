@@ -20,14 +20,10 @@ services:
       - cache
     volumes:
       - config:/config
-    ports:
-      - 8090:8090
 
   cache:
     restart: unless-stopped
     image: redis:7.0.7-alpine
-    ports:
-      - '6379:6379'
     command: redis-server --loglevel warning
     volumes:
       - cacheData:/data
@@ -61,8 +57,6 @@ services:
     environment:
     - BASE_URL=/docs
     - API_URL=/api/docs/json
-    ports:
-      - 8080:8080
     container_name: swagger
 
   influxdb:
