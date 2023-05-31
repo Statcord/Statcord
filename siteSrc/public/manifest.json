@@ -1,0 +1,48 @@
+{
+	"background_color": "#3e53b3",
+	"description": "DisStat is an alternative to Statcord.com which has been unstable recently",
+	"display_override": ["minimal-ui"],
+	"display": "standalone",
+	"name": "DisStat",
+	"lang": "en",
+	"scope": "/",
+	"short_name": "DisStat",
+	"start_url": "/?source=pwa",
+	"theme_color": "#3e53b3",
+	"screenshots": [],
+	"icons": [
+		{
+			"src": "/assets/img/icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		},{
+			"src": "/assets/img/icon.png",
+			"type": "image/png",
+			"sizes": "2391x2271"
+		},{
+			"src": "/assets/img/icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},{
+			"src": "/assets/img/icon-256x256.png",
+			"sizes": "256x256",
+			"type": "image/png"
+		},{
+			"src": "/assets/img/icon-384x384.png",
+			"sizes": "384x384",
+			"type": "image/png"
+		},{
+			"src": "/assets/img/icon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	],
+	"shortcuts": [
+		{
+			"name": "Your account",
+			"url": "/me",
+			"description": "View and edit your account"
+		}
+	]
+}
