@@ -1,5 +1,5 @@
 {
-	"background_color": "#3e53b3",
+	"background_color": "#343F9F",
 	"description": "DisStat is an alternative to Statcord.com which has been unstable recently",
 	"display_override": ["minimal-ui"],
 	"display": "standalone",
@@ -8,7 +8,7 @@
 	"scope": "/",
 	"short_name": "DisStat",
 	"start_url": "/?source=pwa",
-	"theme_color": "#3e53b3",
+	"theme_color": "#343F9F",
 	"screenshots": [],
 	"icons": [
 		{
