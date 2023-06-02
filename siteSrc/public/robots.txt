@@ -1,2 +1,2 @@
-user-agent: *
-Disallow: /assets/
+User-agent: *
+Disallow:
