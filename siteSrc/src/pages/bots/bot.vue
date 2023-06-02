@@ -160,7 +160,7 @@ export default {
             	})
             })
 
-            data.map((item, index)=>{
+            data.forEach((item, index)=>{
                 item.id = timeStamp
                 item.data.labels=labels
 
@@ -241,7 +241,7 @@ export default {
             	})
             })
 
-            customData.map((item, index)=>{
+            customData.forEach((item, index)=>{
                 item.id = timeStamp
                 item.data.labels=customLabels
 

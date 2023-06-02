@@ -48,7 +48,7 @@ export const route = {
 		db`INSERT INTO owners(username, ownerid) VALUES (${request.session.discordUserInfo.username}, ${request.session.discordUserInfo.id})`.catch(err=>{})
 		db`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon) VALUES (${request.body.id}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${request.session.discordUserInfo.id}, now())`.catch(err=>{})
 
-		Object.keys(defaultChartSettings).map(chartID => {
+		Object.keys(defaultChartSettings).forEach(chartID => {
 			const chart = defaultChartSettings[chartID]
 			db`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${request.body.id}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(err=>{})
 		})
