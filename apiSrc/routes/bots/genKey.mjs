@@ -5,6 +5,7 @@ export const route = {
 	method: 'POST',
 	url: '/api/bots/genKey',
 	schema: {
+        hide: true,
         body: {
 			type: 'object',
 			properties: {

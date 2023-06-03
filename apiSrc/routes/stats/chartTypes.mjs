@@ -4,6 +4,7 @@ export const route = {
 	method: 'GET',
 	url: '/api/stats/types/:id',
 	schema: {
+        hide: true,
         response: {
 			404: {
 				type: 'object',

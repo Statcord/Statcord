@@ -19,7 +19,7 @@ export default {
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url(./assets/webfonts/materialicons/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
+  src: url(../public/webfonts/materialicons/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
     format("woff2");
 }
 

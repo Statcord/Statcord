@@ -10,6 +10,7 @@ export const route = {
 		end: { type: 'number' }
 	},
 	schema: {
+        hide: true,
         response: {
 			404: {
 				type: 'object',

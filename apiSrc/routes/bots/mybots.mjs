@@ -4,6 +4,7 @@ export const route = {
 	method: 'GET',
 	url: '/api/mybots',
 	schema: {
+        hide: true,
         querystring: {
 			page: { type: 'number', default: 0 }
         },
