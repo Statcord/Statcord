@@ -4,6 +4,9 @@ export const route = {
 	method: 'GET',
 	url: '/api/bots/:id',
 	schema: {
+        path: {
+			id: { type: 'string' }
+        },
         response: {
 			404: {
 				type: 'object',

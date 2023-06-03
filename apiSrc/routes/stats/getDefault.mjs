@@ -11,6 +11,9 @@ export const route = {
 	},
 	schema: {
         hide: true,
+		path: {
+			id: { type: 'string' }
+		},
         response: {
 			404: {
 				type: 'object',

@@ -5,6 +5,9 @@ export const route = {
 	url: '/api/stats/types/:id',
 	schema: {
         hide: true,
+		path: {
+			id: { type: 'string' }
+		},
         response: {
 			404: {
 				type: 'object',
