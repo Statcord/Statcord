@@ -122,6 +122,10 @@ export default {
             this.endDate = new Date(event.target.value).getTime()
             this.getData()
         },
+        formatDate(timeStamp){
+            const date = new Date(timeStamp)
+            return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+        },
         async getData(){
             const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
             if (!rawDefaultStatsFetch.ok) return;
@@ -135,7 +139,7 @@ export default {
             const data = []
             const labels = []
             defaultStatsJson.mainStats.map(row=>{
-            	labels.push(new Date(row.time).toLocaleString())
+            	labels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 keys.shift()
             	keys.map(key=>{
@@ -182,7 +186,7 @@ export default {
                     name: "Command usage over time",
                     type: "line",
                     data: {
-                        labels: defaultStatsJson.commands.flatMap(i=>new Date(i.time).toLocaleString()),
+                        labels: defaultStatsJson.commands.flatMap(i=>this.formatDate(i.time)),
                         datasets: [
                             {
                                 label: "This week",
@@ -213,7 +217,7 @@ export default {
             const customData = []
             const customLabels = []
             defaultStatsJson.custom.map(row=>{
-            	customLabels.push(new Date(row.time).toLocaleString())
+            	customLabels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 const id = row.customChartID
                 keys.shift()
