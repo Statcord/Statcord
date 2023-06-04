@@ -32,7 +32,7 @@ export default {
     };
   },
   methods: {
-    async submitBot(){
+    async submitBot() {
       const ajaxdata = await fetch(`/api/bots/add`, {
         method: 'post',
         body: JSON.stringify({id:this.$refs.botid.value}),

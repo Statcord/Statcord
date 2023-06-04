@@ -64,8 +64,8 @@ export const route = {
 	},
 	handler: async (request, reply) => {
 		if (!request.body.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
-		
-		const botExisits = await db`SELECT token, maxcustomcharts from bots WHERE botid = ${request.body.id}`.catch(err=>{})
+
+		const botExisits = await db`SELECT token, maxcustomcharts from bots WHERE botid = ${request.body.id}`.catch(() => {})
 		if (!botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID does not exist!"})
 		if (request.headers.authorization !== botExisits[0].token) return reply.status(401).send({message: "Incorrect token"})
 		if (request.body.customCharts?.length > botExisits[0].maxcustomcharts) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
@@ -76,14 +76,14 @@ export const route = {
 			{
 				measurement: 'botStats',
 				tags: { botid: request.body.id },
-				fields: formattedBody.getMainStats(),
+				fields: formattedBody.getMainStats()
 			}
 		]
 
-		if (request.body.customCharts){
+		if (request.body.customCharts) {
 			request.body.customCharts.map(customChart => {
 				db`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${request.body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line') ON CONFLICT (botid, chartid) DO NOTHING`.catch(console.log)
-				
+
 				dataToWrite.push({
 					measurement: "customCharts",
 					tags: {botid: request.body.id, customChartID: customChart.id,},
@@ -91,11 +91,11 @@ export const route = {
 				})
 			})
 		}
-		if (request.body.topCommands){
+		if (request.body.topCommands) {
 			dataToWrite.push({
 				measurement: 'topCommands',
 				tags: { botid: request.body.id},
-				fields: formattedBody.getTopCommands(),
+				fields: formattedBody.getTopCommands()
 			})
 		}
 

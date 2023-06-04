@@ -12,7 +12,7 @@ const { cookieSecret } = await import(process.env.NODE_ENV === "production" ? '/
 const API = fastify();
 API.register(fastifySwagger, {
 
-}).after(a=>{
+}).after(() => {
     routes.map(async endpoint => {
         API.route(endpoint)
     })

@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="divider"></div>
         <div class="section">
             <div class="waves-effect waves-light btn" @click="showAPIkeyModel">API key<i class="material-icons left">keygen</i></div>
@@ -191,7 +191,7 @@
         <div class="waves-effect waves-light btn red accent-3" @click="confirmedDelete">Delete Forever<i class="material-icons left">delete_forever</i></div>
     </modal>
 </template>
-  
+
 <script>
 import modal from '../../components/modal.vue';
 
@@ -228,24 +228,24 @@ export default {
             this.deleteModelVisible = true
         },
         closeAPIkeyModel() {
-            this.APIkeyModelVisible = false;
+            this.APIkeyModelVisible = false
         },
         closeDeleteModel() {
-            this.deleteModelVisible = false;
+            this.deleteModelVisible = false
         },
-        async reGenKey(){
+        async reGenKey() {
             const ajaxdata = await fetch(`/api/bots/genKey`, {
                 method: 'post',
-                body: JSON.stringify({id:this.botid}),
+                body: JSON.stringify({id: this.botid}),
                 headers: {'Content-Type': 'application/json'}
-            }).catch(err => console.error);
+            }).catch(console.error)
             if (ajaxdata.status === 201) {
                 const keyJson = await ajaxdata.json()
                 this.apiKey = keyJson.key
             }
         },
-        copyKey(){
-            navigator.clipboard.writeText(this.apiKey);
+        copyKey() {
+            navigator.clipboard.writeText(this.apiKey)
         },
         async sync() {
             M.toast({html: 'bot is syncing'})
@@ -253,17 +253,17 @@ export default {
                 method: 'post',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}
-            }).catch(err => console.error);
+            }).catch(console.error);
             if (ajaxdata.status === 201) {
                 M.toast({html: 'bot has synced'})
             }
         },
-        async confirmedDelete(){
+        async confirmedDelete() {
             const ajaxdata = await fetch(`/api/bots/delete`, {
                 method: 'delete',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}
-            }).catch(err => console.error);
+            }).catch(console.error);
             if (ajaxdata.status === 201) {
                 return window.location.href = `/me`
             }

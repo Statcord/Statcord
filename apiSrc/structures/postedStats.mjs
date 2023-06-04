@@ -2,7 +2,7 @@ export default class {
     #customCharts
     #topCommands
     #mainStats
-    constructor (postBody){
+    constructor (postBody) {
         this.#customCharts = postBody.customCharts
         this.#topCommands = postBody.topCommands
         this.#mainStats = {
@@ -15,19 +15,19 @@ export default class {
             members: postBody.members
         }
     }
-    getMainStats(){
+    getMainStats() {
         return this.#mainStats
     }
-    getCustomCharts(){
+    getCustomCharts() {
         return this.#customCharts
     }
-    getTopCommands(){
-        const test = this.#topCommands.map(item=>{
+    getTopCommands() {
+        const test = this.#topCommands.map(item => {
 			const obj = {}
 			obj[item.name] = item.count
 			return obj
 		})
-        
+
         return Object.assign({}, ...test)
     }
 }

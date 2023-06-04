@@ -48,14 +48,14 @@ export default {
     },
     async mounted() {
         M.Dropdown.init(this.$refs.dropdown, { coverTrigger: false })
-        M.Sidenav.init(this.$refs.sidenav);
+        M.Sidenav.init(this.$refs.sidenav)
 
         const ajaxdata = await fetch(`/api/discordOauth/user`)
         const ajaxdataJSON = ajaxdata.ok ? await ajaxdata.json() : {}
 
         this.ajaxdataok = ajaxdata.ok
         this.username = ajaxdataJSON.username
-        this.avatarURL = ajaxdata.ok ? `https://cdn.discordapp.com/avatars/${ajaxdataJSON.id}/${ajaxdataJSON.avatar}.webp?size=32` : "https://cdn.discordapp.com/embed/avatars/0.png"
+        this.avatarURL = ajaxdata.ok ? `https://cdn.discordapp.com/avatars/${ajaxdataJSON.id}/${ajaxdataJSON.avatar}.webp?size=32` : "https://cdn.discordapp.com/embed/avatars/" + (ajaxdataJSON.id >>> 22) % 5 + ".png"
     },
     methods: {
         hideLogin() {

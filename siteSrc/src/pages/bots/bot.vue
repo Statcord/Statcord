@@ -3,7 +3,7 @@
         <div class="col s12 m2">
             <div class="row">
                 <div class="col s6 m12">
-                    <img v-if="avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.webp'" :alt="botName+'\'s icon'">
+                    <img v-if="avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.webp?size=128'" :alt="botName+'\'s icon'">
                 </div>
                 <div class="col s6 m12">
                     <h3>{{ botName }}</h3>
@@ -26,9 +26,7 @@
                 <input type="date" :onChange="updateStartDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMin">
 
                 <label>End date:</label>
-                <input
-                    type="date" :onChange="updateEndDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMax"
-                >
+                <input type="date" :onChange="updateEndDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMax">
             </div>
         </div>
 
@@ -89,11 +87,11 @@ export default {
     async mounted() {
         this.botid = this.$route.params.botid
 
-        M.FormSelect.init(this.$refs.allTimeOrDateRange);
+        M.FormSelect.init(this.$refs.allTimeOrDateRange)
         this.getData()
-        const rawBotFetch = await fetch(`/api/bots/${ this.botid}`)
-        if (rawBotFetch.status === 401) return window.location.href = `/`;
-        if (rawBotFetch.status === 404) return window.location.href = `/error/404`;
+        const rawBotFetch = await fetch(`/api/bots/${this.botid}`)
+        if (rawBotFetch.status === 401) return window.location.href = `/`
+        if (rawBotFetch.status === 404) return window.location.href = `/error/404`
         const botJson = await rawBotFetch.json()
 
         this.botName = botJson.username
@@ -106,7 +104,7 @@ export default {
         this.datePickerMin = new Date(botJson.addedon).toISOString().substring(0, 10)
     },
     methods:{
-        dateOrAllTimeChanged(event){
+        dateOrAllTimeChanged(event) {
             this.showDateRange = event.target.value === "dateRange"
             if (event.target.value === "allTime") {
                 this.startDate = null
@@ -114,47 +112,47 @@ export default {
             }
             this.getData()
         },
-        updateStartDate(event){
+        updateStartDate(event) {
             this.startDate = new Date(event.target.value).getTime()
             this.getData()
         },
-        updateEndDate(event){
+        updateEndDate(event) {
             this.endDate = new Date(event.target.value).getTime()
             this.getData()
         },
-        formatDate(timeStamp){
+        formatDate(timeStamp) {
             const date = new Date(timeStamp)
             return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
         },
-        async getData(){
+        async getData() {
             const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
             if (!rawDefaultStatsFetch.ok) return;
             const defaultStatsJson = await rawDefaultStatsFetch.json()
 
             const rawChartSettings = await fetch(`/api/stats/types/${this.botid}`)
             const chartSettings = await rawChartSettings.json()
-            
+
             const timeStamp = new Date().getTime()
 
             const data = []
             const labels = []
-            defaultStatsJson.mainStats.map(row=>{
+            defaultStatsJson.mainStats.map(row => {
             	labels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 keys.shift()
-            	keys.map(key=>{
+            	keys.map(key => {
                     const indexTwo = chartSettings.findIndex(a=>a.chartid===key)
                     const thisChartSettings = chartSettings[indexTwo]
-                    if (thisChartSettings.enabled){
+                    if (thisChartSettings.enabled) {
                         const idkIndex = data.findIndex((a)=>a.name===thisChartSettings.name)
-                        if (idkIndex=== -1) data.push({
+                        if (idkIndex === -1) data.push({
                             name: thisChartSettings.name,
                             type: thisChartSettings.type,
                             data: {
                                 datasets: [
                                     {
                                         label: thisChartSettings.label,
-                                        data: [row[key]],
+                                        data: [row[key]]
                                     }
                                 ]
                             }
@@ -164,21 +162,21 @@ export default {
             	})
             })
 
-            data.forEach((item, index)=>{
+            data.forEach((item, index) => {
                 item.id = timeStamp
-                item.data.labels=labels
+                item.data.labels = labels
 
                 set(this.stats, index, item)
             })
 
             const holder = {};
-            defaultStatsJson.commands.map((d)=> {
-                Object.keys(d).map(key=>{
-                    if (key === "time") return;
+            defaultStatsJson.commands.map(d => {
+                Object.keys(d).map(key => {
+                    if (key === "time") return
                     if (holder[key]) holder[key]+= d[key]
                     else holder[key] = d[key]
                 })
-            });
+            })
 
             this.commandStats = [
                 {
@@ -186,11 +184,11 @@ export default {
                     name: "Command usage over time",
                     type: "line",
                     data: {
-                        labels: defaultStatsJson.commands.flatMap(i=>this.formatDate(i.time)),
+                        labels: defaultStatsJson.commands.flatMap(i => this.formatDate(i.time)),
                         datasets: [
                             {
                                 label: "This week",
-                                data: defaultStatsJson.commands.flatMap(i=>{
+                                data: defaultStatsJson.commands.flatMap(i => {
                                     delete i.time;
                                     return Object.values(i).reduce((a,b) => a + b, 0)
                                 })
@@ -216,17 +214,17 @@ export default {
 
             const customData = []
             const customLabels = []
-            defaultStatsJson.custom.map(row=>{
+            defaultStatsJson.custom.map(row => {
             	customLabels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 const id = row.customChartID
                 keys.shift()
                 keys.shift()
                 console.log(keys)
-            	keys.map(key=>{
+            	keys.map(key => {
                     const indexTwo = chartSettings.findIndex(a=>a.chartid===id)
                     const thisChartSettings = chartSettings[indexTwo]
-                    if (thisChartSettings.enabled){
+                    if (thisChartSettings.enabled) {
                         const idkIndex = customData.findIndex((a)=>a.name===thisChartSettings.name)
                         if (idkIndex=== -1) customData.push({
                             name: thisChartSettings.name,
@@ -235,7 +233,7 @@ export default {
                                 datasets: [
                                     {
                                         label: thisChartSettings.label,
-                                        data: [row[key]],
+                                        data: [row[key]]
                                     }
                                 ]
                             }
@@ -245,9 +243,9 @@ export default {
             	})
             })
 
-            customData.forEach((item, index)=>{
+            customData.forEach((item, index) => {
                 item.id = timeStamp
-                item.data.labels=customLabels
+                item.data.labels = customLabels
 
                 set(this.customStats, index, item)
             })

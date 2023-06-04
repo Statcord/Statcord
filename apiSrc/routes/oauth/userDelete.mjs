@@ -32,9 +32,9 @@ export const route = {
 	handler: async (request, reply) => {
 		if (!request.session.discordAccessToken) return reply.code(401).send({error: true, message: "You need to be logged in to add a bot!"});
 
-        const myBots = await db`SELECT botid FROM bots WHERE ownerid = ${request.session.discordUserInfo.id}`.catch(err=>{})
+        const myBots = await db`SELECT botid FROM bots WHERE ownerid = ${request.session.discordUserInfo.id}`.catch(() => {})
         myBots.map(bot => {
-            db`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(err=>{})
+            db`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(() => {})
             influx.query(`DELETE FROM botStats WHERE botid = $botid`, {
                 placeholders: {
                     botid: bot.botid
@@ -42,7 +42,7 @@ export const route = {
             })
         })
 
-        db`DELETE FROM owners WHERE ownerid = ${request.session.discordUserInfo.id}`.catch(err=>{})
+        db`DELETE FROM owners WHERE ownerid = ${request.session.discordUserInfo.id}`.catch(() => {})
 
         request.session.destroy()
 

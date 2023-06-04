@@ -22,6 +22,6 @@ export const route = {
         }
 	},
 	handler: async (request, reply) => {
-		reply.send(await sql`SELECT username, avatar, botid FROM bots WHERE public = true LIMIT 30 OFFSET 30*${request.query.page ?? 0}`.catch(err=>{}))
+		reply.send(await sql`SELECT username, avatar, botid FROM bots WHERE public = true LIMIT 30 OFFSET 30*${request.query.page ?? 0}`.catch(() => {}))
 	}
 }

@@ -38,12 +38,12 @@ export const route = {
 		if (!request.session.discordAccessToken) return reply.code(401).send({error: true, message: "You need to be logged in to add a bot!"});
 
 		if (!request.body.id) return reply.status(400).send({message: "Please specify the bot ID as a parameter!"})
-		const botExisits = await db`SELECT ownerid from bots WHERE botid = ${request.body.id}`.catch(err=>{})
+		const botExisits = await db`SELECT ownerid from bots WHERE botid = ${request.body.id}`.catch(() => {})
 		if (!botExisits[0]) return reply.status(409).send({message: "The bot with the specified ID does not exist!"})
 		if (botExisits[0].ownerid !== request.session.discordUserInfo.id)return reply.status(401).send({message: "You do not have permission to delete this bot"})
 
-		db`DELETE FROM chartsettings WHERE botid = ${request.body.id}`.catch(err=>{})
-		db`DELETE FROM bots WHERE botid = ${request.body.id}`.catch(err=>{})
+		db`DELETE FROM chartsettings WHERE botid = ${request.body.id}`.catch(() => {})
+		db`DELETE FROM bots WHERE botid = ${request.body.id}`.catch(() => {})
 		influx.query(`DELETE FROM botStats WHERE botid = $botid`, {
 			placeholders: {
 				botid: request.body.id
