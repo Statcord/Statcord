@@ -21,6 +21,15 @@
                 <label>Select date range</label>
             </div>
 
+            <div>
+                <select ref="groupBySelector" :onchange="groupBySelectorChanged">
+                    <option value="d" selected>Day</option>
+                    <option value="mo">Month</option>
+                    <option value="y">Year</option>
+                </select>
+                <label>Select group by range</label>
+            </div>
+
             <div v-if="showDateRange">
                 <label>Start date:</label>
                 <input type="date" :onChange="updateStartDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMin">
@@ -82,13 +91,14 @@ export default {
             showDateRange: false,
             startDate: null,
             endDate: Date.now(),
-            groupBy: '1d'
+            groupByTimeFrame: 'd'
         }
     },
     async mounted() {
         this.botid = this.$route.params.botid
 
         M.FormSelect.init(this.$refs.allTimeOrDateRange)
+        M.FormSelect.init(this.$refs.groupBySelector)
         this.getData()
         const rawBotFetch = await fetch(`/api/bots/${this.botid}`)
         if (rawBotFetch.status === 401) return window.location.href = `/`
@@ -125,8 +135,12 @@ export default {
             const date = new Date(timeStamp)
             return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
         },
+        groupBySelectorChanged(event){
+            this.groupByTimeFrame=event.target.value
+            this.getData()
+        },
         async getData() {
-            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}?groupBy=${this.groupBy}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
             if (!rawDefaultStatsFetch.ok) return;
             const defaultStatsJson = await rawDefaultStatsFetch.json()
 

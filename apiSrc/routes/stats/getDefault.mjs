@@ -65,18 +65,18 @@ export const route = {
         if (!bot[0]) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
         if (!bot[0].public && bot[0].ownerid !== request.session.discordUserInfo?.id) return reply.status(401).send({message: "You do not have permission to see this bot"})
 
+		if (!/[0-9]+([unµm]?s|m|h|d|w)/.test(request.query.groupBy)) return reply.status(401).send({message: "Invalid group by"})
+
 		const mainStatsData = await influx.query(
 			(request.query.start && request.query.end) ?
-			`SELECT MEAN(cpuUsage) as cpuUsage, ROUND(MEAN(guildCount)) as guildCount, ROUND(MEAN(members)) as members, MEAN(ramUsage) as ramUsage, ROUND(MEAN(shardCount)) as shardCount, MEAN(totalRam) as totalRam, ROUND(MEAN(userCount)) as userCount FROM botStats WHERE botid = $botid AND time >= $startdate AND time <= $enddate GROUP BY time($groupBy) ORDER BY time ASC` :
-			`SELECT MEAN(cpuUsage) as cpuUsage, ROUND(MEAN(guildCount)) as guildCount, ROUND(MEAN(members)) as members, MEAN(ramUsage) as ramUsage, ROUND(MEAN(shardCount)) as shardCount, MEAN(totalRam) as totalRam, ROUND(MEAN(userCount)) as userCount FROM botStats WHERE botid = $botid GROUP BY time($groupBy) ORDER BY time ASC `, {
+			`SELECT MEAN(cpuUsage) as cpuUsage, ROUND(MEAN(guildCount)) as guildCount, ROUND(MEAN(members)) as members, MEAN(ramUsage) as ramUsage, ROUND(MEAN(shardCount)) as shardCount, MEAN(totalRam) as totalRam, ROUND(MEAN(userCount)) as userCount FROM botStats WHERE botid = $botid AND time >= $startdate AND time <= $enddate GROUP BY time(${request.query.groupBy}) ORDER BY time ASC` :
+			`SELECT MEAN(cpuUsage) as cpuUsage, ROUND(MEAN(guildCount)) as guildCount, ROUND(MEAN(members)) as members, MEAN(ramUsage) as ramUsage, ROUND(MEAN(shardCount)) as shardCount, MEAN(totalRam) as totalRam, ROUND(MEAN(userCount)) as userCount FROM botStats WHERE botid = $botid GROUP BY time(${request.query.groupBy}) ORDER BY time ASC `, {
 			placeholders:(request.query.start && request.query.end) ? {
 				botid: request.params.id,
 				startdate: new Date(Number(request.query.start)).toISOString(),
-				enddate: new Date(Number(request.query.end)).toISOString(),
-				groupBy: request.params.groupBy
+				enddate: new Date(Number(request.query.end)).toISOString()
 			} : {
-				botid: request.params.id,
-				groupBy: request.params.groupBy
+				botid: request.params.id
 			}
 		})
 
