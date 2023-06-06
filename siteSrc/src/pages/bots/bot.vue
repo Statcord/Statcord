@@ -126,7 +126,7 @@ export default {
             return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
         },
         async getData() {
-            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/?groupBy=${this.groupBy}${this.botid}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}?groupBy=${this.groupBy}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
             if (!rawDefaultStatsFetch.ok) return;
             const defaultStatsJson = await rawDefaultStatsFetch.json()
 
