@@ -8,7 +8,7 @@ export const route = {
 	querystring: {
 		start: { type: 'number' },
 		end: { type: 'number' },
-		groupBy: { type: 'string', default: '1d'}
+		groupBy: { type: 'string' }
 	},
 	schema: {
         hide: true,

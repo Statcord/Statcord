@@ -81,7 +81,8 @@ export default {
             customStats: [],
             showDateRange: false,
             startDate: null,
-            endDate: Date.now()
+            endDate: Date.now(),
+            groupBy: '1d'
         }
     },
     async mounted() {
@@ -125,7 +126,7 @@ export default {
             return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
         },
         async getData() {
-            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/${this.botid}${this.startDate && this.endDate ? `?start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const rawDefaultStatsFetch = await fetch(`/api/stats/getDefault/?groupBy=${this.groupBy}${this.botid}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
             if (!rawDefaultStatsFetch.ok) return;
             const defaultStatsJson = await rawDefaultStatsFetch.json()
 
