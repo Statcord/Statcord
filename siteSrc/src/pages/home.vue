@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div class="container">
     <h1>DisStat - Track statistics of your Discord bot</h1>
 
     <p>
@@ -13,7 +13,7 @@
     <h2>All currently tracked, public bots</h2>
 
     <botlist botListRoute="/api/bots"></botlist>
-  </main>
+  </div>
 </template>
 
 <script>
