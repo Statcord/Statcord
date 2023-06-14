@@ -1,4 +1,4 @@
-FROM node:19.9.0-alpine3.16
+FROM node:bookworm-slim
 ENV NODE_ENV production
 
 EXPOSE 8090
