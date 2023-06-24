@@ -19,9 +19,6 @@ export const pgConfig = {
 }
 
 export const influxConfig = {
-    host: "influxdb",
-    database: "db0",
-    username: "disstat",
-    password: "6#Le0zTjR0Q2",
-    timeout: 10 * 1000
+    url: 'http://127.0.0.1:8086',
+    token: "yh3dMn8sXX09umUdz!ykW3m&d2PN9s"
 }

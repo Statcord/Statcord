@@ -1,5 +1,5 @@
 import db from "../../utils/postgres.mjs"
-import influx from '../../utils/influxdb.mjs'
+import {influxDelete} from '../../utils/influxdb.mjs'
 
 export const route = {
 	method: 'DELETE',
@@ -35,9 +35,15 @@ export const route = {
         const myBots = await db`SELECT botid FROM bots WHERE ownerid = ${request.session.discordUserInfo.id}`.catch(() => {})
         myBots.map(bot => {
             db`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(() => {})
-            influx.query(`DELETE FROM botStats WHERE botid = $botid`, {
-                placeholders: {
-                    botid: bot.botid
+
+            influxDelete.postDelete({
+                org: "disstat",
+                bucket:"defualtBucket",
+                body: {
+                    start: new Date(0),
+                    stop: new Date(),
+                    // see https://docs.influxdata.com/influxdb/latest/reference/syntax/delete-predicate/
+                    predicate: `botid="${bot.botid}"`,
                 }
             })
         })

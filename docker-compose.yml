@@ -60,15 +60,16 @@ services:
     container_name: swagger
 
   influxdb:
-    image: influxdb:1.8.10-alpine
+    image: influxdb:2.7.1-alpine
     ports:
       - '8086:8086'
     container_name: influxdb
     volumes:
       - influxdbData:/var/lib/influxdb
     environment:
-      - INFLUXDB_DB=db0
-      - INFLUXDB_USERNAME=disstat
-      - 'INFLUXDB_PASSWORD=6#Le0zTjR0Q2'
-      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
-      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_ORG=disstat
+      - DOCKER_INFLUXDB_INIT_BUCKET=defualtBucket
+      - DOCKER_INFLUXDB_INIT_USERNAME=disStatAdmin
+      - 'DOCKER_INFLUXDB_INIT_PASSWORD=6#Le0zTjR0Q2'
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=yh3dMn8sXX09umUdz!ykW3m&d2PN9s

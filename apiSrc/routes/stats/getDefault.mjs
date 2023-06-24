@@ -1,6 +1,6 @@
-import influx from '../../utils/influxdb.mjs'
+import { influxClient } from '../../utils/influxdb.mjs'
 import db from '../../utils/postgres.mjs'
-import formatInfluxResponse from '../../structures/formatInfluxResponse.mjs'
+import { flux, fluxDuration } from '@influxdata/influxdb-client'
 
 export const route = {
 	method: 'GET',
@@ -11,24 +11,24 @@ export const route = {
 		groupBy: { type: 'string' }
 	},
 	schema: {
-        hide: true,
+		hide: true,
 		path: {
 			id: { type: 'string' }
 		},
-        response: {
+		response: {
 			404: {
 				type: 'object',
 				properties: {
 					message: { type: 'string', default: 'The bot with the specified ID does not exist!' }
 				}
 			},
-            401: {
+			401: {
 				type: 'object',
 				properties: {
 					message: { type: 'string', default: "You do not have permission to see this bot" }
 				}
 			},
-            200: {
+			200: {
 				type: 'object',
 				properties: {
 					mainStats: {
@@ -57,65 +57,75 @@ export const route = {
 						contains: { type: "object" }
 					}
 				}
-            }
-        }
+			}
+		}
 	},
 	handler: async (request, reply) => {
-		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${request.params.id}`.catch(() => {})
-        if (!bot[0]) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
-        if (!bot[0].public && bot[0].ownerid !== request.session.discordUserInfo?.id) return reply.status(401).send({message: "You do not have permission to see this bot"})
+		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${request.params.id}`.catch(() => { })
+		if (!bot[0]) return reply.status(404).send({ message: "The bot with the specified ID does not exist!" })
+		if (!bot[0].public && bot[0].ownerid !== request.session.discordUserInfo?.id) return reply.status(401).send({ message: "You do not have permission to see this bot" })
 
-		if (!/[0-9]+([unµm]?s|m|h|d|w)/.test(request.query.groupBy)) return reply.status(401).send({message: "Invalid group by"})
+		const start = new Date(Number(request.query.start)).toISOString()
+		const stop = new Date(Number(request.query.end)).toISOString()
 
-		const mainStatsData = await influx.query(
-			(request.query.start && request.query.end) ?
-			`SELECT MEAN(cpuUsage) as cpuUsage, ROUND(MEAN(guildCount)) as guildCount, ROUND(MEAN(members)) as members, MEAN(ramUsage) as ramUsage, ROUND(MEAN(shardCount)) as shardCount, MEAN(totalRam) as totalRam, ROUND(MEAN(userCount)) as userCount FROM botStats WHERE botid = $botid AND time >= $startdate AND time <= $enddate GROUP BY time(${request.query.groupBy}) ORDER BY time ASC` :
-			`SELECT MEAN(cpuUsage) as cpuUsage, ROUND(MEAN(guildCount)) as guildCount, ROUND(MEAN(members)) as members, MEAN(ramUsage) as ramUsage, ROUND(MEAN(shardCount)) as shardCount, MEAN(totalRam) as totalRam, ROUND(MEAN(userCount)) as userCount FROM botStats WHERE botid = $botid GROUP BY time(${request.query.groupBy}) ORDER BY time ASC `, {
-			placeholders:(request.query.start && request.query.end) ? {
-				botid: request.params.id,
-				startdate: new Date(Number(request.query.start)).toISOString(),
-				enddate: new Date(Number(request.query.end)).toISOString()
-			} : {
-				botid: request.params.id
-			}
+		const mainStats = await fetchFromInflux({
+			measurement: "botStats",
+			start,
+			stop,
+			groupBy: request.query.groupBy,
+			botID: request.params.id
 		})
 
-		const commandStatsData = await influx.query(
-			(request.query.start && request.query.end) ?
-			`SELECT * FROM topCommands WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` :
-			`SELECT * FROM topCommands WHERE botid = $botid ORDER BY time ASC`, {
-			placeholders: request.query.start || request.query.end ? {
-				botid: request.params.id,
-				startdate: request.query.start ? new Date(Number(request.query.start)).toISOString() : new Date("2023-04-01").toISOString(),
-				enddate: request.query.end ? new Date(Number(request.query.end)).toISOString() : new Date().toISOString()
-			} : {
-				botid: request.params.id
-			}
+		const commands = await fetchFromInflux({
+			measurement: "customCharts",
+			start,
+			stop,
+			groupBy: request.query.groupBy,
+			botID: request.params.id
+		})
+		
+		const custom = await fetchFromInflux({
+			measurement: "topCommands",
+			start,
+			stop,
+			groupBy: request.query.groupBy,
+			botID: request.params.id
 		})
 
-		const customStatsData = await influx.query(
-			(request.query.start && request.query.end) ?
-			`SELECT * FROM customCharts WHERE botid = $botid AND time >= $startdate AND time <= $enddate ORDER BY time ASC` :
-			`SELECT * FROM customCharts WHERE botid = $botid ORDER BY time ASC`, {
-			placeholders: request.query.start || request.query.end ? {
-				botid: request.params.id,
-				startdate: request.query.start ? new Date(Number(request.query.start)).toISOString() : new Date("2023-04-01").toISOString(),
-				enddate: request.query.end ? new Date(Number(request.query.end)).toISOString() : new Date().toISOString()
-			} : {
-				botid: request.params.id
-			}
-		})
-
-		const formatedInfluxResponse = new formatInfluxResponse(mainStatsData).getResponse()
-		const formatedCommandResponse = new formatInfluxResponse(commandStatsData).getResponse()
-		const formatedCustomResponse = new formatInfluxResponse(customStatsData).getResponse()
-
-		if (!formatedInfluxResponse) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
+		if (!mainStats) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
 
 		reply.send({
-			mainStats: formatedInfluxResponse,
-			commands: formatedCommandResponse,
-			custom: formatedCustomResponse
+			mainStats,
+			commands,
+			custom
 		})
 	}
+}
+
+
+const fetchFromInflux = async (options) => {
+	const queryApi = influxClient.getQueryApi("disstat")
+	// |> range(start: 0) 
+
+	const fluxQuery = flux`from(bucket:"defualtBucket") 
+	|> range(start: ${options.start}, stop: ${options.stop}) 
+	|> filter(fn: (r) => r._measurement == ${options.measurement})
+	|> filter(fn: (r) => r["botid"] == ${options.botID})
+	|> group(columns: ["_time", "_field"])
+	|> aggregateWindow(every: ${fluxDuration(options.groupBy)}, fn: mean, createEmpty: false)
+	|> yield(name: "mean")`
+
+	let outData = [];
+	for await (const { values, tableMeta } of queryApi.iterateRows(fluxQuery)) {
+		const tableObject = tableMeta.toObject(values)
+
+		const timeIndex = outData.findIndex(element => element.time === tableObject._time)
+		if (timeIndex === -1) outData.push({
+			time: tableObject._time,
+			[tableObject._field]: tableObject._value
+		})
+		else outData[timeIndex][tableObject._field] = tableObject._value
+	}
+
+	return outData;
 }

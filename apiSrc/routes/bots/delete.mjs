@@ -1,5 +1,5 @@
 import db from "../../utils/postgres.mjs"
-import influx from '../../utils/influxdb.mjs'
+import {influxDelete} from '../../utils/influxdb.mjs'
 
 export const route = {
 	method: 'DELETE',
@@ -43,10 +43,15 @@ export const route = {
 		if (botExisits[0].ownerid !== request.session.discordUserInfo.id)return reply.status(401).send({message: "You do not have permission to delete this bot"})
 
 		db`DELETE FROM chartsettings WHERE botid = ${request.body.id}`.catch(() => {})
-		db`DELETE FROM bots WHERE botid = ${request.body.id}`.catch(() => {})
-		influx.query(`DELETE FROM botStats WHERE botid = $botid`, {
-			placeholders: {
-				botid: request.body.id
+
+		influxDelete.postDelete({
+			org: "disstat",
+			bucket:"defualtBucket",
+			body: {
+				start: new Date(0),
+				stop: new Date(),
+				// see https://docs.influxdata.com/influxdb/latest/reference/syntax/delete-predicate/
+				predicate: `botid="${request.body.id}"`,
 			}
 		})
 
