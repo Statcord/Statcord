@@ -38,7 +38,7 @@ export const route = {
 
             influxDelete.postDelete({
                 org: "disstat",
-                bucket:"defualtBucket",
+                bucket:"defaultBucket",
                 body: {
                     start: new Date(0),
                     stop: new Date(),

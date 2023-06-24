@@ -69,7 +69,7 @@ services:
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_ORG=disstat
-      - DOCKER_INFLUXDB_INIT_BUCKET=defualtBucket
+      - DOCKER_INFLUXDB_INIT_BUCKET=defaultBucket
       - DOCKER_INFLUXDB_INIT_USERNAME=disStatAdmin
       - 'DOCKER_INFLUXDB_INIT_PASSWORD=6#Le0zTjR0Q2'
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=yh3dMn8sXX09umUdz!ykW3m&d2PN9s

@@ -107,7 +107,7 @@ const fetchFromInflux = async (options) => {
 	const queryApi = influxClient.getQueryApi("disstat")
 	// |> range(start: 0) 
 
-	const fluxQuery = flux`from(bucket:"defualtBucket") 
+	const fluxQuery = flux`from(bucket:"defaultBucket") 
 	|> range(start: ${options.start}, stop: ${options.stop}) 
 	|> filter(fn: (r) => r._measurement == ${options.measurement})
 	|> filter(fn: (r) => r["botid"] == ${options.botID})

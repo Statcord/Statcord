@@ -70,7 +70,7 @@ export const route = {
 		if (request.headers.authorization !== botExisits[0].token) return reply.status(401).send({message: "Incorrect token"})
 		if (request.body.customCharts?.length > botExisits[0].maxcustomcharts) return reply.status(409).send({message: "The bot with the specified ID already exists!"})
 
-		const writeClient = influxClient.getWriteApi('disstat', 'defualtBucket')
+		const writeClient = influxClient.getWriteApi('disstat', 'defaultBucket')
 		
 		const mainStatsPoint = new Point('botStats')
 		.tag('botid',  request.body.id)
