@@ -65,9 +65,10 @@ export const route = {
 		if (!bot[0]) return reply.status(404).send({ message: "The bot with the specified ID does not exist!" })
 		if (!bot[0].public && bot[0].ownerid !== request.session.discordUserInfo?.id) return reply.status(401).send({ message: "You do not have permission to see this bot" })
 
-		const start = new Date(Number(request.query.start)).toISOString()
-		const stop = new Date(Number(request.query.end)).toISOString()
+		const start = new Date(Number(request.query.start ?? 0)).toISOString()
+		const stop = request.query.end ? new Date(Number(request.query.end)).toISOString() : new Date().toISOString()
 
+		// console.time("first")
 		const mainStats = await fetchFromInflux({
 			measurement: "botStats",
 			start,
@@ -75,7 +76,9 @@ export const route = {
 			groupBy: request.query.groupBy,
 			botID: request.params.id
 		})
+		// console.timeEnd("first")
 
+		// console.time("second")
 		const commands = await fetchFromInflux({
 			measurement: "customCharts",
 			start,
@@ -83,7 +86,9 @@ export const route = {
 			groupBy: request.query.groupBy,
 			botID: request.params.id
 		})
+		// console.timeEnd("second")
 		
+		// console.time("thrid")
 		const custom = await fetchFromInflux({
 			measurement: "topCommands",
 			start,
@@ -91,6 +96,7 @@ export const route = {
 			groupBy: request.query.groupBy,
 			botID: request.params.id
 		})
+		// console.timeEnd("thrid")
 
 		if (!mainStats) return reply.status(404).send({message: "The bot with the specified ID does not exist!"})
 
@@ -105,15 +111,15 @@ export const route = {
 
 const fetchFromInflux = async (options) => {
 	const queryApi = influxClient.getQueryApi("disstat")
-	// |> range(start: 0) 
 
 	const fluxQuery = flux`from(bucket:"defaultBucket") 
-	|> range(start: ${options.start}, stop: ${options.stop}) 
+	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop})) 
 	|> filter(fn: (r) => r._measurement == ${options.measurement})
 	|> filter(fn: (r) => r["botid"] == ${options.botID})
-	|> group(columns: ["_time", "_field"])
-	|> aggregateWindow(every: ${fluxDuration(options.groupBy)}, fn: mean, createEmpty: false)
+	|> aggregateWindow(every: ${fluxDuration(options.groupBy ?? "1d")}, fn: mean, createEmpty: false)
 	|> yield(name: "mean")`
+	// this slows down requests by 9.92%
+	// |> group(columns: ["_time", "_field"])
 
 	let outData = [];
 	for await (const { values, tableMeta } of queryApi.iterateRows(fluxQuery)) {
