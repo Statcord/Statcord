@@ -1,22 +1,23 @@
 {
-  "name": "disstat",
-  "version": "0.1.0",
+  "name": "nuxt-app",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
-  },
-  "dependencies": {
-    "@vueuse/head": "^1.1.26",
-    "@vueuse/shared": "^10.1.2",
-    "chart.js": "^4.3.0",
-    "register-service-worker": "^1.7.2",
-    "vue": "^3.3.1",
-    "vue-router": "^4.2.0"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~5.0.8",
-    "@vue/cli-plugin-pwa": "~5.0.0",
-    "@vue/cli-service": "~5.0.8"
+    "@nuxt/devtools": "^0.6.4",
+    "@types/node": "^18",
+    "chart.js": "^4.3.0",
+    "nuxt": "^3.6.1"
+  },
+  "dependencies": {
+    "@vueuse/shared": "^10.2.0",
+    "ioredis": "^5.3.2",
+    "materialize-css": "^1.0.0",
+    "postgres": "^3.3.5"
   }
 }

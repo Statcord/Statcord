@@ -1,6 +1,6 @@
 export const route = {
     method: 'GET',
-    url: '/api/discordOauth/user',
+    url: '/siteApi/discordOauth/user',
 	schema: {
         hide: true,
         response: {

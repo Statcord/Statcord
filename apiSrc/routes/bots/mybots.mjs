@@ -2,7 +2,7 @@ import sql from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'GET',
-	url: '/api/mybots',
+	url: '/siteApi/mybots',
 	schema: {
         hide: true,
         querystring: {

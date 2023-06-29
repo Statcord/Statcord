@@ -4,7 +4,7 @@ import { flux, fluxDuration } from '@influxdata/influxdb-client'
 
 export const route = {
 	method: 'GET',
-	url: '/api/stats/getDefault/:id',
+	url: '/siteApi/stats/getDefault/:id',
 	querystring: {
 		start: { type: 'number' },
 		end: { type: 'number' },

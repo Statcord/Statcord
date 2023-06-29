@@ -2,7 +2,7 @@ import db from '../../utils/postgres.mjs'
 
 export const route = {
 	method: 'GET',
-	url: '/api/stats/types/:id',
+	url: '/siteApi/stats/types/:id',
 	schema: {
         hide: true,
 		path: {

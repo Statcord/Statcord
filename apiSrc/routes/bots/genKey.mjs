@@ -3,7 +3,7 @@ import genKey from '../../utils/genKey.mjs'
 
 export const route = {
 	method: 'POST',
-	url: '/api/bots/genKey',
+	url: '/siteApi/bots/genKey',
 	schema: {
         hide: true,
         body: {

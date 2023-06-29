@@ -3,7 +3,7 @@ import {influxDelete} from '../../utils/influxdb.mjs'
 
 export const route = {
 	method: 'DELETE',
-	url: '/api/discordOauth/user/delete',
+	url: '/siteApi/discordOauth/user/delete',
 	schema: {
         hide: true,
         body: {},

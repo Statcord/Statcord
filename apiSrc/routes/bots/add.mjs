@@ -5,7 +5,7 @@ import { defaultChartSettings } from '../../utils/supportedCharts.mjs'
 
 export const route = {
 	method: 'POST',
-	url: '/api/bots/add',
+	url: '/siteApi/bots/add',
 	schema: {
         hide: true,
         body: {

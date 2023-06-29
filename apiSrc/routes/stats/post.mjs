@@ -4,7 +4,7 @@ import { Point } from "@influxdata/influxdb-client"
 
 export const route = {
 	method: 'POST',
-	url: '/api/stats/post',
+	url: '/siteApi/stats/post',
 	schema: {
         body: {
 			type: 'object',

@@ -19,11 +19,11 @@ self.addEventListener("fetch", event => {
 				const preloadResponse = await event.preloadResponse
 				if (preloadResponse) return preloadResponse
 
-				const response = await fetch(event.request)
+				const response = await useFetch(event.request)
 				cache.put(event.request, response.clone())
 				return response
 			} catch (e) {
-				console.warn("Cannot fetch, serving from cache", e)
+				console.warn("Cannot useFetch, serving from cache", e)
 
 				const cache = await caches.open("offline")
 				const cachedResponse = await cache.match(event.request.url)

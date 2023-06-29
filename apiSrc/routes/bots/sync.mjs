@@ -3,7 +3,7 @@ import {getBot} from '../../utils/oauth2/oauth.mjs'
 
 export const route = {
 	method: 'POST',
-	url: '/api/bots/sync',
+	url: '/siteApi/bots/sync',
 	schema: {
         body: {
 			type: 'object',
