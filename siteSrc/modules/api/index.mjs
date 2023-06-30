@@ -1,22 +1,24 @@
 import { createResolver, defineNuxtModule, addServerHandler } from 'nuxt/kit'
-
-import routeList from './routes/list.mjs'
-
+import fs from 'fs/promises'
 
 export default defineNuxtModule({
   meta: {
     name: 'api'
   },
-  async setup () {
+  async setup() {
     const { resolve } = createResolver(import.meta.url)
 
-    routeList.map(async route=>{
-      addServerHandler({
-        route: route.sc.url,
-        method: route.sc.method.toLowerCase(),
-        handler:       resolve(`./routes/${route.file}`)  
-      })
-    })
+    const routeCatagorys = await fs.readdir("./modules/api/routes")
+    Promise.all(routeCatagorys.map(async routeCatagory => {
+      const endpoints = await fs.readdir(`./modules/api/routes/${routeCatagory}`)
+      Promise.all(endpoints.map(async endpoint => {
+        const { schema } = await import(`./routes/${routeCatagory}/${endpoint}`)
+        addServerHandler({
+          route: schema.url,
+          method: schema.method.toLowerCase(),
+          handler: resolve(`./routes/${routeCatagory}/${endpoint}`)
+        })
+      }))
+    }))
   }
-  
 })

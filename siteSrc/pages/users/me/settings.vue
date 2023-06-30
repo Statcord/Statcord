@@ -25,11 +25,11 @@
     },
     methods: {
       async confirmedDelete() {
-        const ajaxdata = await useFetch(() => `/siteApi/discordOauth/user/delete`, {
+        const {error} = await useFetch(() => `/siteApi/discordOauth/user/delete`, {
             method: 'delete',
-        }).catch(err => console.error);
-        if (ajaxdata.status === 201) {
-            return window.location.href = `/`
+        })
+        if (!error.value) {
+          await navigateTo("/")
         }
       },
       showDeleteAllModal() {
@@ -40,7 +40,7 @@
       }
     },
     async mounted() {
-      if (!this.$auth.isLoggedIn()) return window.location.href = `/siteApi/discordOauth/login`;
+      if (!this.$auth.isLoggedIn()) await navigateTo("/login");
     },
   }
   useSeoMeta({

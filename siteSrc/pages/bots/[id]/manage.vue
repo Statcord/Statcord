@@ -211,7 +211,7 @@ export default {
     async mounted() {
         if (!await this.$auth.canSeeBot(this.$route.params.id, true)) return window.location.href = this.$route.fullPath.substring(0, this.$route.fullPath.lastIndexOf('/'));
         
-        this.botid = this.$route.params.botid
+        this.botid = this.$route.params.id
 
         this.$M.FormSelect.init(document.querySelectorAll('select'));
     },
@@ -229,14 +229,13 @@ export default {
             this.deleteModelVisible = false
         },
         async reGenKey() {
-            const ajaxdata = await useFetch(() => `/siteApi/bots/genKey`, {
+            const {data} = await useFetch(() => `/siteApi/bots/genKey`, {
                 method: 'post',
                 body: JSON.stringify({id: this.botid}),
                 headers: {'Content-Type': 'application/json'}
-            }).catch(console.error)
-            if (ajaxdata.status === 201) {
-                const keyJson = await ajaxdata.json()
-                this.apiKey = keyJson.key
+            })
+            if (data.value?.key) {
+                this.apiKey = data.value.key
             }
         },
         copyKey() {
@@ -244,23 +243,22 @@ export default {
         },
         async sync() {
             this.$M.toast({html: 'bot is syncing'})
-            const ajaxdata = await useFetch(() => `/siteApi/bots/sync`, {
+            const ajaxdata = await $fetch(`/siteApi/bots/sync`, {
                 method: 'post',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}
             }).catch(console.error);
-            if (ajaxdata.status === 201) {
-                this.$M.toast({html: 'bot has synced'})
-            }
+            if (ajaxdata) this.$M.toast({html: 'bot has synced'})
+            else this.$M.toast({html: 'An error has occurred'})
         },
         async confirmedDelete() {
-            const ajaxdata = await useFetch(() => `/siteApi/bots/delete`, {
+            const {error} = await useFetch(() => `/siteApi/bots/delete`, {
                 method: 'delete',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}
-            }).catch(console.error);
-            if (ajaxdata.status === 201) {
-                return window.location.href = `/me`
+            })
+            if (!error.value) {
+                await navigateTo("/users/me")
             }
         }
     }

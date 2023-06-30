@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import {oauth2} from './config/config.mjs'
+import {oauth2} from './config.mjs'
 export default defineNuxtConfig({
 
   devtools: {
@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     // "port":443
   },
 
-  css: ['materialize-css/dist/css/materialize.min.css'],
+  css: ['@materializecss/materialize/dist/css/materialize.min.css'],
   plugins: [{ src: '~/plugins/materialize.js', mode: 'client' },
   { src: '~/plugins/auth.js', mode: 'client' }
 

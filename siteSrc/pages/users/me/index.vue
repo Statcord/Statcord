@@ -33,13 +33,13 @@ export default {
   },
   methods: {
     async submitBot() {
-      const ajaxdata = await useFetch(() => `/siteApi/bots/add`, {
+      const {error} = await useFetch(() => `/siteApi/bots/add`, {
         method: 'post',
         body: JSON.stringify({id:this.$refs.botid.value}),
         headers: {'Content-Type': 'application/json'}
-      }).catch(err => console.error);
-      if (ajaxdata.status === 201) return window.location.href = `/bots/${this.$refs.botid.value}`;
-      else alert("error adding bot")
+      })
+      if (!error.value) await navigateTo(`/bots/${this.$refs.botid.value}`);
+      else this.$M.toast({html: "error adding bot"})
     },
     showAddModal() {
       this.isAddModalVisible = true;
@@ -49,7 +49,7 @@ export default {
     }
   },
   async mounted() {
-    if (!this.$auth.isLoggedIn()) return window.location.href = `/siteApi/discordOauth/login`;
+    if (!this.$auth.isLoggedIn()) await navigateTo("/login");
   },
 }
 useSeoMeta({

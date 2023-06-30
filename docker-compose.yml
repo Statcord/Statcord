@@ -11,16 +11,6 @@ volumes:
     external: true
 
 services:
-  api:
-    restart: unless-stopped
-    build: ./apiSrc
-    container_name: api
-    depends_on:
-      - postgres
-      - cache
-    volumes:
-      - config:/config
-
   cache:
     restart: unless-stopped
     image: redis:7.0.7-alpine
@@ -47,11 +37,14 @@ services:
     restart: unless-stopped
     build: ./siteSrc
     container_name: site
-    depends_on:
-      - api
     ports:
       - 80:80
-
+    volumes:
+      - config:/config
+    depends_on:
+      - postgres
+      - cache
+  
   swagger:
     image: swaggerapi/swagger-ui
     environment:

@@ -7,7 +7,7 @@ if (import.meta.env) {
 export default eventHandler(
     async (a)=>{
 		if (!a.context.params.id) return sendNoContent(a, 404)
-		const bot = await db`SELECT addedon, bots.username, avatar, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${a.context.params.id}`.catch(() => {})
+		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
@@ -18,31 +18,24 @@ export default eventHandler(
 
 		if ((!isPublic && !isOwner)) return sendNoContent(a, 401)
 
-		return {...bot[0], isOwner}
+		return db`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${a.context.params.id}`.catch(() => {})
     }
 )
-export const file = "bots/getbot.mjs"
+export const file = "stats/chartTypes.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/bots/:id',
+	url: '/siteApi/stats/types/:id',
 	schema: {
-        path: {
+        hide: true,
+		path: {
 			id: { type: 'string' }
-        },
+		},
         response: {
 			404: {},
             401: {},
             200: {
-				type: 'object',
-				properties: {
-					username: { type: 'string' },
-					avatar: { type: 'string' },
-					ownername: { type: 'string' },
-					ownerid: { type: 'string' },
-					public: {type: "boolean"},
-					isOwner: {type: "boolean"},
-					addedon: {type: "string"}
-				}
+				type: "array",
+				contains: { type: "object" }
             }
         }
 	}
