@@ -1,17 +1,6 @@
 <template>
     <nav>
         <div class="nav-wrapper black">
-            <a href="/login" :class="hideLogin()" id="login">Login</a>
-            <div
-                class="dropdown-trigger"
-                ref="dropdown"
-                :class="hideUserDrop()"
-                data-target="dropdown1"
-                id="userDropdown"
-            >
-                <img v-if="username" :src="avatarURL" :alt="username" class="circle left-align" />
-                <i class="material-icons right-align">arrow_drop_down</i>
-            </div>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger">
                 <i class="material-icons">menu</i>
             </a>
@@ -21,6 +10,19 @@
                 <li><router-link to="/support">Support</router-link></li>
                 <li><router-link to="/privacy">Privacy</router-link></li>
             </ul>
+
+            <ul class="right ">
+                <li :class="hideLogin()"><a href="/login">Login</a></li>
+                <div
+                    class="dropdown-trigger"
+                    ref="dropdown"
+                    :class="hideUserDrop()"
+                    data-target="dropdown1"
+                    id="userDropdown">
+                    <img v-if="username" :src="avatarURL" :alt="username" class="circle left-align" />
+                    <i class="material-icons right-align">arrow_drop_down</i>
+                </div>
+            </ul>
         </div>
     </nav>
     <ul class="sidenav black" ref="sidenav" id="mobile-demo">
@@ -29,10 +31,10 @@
         <li><router-link to="/support" class="white-text">Support</router-link></li>
         <li><router-link to="/privacy" class="white-text">Privacy</router-link></li>
     </ul>
-    <ul id="dropdown1" class="dropdown-content black">
-        <li><a href="/users/me" class="white-text">User</a></li>
+    <ul id="dropdown1" class="dropdown-content valign-wrapper black">
+        <a href="/users/me" class="white-text">User</a>
         <li class="divider"></li>
-        <li><a href="/logout" class="red-text darken-3">Logout</a></li>
+        <a href="/logout" class="red-text darken-3">Logout</a>
     </ul>
 </template>
 

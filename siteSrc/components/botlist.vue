@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row" style="gap: 1rem;">
         <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots">
             <div class="card">
                 <div class="card-image">
@@ -14,9 +14,9 @@
         </router-link>
     </div>
     <div class="fixed-action-btn">
-    <!-- <button v-if="paage>0" class="btn-floating btn-large waves-effect deep-purple darken-2" @click="scrollToTop">
+    <button v-if="page>0" class="btn-floating btn-large waves-effect deep-purple darken-2" @click="scrollToTop">
       <i class="large material-icons">expand_less</i>
-    </button> -->
+    </button>
   </div>
 </template>
 

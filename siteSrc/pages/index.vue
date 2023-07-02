@@ -16,6 +16,33 @@
   </div>
 </template>
 
+<script setup>
+useSeoMeta({
+  title: 'DisStat',
+  description: "Track your Discord bot's statistics using DisStat.",
+  ogTitle: 'DisStat',
+  ogDescription: "Track your Discord bot's statistics using DisStat.",
+  ogImage: '/img/icon.png',
+  ogUrl: 'https://disstat.numselli.xyz',
+  twitterTitle: 'DisStat',
+  twitterDescription: "Track your Discord bot's statistics using DisStat.",
+  twitterImage: '/img/icon.png',
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/img/favicon.ico'
+    }
+  ]
+})
+</script>
 <script>
 import botlist from '../components/botlist.vue'
 
@@ -25,12 +52,4 @@ export default {
     botlist
   }
 }
-useSeoMeta({
-  title: 'My Amazing Site',
-  ogTitle: 'My Amazing Site',
-  description: 'This is my amazing site, let me tell you all about it.',
-  ogDescription: 'This is my amazing site, let me tell you all about it.',
-  ogImage: 'https://example.com/image.png',
-  twitterCard: 'summary_large_image',
-})
 </script>

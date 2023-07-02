@@ -1,21 +1,42 @@
 <template>
-  <main>
-    <br>
-    <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons left">add</i>Add your bot</div>
-    <router-link class="waves-effect waves-light btn-large" to="/users/me/settings"><i class="material-icons left">settings</i>User Settings</router-link>
-    <h1>Your bots</h1>
-    <botlist botListRoute="/siteApi/mybots"></botlist>
-  </main>
+  <div class="waves-effect waves-light btn-large" @click="showAddModal"><i class="material-icons left">add</i>Add your bot</div>
+  <router-link class="waves-effect waves-light btn-large" to="/users/me/settings"><i class="material-icons left">settings</i>User Settings</router-link>
+  <h1>Your bots</h1>
+  <botlist botListRoute="/siteApi/mybots"></botlist>
 
-  <modal v-show="isAddModalVisible" header="Add your bot" @close="closeAddModal">
+  <modal v-show="isAddModalVisible" mHeader="Add your bot" @close="closeAddModal">
     <label for="botid">Enter the Bot ID</label>
     <input type="text" ref="botid" pattern="[0-9]{17,21}" placeholder="685166801394335819">
-    <br>
-    <br>
-    <button @click="submitBot" type="button" id="addbotbutton">Add bot</button>
+    <button @click="submitBot" type="button">Add bot</button>
   </modal>
 </template>
+<script setup>
+useSeoMeta({
+  title: 'DisStat - My bots',
+  description: "Track your Discord bot's statistics using DisStat.",
+  ogTitle: 'DisStat - My bots',
+  ogDescription: "Track your Discord bot's statistics using DisStat.",
+  ogImage: '/img/icon.png',
+  ogUrl: 'https://disstat.numselli.xyz',
+  twitterTitle: 'DisStat - My bots',
+  twitterDescription: "Track your Discord bot's statistics using DisStat.",
+  twitterImage: '/img/icon.png',
+  twitterCard: 'summary'
+})
 
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/img/favicon.ico'
+    }
+  ]
+})
+</script>
 <script>
 import modal from '../../../components/modal.vue';
 import botlist from '../../../components/botlist.vue'
@@ -39,7 +60,7 @@ export default {
         headers: {'Content-Type': 'application/json'}
       })
       if (!error.value) await navigateTo(`/bots/${this.$refs.botid.value}`);
-      else this.$M.toast({html: "error adding bot"})
+      else this.$M.toast({text: "error adding bot"})
     },
     showAddModal() {
       this.isAddModalVisible = true;
@@ -52,12 +73,4 @@ export default {
     if (!this.$auth.isLoggedIn()) await navigateTo("/login");
   },
 }
-useSeoMeta({
-  title: 'My Amazing Site',
-  ogTitle: 'My Amazing Site',
-  description: 'This is my amazing site, let me tell you all about it.',
-  ogDescription: 'This is my amazing site, let me tell you all about it.',
-  ogImage: 'https://example.com/image.png',
-  twitterCard: 'summary_large_image',
-})
 </script>

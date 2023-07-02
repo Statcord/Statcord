@@ -6,7 +6,7 @@
     </div>
 
     <div class="container">
-        <div class="divider"></div>
+        <!-- <div class="divider"></div>
         <div class="section">
             <h5>Access</h5>
             <div>
@@ -16,7 +16,7 @@
                 </label>
             </div>
             <div class="input-field inline">
-                <input id="email_inline" disabled type="email" class="validate">
+                <input disabled type="email" class="validate">
                 <label for="email_inline">Custom url</label>
             </div>
         </div>
@@ -55,11 +55,11 @@
         </div>
 
 
+ -->
 
 
 
-
-        <div class="divider"></div>
+        <!-- <div class="divider"></div>
         <div class="section">
             <div>
                 <h5>Custom Chart Settings</h5>
@@ -72,11 +72,11 @@
                         </label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">Name</label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">label</label>
                     </div>
                     <div class="input-field">
@@ -98,11 +98,11 @@
                         </label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">Name</label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">label</label>
                     </div>
                     <div class="input-field">
@@ -113,9 +113,9 @@
                         </select>
                         <label>Type</label>
                     </div>
-                </div>
+                </div> -->
 
-                <div>
+                <!-- <div>
                     <span>Chart name here</span>
                     <div>
                         <label>
@@ -124,11 +124,11 @@
                         </label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">Name</label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">label</label>
                     </div>
                     <div class="input-field">
@@ -139,9 +139,9 @@
                         </select>
                         <label>Type</label>
                     </div>
-                </div>
+                </div> -->
 
-                <div>
+                <!-- <div>
                     <span>Chart name here</span>
                     <div>
                         <label>
@@ -150,11 +150,11 @@
                         </label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">Name</label>
                     </div>
                     <div class="input-field inline">
-                        <input id="email_inline" disabled type="email" class="validate">
+                        <input disabled type="email" class="validate">
                         <label for="email_inline">label</label>
                     </div>
                     <div class="input-field">
@@ -165,69 +165,105 @@
                         </select>
                         <label>Type</label>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div> -->
+            <!-- </div> -->
+        <!-- </div> -->
 
-        <div class="divider"></div>
+        <!-- <div class="divider"></div> -->
         <div class="section">
-            <div class="waves-effect waves-light btn" @click="showAPIkeyModel">API key<i class="material-icons left">keygen</i></div>
+            <div class="waves-effect waves-light btn  modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div>            
             <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
             <div class="waves-effect waves-light btn disabled" @click="sync">Save<i class="material-icons left">save</i></div>
-            <div class="waves-effect waves-light btn red accent-3" @click="showDeleteModel">Delete<i class="material-icons left">delete_forever</i></div>
+            <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
         </div>
     </div>
 
-    <modal v-show="APIkeyModelVisible" header="API key" @close="closeAPIkeyModel">
-        <div class="waves-effect waves-light btn" @click="reGenKey">Regenerate API key<i class="material-icons left">autorenew</i></div>
-        <div v-if="apiKey">
-            <div class="waves-effect waves-light btn" @click="copyKey">copy<i class="material-icons left">content_copy</i></div>
-            <input type="text" disabled :value="apiKey">
-        </div>
-    </modal>
 
-    <modal v-show="deleteModelVisible" header="Are you sure?" @close="closeDeleteModel">
-        <div @click="closeDeleteModel" class="waves-effect waves-light btn " type="button">Cancel</div>
-        <div class="waves-effect waves-light btn red accent-3" @click="confirmedDelete">Delete Forever<i class="material-icons left">delete_forever</i></div>
-    </modal>
+    <div id="keyModal1" ref="keyModal1" class="modal hide">
+        <div class="modal-content">
+            <h4>API key</h4>
+           
+            <div v-if="apiKey">
+                <input type="text" disabled :value="apiKey">
+                <div class="waves-effect waves-light btn" @click="copyKey">copy<i class="material-icons left">content_copy</i></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <div class="modal-close waves-effect waves-light btn left">Close</div>
+                <div class="waves-effect waves-light btn" @click="reGenKey">Regenerate API key<i class="material-icons left">autorenew</i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="delModal1" ref="delModal1" class="modal hide">
+        <div class="modal-content">
+            <h4>Confirm data deletion</h4>
+        </div>
+        <div class="modal-footer">
+            <div>
+                <div class="modal-close waves-effect waves-light btn left">Cancel</div>
+                <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete">Delete forever (really!)<i class="material-icons left">delete_forever</i></div>
+            </div>
+        </div>
+    </div>
 </template>
 
-<script>
-import modal from '../../../components/modal.vue';
+<script setup>
+ import { useRoute } from 'vue-router';
+    const route = useRoute()
+    // const id = ref(route.params.id)
+    const bot = await $fetch(`/siteApi/bots/${route.params.id}`)
+    // console.log(route)
+    useSeoMeta({
+        title: () =>`DisStat - ${bot?.username}`,
+        ogTitle: () => `DisStat - ${bot?.username}`,
+        description:  () => `Manage ${bot?.username} on DisStat.`,
+        ogDescription:  () => `Manage ${bot?.username} on DisStat.`,
+        ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+        twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+        // twitterCard: 'summary_large_image',
+        ogUrl: () => `https://disstat.numselli.xyz/bots/${route.params.id}/manage`,
+        twitterTitle: () =>`DisStat - ${bot?.username}`,
+        twitterDescription:  () => `Manage ${bot?.username} on DisStat.`,
+})
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+    }
+  ]
+})
+</script>
 
+<script>
 export default {
     name: 'server',
-    components: {
-        modal
-    },
     data() {
         return {
             botid: "",
-            APIkeyModelVisible: false,
-            deleteModelVisible: false,
             apiKey: undefined
         }
     },
     async mounted() {
-        if (!await this.$auth.canSeeBot(this.$route.params.id, true)) return window.location.href = this.$route.fullPath.substring(0, this.$route.fullPath.lastIndexOf('/'));
-        
+        if (!await this.$auth.canSeeBot(this.$route.params.id, true)) return await navigateTo(this.$route.fullPath.substring(0, this.$route.fullPath.lastIndexOf('/')))
+
         this.botid = this.$route.params.id
 
         this.$M.FormSelect.init(document.querySelectorAll('select'));
+        this.$M.Modal.init(this.$refs.keyModal1, {
+            onOpenStart: ()=> this.$refs.keyModal1.classList.remove("hide")
+        })
+        this.$M.Modal.init(this.$refs.delModal1, {
+            onOpenStart: ()=> this.$refs.delModal1.classList.remove("hide")
+        })
     },
     methods: {
-        showAPIkeyModel() {
-            this.APIkeyModelVisible = true
-        },
-        showDeleteModel() {
-            this.deleteModelVisible = true
-        },
-        closeAPIkeyModel() {
-            this.APIkeyModelVisible = false
-        },
-        closeDeleteModel() {
-            this.deleteModelVisible = false
-        },
         async reGenKey() {
             const {data} = await useFetch(() => `/siteApi/bots/genKey`, {
                 method: 'post',
@@ -242,14 +278,14 @@ export default {
             navigator.clipboard.writeText(this.apiKey)
         },
         async sync() {
-            this.$M.toast({html: 'bot is syncing'})
+            this.$M.toast({text: 'bot is syncing'})
             const ajaxdata = await $fetch(`/siteApi/bots/sync`, {
                 method: 'post',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}
             }).catch(console.error);
-            if (ajaxdata) this.$M.toast({html: 'bot has synced'})
-            else this.$M.toast({html: 'An error has occurred'})
+            if (ajaxdata) this.$M.toast({text: 'bot has synced'})
+            else this.$M.toast({text: 'An error has occurred'})
         },
         async confirmedDelete() {
             const {error} = await useFetch(() => `/siteApi/bots/delete`, {
@@ -263,13 +299,4 @@ export default {
         }
     }
 }
-
-useSeoMeta({
-  title: 'My Amazing Site',
-  ogTitle: 'My Amazing Site',
-  description: 'This is my amazing site, let me tell you all about it.',
-  ogDescription: 'This is my amazing site, let me tell you all about it.',
-  ogImage: 'https://example.com/image.png',
-  twitterCard: 'summary_large_image',
-})
 </script>

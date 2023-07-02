@@ -17,18 +17,35 @@
   </div>
 </template>
 
+<script setup>
+useSeoMeta({
+  title: 'DisStat - Privacy',
+  description: "Read DisStat's privacy policy.",
+  ogTitle: 'DisStat - Privacy',
+  ogDescription: "Read DisStat's privacy policy.",
+  ogImage: '/img/icon.png',
+  ogUrl: 'https://disstat.numselli.xyz',
+  twitterTitle: 'DisStat - Privacy',
+  twitterDescription: "Read DisStat's privacy policy.",
+  twitterImage: '/img/icon.png',
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/img/favicon.ico'
+    }
+  ]
+})
+</script>
 <script>
 export default {
   name: 'privacy'
 }
-useHead({
-  // title: 'My App',
-  meta: [
-    { name: 'description', content: 'My amazing site.' }
-  ],
-  // bodyAttrs: {
-  //   class: 'test'
-  // },
-  // script: [ { innerHTML: 'console.log(\'Hello world\')' } ]
-})
 </script>

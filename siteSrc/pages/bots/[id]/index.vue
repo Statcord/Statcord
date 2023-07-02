@@ -3,14 +3,14 @@
         <div class="col s12 m2">
             <div class="row">
                 <div class="col s6 m12">
-                    <img v-if="avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + avatar + '.webp?size=128'" :alt="botName+'\'s icon'">
+                    <img v-if="bot.avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'" :alt="bot.username+'\'s icon'">
                 </div>
                 <div class="col s6 m12">
-                    <h3>{{ botName }}</h3>
-                    <h5>Made by: {{ owner }}</h5>
+                    <h3>{{ bot.username }}</h3>
+                    <h5>Made by: {{ bot.ownername }}</h5>
                 </div>
             </div>
-
+            
             <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
 
             <div>
@@ -45,7 +45,7 @@
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
                 </div>
-
+                
                 <div v-for="stat in commandStats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
@@ -66,20 +66,35 @@
 </template>
 
 <script setup>
+    import { useRoute } from 'vue-router';
     const route = useRoute()
-    const id = ref(route.params.id)
-    const { data: bot, pending, error } = await useFetch(() => `http://192.168.0.23/siteApi/bots/${id.value}`)
-
+    // const id = ref(route.params.id)
+    const bot = await $fetch(`/siteApi/bots/${route.params.id}`)
+    // console.log(route)
     useSeoMeta({
-    title: () =>bot.value?.username,
-    ogTitle: () =>bot.value?.username,
-    description: 'This is my amazing site, let me tell you all about it.',
-    ogDescription: 'This is my amazing site, let me tell you all about it.',
-    ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot.value?.avatar}`,
-    twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot.value?.avatar}`,
-    // twitterCard: 'summary_large_image',
-})
-
+        title: () =>`DisStat - ${bot?.username}`,
+        ogTitle: () => `DisStat - ${bot?.username}`,
+        description:  () => `View ${bot?.username}'s stats on DisStat.`,
+        ogDescription:  () => `View ${bot?.username}'s stats on DisStat.`,
+        ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+        twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+        // twitterCard: 'summary_large_image',
+        ogUrl: () => `https://disstat.numselli.xyz/bots/${route.params.id}`,
+        twitterTitle: () =>`DisStat - ${bot?.username}`,
+        twitterDescription:  () => `View ${bot?.username}'s stats on DisStat.`,
+    })
+    useHead({
+        htmlAttrs: {
+            lang: 'en'
+        },
+        link: [
+            {
+                rel: 'icon',
+                type: 'image/png',
+                href: `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+            }
+        ]
+    })
 </script>
 
 <script>
@@ -94,9 +109,6 @@ export default {
     data() {
         return {
             botid: "",
-            botName: "",
-            avatar: "",
-            owner: "",
             public: false,
             isOwner: false,
             addedOn: 0,
@@ -119,12 +131,7 @@ export default {
         const {data: botJson} = await useFetch(`/siteApi/bots/${this.botid}`, {
             server: false
         })
-        // if (rawBotFetch.status === 401) return window.location.href = `/`
-        // if (rawBotFetch.status === 404) return window.location.href = `/error/404`
 
-        this.botName = botJson.value.username
-        this.avatar = botJson.value.avatar
-        this.owner = botJson.value.ownername
         this.public = botJson.value.public
         this.isOwner = botJson.value.isOwner
         this.addedOn = botJson.value.addedon
@@ -202,47 +209,49 @@ export default {
                 set(this.stats, index, item)
             })
 
-            const holder = {};
-            defaultStatsJson.commands.map(d => {
-                Object.keys(d).map(key => {
-                    if (key === "time") return
-                    if (holder[key]) holder[key]+= d[key]
-                    else holder[key] = d[key]
+            if (defaultStatsJson.commands.length>0){
+                const holder = {};
+                defaultStatsJson.commands.map(d => {
+                    Object.keys(d).map(key => {
+                        if (key === "time") return
+                        if (holder[key]) holder[key]+= d[key]
+                        else holder[key] = d[key]
+                    })
                 })
-            })
-
-            this.commandStats = [
-                {
-                    id: timeStamp,
-                    name: "Command usage over time",
-                    type: "line",
-                    data: {
-                        labels: defaultStatsJson.commands.flatMap(i => this.formatDate(i.time)),
-                        datasets: [
-                            {
-                                label: "This week",
-                                data: defaultStatsJson.commands.flatMap(i => {
-                                    delete i.time;
-                                    return Object.values(i).reduce((a,b) => a + b, 0)
-                                })
-                            }
-                        ]
+    
+                this.commandStats = [
+                    {
+                        id: timeStamp,
+                        name: "Command usage over time",
+                        type: "line",
+                        data: {
+                            labels: defaultStatsJson.commands.flatMap(i => this.formatDate(i.time)),
+                            datasets: [
+                                {
+                                    label: "This week",
+                                    data: defaultStatsJson.commands.flatMap(i => {
+                                        delete i.time;
+                                        return Object.values(i).reduce((a,b) => a + b, 0)
+                                    })
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        id: timeStamp,
+                        name: "Top commands",
+                        type: "pie",
+                        data: {
+                            labels: Object.keys(holder),
+                            datasets: [
+                                {
+                                    data: Object.values(holder)
+                                }
+                            ]
+                        }
                     }
-                },
-                {
-                    id: timeStamp,
-                    name: "Top commands",
-                    type: "pie",
-                    data: {
-                        labels: Object.keys(holder),
-                        datasets: [
-                            {
-                                data: Object.values(holder)
-                            }
-                        ]
-                    }
-                }
-            ]
+                ]
+            }
 
 
             const customData = []
@@ -285,14 +294,4 @@ export default {
         }
     }
 }
-
-useSeoMeta({
-  title: 'My Site',
-  ogTitle: 'My Site',
-  description: 'This is my amazing site, let me tell you all about it.',
-  ogDescription: 'This is my amazing site, let me tell you all about it.',
-  ogImage: 'https://example.com/image.png',
-  twitterCard: 'summary_large_image',
-})
-// console.log(exports)
 </script>
