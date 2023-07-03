@@ -6,170 +6,16 @@
     </div>
 
     <div class="container">
-        <!-- <div class="divider"></div>
-        <div class="section">
-            <h5>Access</h5>
-            <div>
-                <label>
-                    <input type="checkbox" class="filled-in" disabled checked="checked" />
-                    <span>Public</span>
-                </label>
-            </div>
-            <div class="input-field inline">
-                <input disabled type="email" class="validate">
-                <label for="email_inline">Custom url</label>
+        <div v-for="(value, index) in Object.entries(settings)" :key="index">
+            <div class="section"></div>
+            <h5>{{value[0]}}</h5>
+
+            <div v-for="(valuae, indexa) in Object.entries(value[1])" :key="indexa">
+                <input :type="valuae[1].type" class="filled-in" :checked="valuae[1].state" />
+                <span>{{ valuae[0] }}</span>
             </div>
         </div>
-        <div class="divider"></div>
-        <div class="section">
-            <div>
-                <h5>Chart Settings</h5>
-                <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                </div>
-                <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                </div>
-                <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
- -->
-
-
-
-        <!-- <div class="divider"></div>
-        <div class="section">
-            <div>
-                <h5>Custom Chart Settings</h5>
-                <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">Name</label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">label</label>
-                    </div>
-                    <div class="input-field">
-                        <select disabled>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                        </select>
-                        <label>Type</label>
-                    </div>
-                </div>
-
-                <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">Name</label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">label</label>
-                    </div>
-                    <div class="input-field">
-                        <select disabled>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                        </select>
-                        <label>Type</label>
-                    </div>
-                </div> -->
-
-                <!-- <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">Name</label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">label</label>
-                    </div>
-                    <div class="input-field">
-                        <select disabled>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                        </select>
-                        <label>Type</label>
-                    </div>
-                </div> -->
-
-                <!-- <div>
-                    <span>Chart name here</span>
-                    <div>
-                        <label>
-                            <input type="checkbox" class="filled-in" disabled checked="checked" />
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">Name</label>
-                    </div>
-                    <div class="input-field inline">
-                        <input disabled type="email" class="validate">
-                        <label for="email_inline">label</label>
-                    </div>
-                    <div class="input-field">
-                        <select disabled>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
-                        </select>
-                        <label>Type</label>
-                    </div>
-                </div> -->
-            <!-- </div> -->
-        <!-- </div> -->
-
-        <!-- <div class="divider"></div> -->
+       
         <div class="section">
             <div class="waves-effect waves-light btn  modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div>            
             <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
@@ -247,7 +93,8 @@ export default {
     data() {
         return {
             botid: "",
-            apiKey: undefined
+            apiKey: undefined,
+            settings:{}
         }
     },
     async mounted() {
@@ -262,6 +109,12 @@ export default {
         this.$M.Modal.init(this.$refs.delModal1, {
             onOpenStart: ()=> this.$refs.delModal1.classList.remove("hide")
         })
+
+        const {data: botSettingsJson} = await useFetch(`/siteApi/bots/${this.$route.params.id}/settings/get`, {
+            server: false
+        })
+        
+        this.settings = botSettingsJson.value
     },
     methods: {
         async reGenKey() {

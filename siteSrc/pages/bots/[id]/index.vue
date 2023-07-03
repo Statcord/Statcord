@@ -41,6 +41,13 @@
 
         <div class="col s12 m10">
             <div v-if="stats.length>0" class="row">
+                <div v-for="card in cards" class="col s12 l4">
+                    <h5>{{ card.name }}</h5>
+                    <span>{{ card.value.toLocaleString() }}</span>
+                </div>
+            </div>
+
+            <div v-if="stats.length>0" class="row">
                 <div v-for="stat in stats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
@@ -99,7 +106,7 @@
 
 <script>
 import lineChart from '../../../components/lineChart.vue'
-import { set } from '@vueuse/shared'
+// import { set } from '@vueuse/shared'
 
 export default {
     name: 'bot',
@@ -117,6 +124,7 @@ export default {
             stats: [],
             commandStats:[],
             customStats: [],
+            cards: [],
             showDateRange: false,
             startDate: null,
             endDate: Date.now(),
@@ -164,23 +172,17 @@ export default {
             this.groupByTimeFrame=event.target.value
             this.getData()
         },
-        async getData() {
-            const {data: rawDefaultStatsFetch} = await useFetch(() => `/siteApi/stats/getDefault/${this.botid}?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
-            // if (!rawDefaultStatsFetch.ok) return;
-            const defaultStatsJson = rawDefaultStatsFetch.value
 
-            const {data: rawChartSettings} = await useFetch(() => `/siteApi/stats/types/${this.botid}`)
-            const chartSettings = rawChartSettings.value
-
+        createLineChart(chartData, chartSettings){
             const timeStamp = new Date().getTime()
 
             const data = []
             const labels = []
-            defaultStatsJson.mainStats.map(row => {
-            	labels.push(this.formatDate(row.time))
+            chartData.map(row => {
+                labels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 keys.shift()
-            	keys.map(key => {
+                keys.map(key => {
                     const indexTwo = chartSettings.findIndex(a=>a.chartid===key)
                     const thisChartSettings = chartSettings[indexTwo]
                     if (thisChartSettings.enabled) {
@@ -199,64 +201,67 @@ export default {
                         })
                         else data[idkIndex].data.datasets[0].data.push(row[key])
                     }
-            	})
+                })
             })
 
             data.forEach((item, index) => {
                 item.id = timeStamp
                 item.data.labels = labels
 
-                set(this.stats, index, item)
+                // set(this.stats, index, item)
             })
 
-            if (defaultStatsJson.commands.length>0){
-                const holder = {};
-                defaultStatsJson.commands.map(d => {
-                    Object.keys(d).map(key => {
-                        if (key === "time") return
-                        if (holder[key]) holder[key]+= d[key]
-                        else holder[key] = d[key]
-                    })
+            return data
+        },
+        createPieChart(chartData, chartSettings){
+            const timeStamp = new Date().getTime()
+
+            const holder = {};
+            chartData.map(d => {
+                Object.keys(d).map(key => {
+                    if (key === "time") return
+                    if (holder[key]) holder[key]+= d[key]
+                    else holder[key] = d[key]
                 })
+            })
     
-                this.commandStats = [
-                    {
-                        id: timeStamp,
-                        name: "Command usage over time",
-                        type: "line",
-                        data: {
-                            labels: defaultStatsJson.commands.flatMap(i => this.formatDate(i.time)),
-                            datasets: [
-                                {
-                                    label: "This week",
-                                    data: defaultStatsJson.commands.flatMap(i => {
-                                        delete i.time;
-                                        return Object.values(i).reduce((a,b) => a + b, 0)
-                                    })
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        id: timeStamp,
-                        name: "Top commands",
-                        type: "pie",
-                        data: {
-                            labels: Object.keys(holder),
-                            datasets: [
-                                {
-                                    data: Object.values(holder)
-                                }
-                            ]
-                        }
+            return [
+                {
+                    id: timeStamp,
+                    name: "Command usage over time",
+                    type: "line",
+                    data: {
+                        labels: chartData.flatMap(i => this.formatDate(i.time)),
+                        datasets: [
+                            {
+                                label: "This week",
+                                data: chartData.flatMap(i => {
+                                    delete i.time;
+                                    return Object.values(i).reduce((a,b) => a + b, 0)
+                                })
+                            }
+                        ]
                     }
-                ]
-            }
-
-
+                },
+                {
+                    id: timeStamp,
+                    name: "Top commands",
+                    type: "pie",
+                    data: {
+                        labels: Object.keys(holder),
+                        datasets: [
+                            {
+                                data: Object.values(holder)
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        createCustomChart(chartData, chartSettings){
             const customData = []
             const customLabels = []
-            defaultStatsJson.custom.map(row => {
+            chartData.map(row => {
             	customLabels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 const id = row.customChartID
@@ -289,9 +294,41 @@ export default {
                 itethis.$M.id = timeStamp
                 itethis.$M.data.labels = customLabels
 
-                set(this.customStats, index, item)
+                // set(this.customStats, index, item)
             })
-        }
+
+            return customData
+        },
+        async getData() {
+            const {data: rawDefaultStatsFetch} = await useFetch(() => `/siteApi/stats/getDefault/${this.botid}?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const defaultStatsJson = rawDefaultStatsFetch.value
+
+            const {data: rawChartSettings} = await useFetch(() => `/siteApi/stats/types/${this.botid}`)
+            const chartSettings = rawChartSettings.value
+
+            this.stats = this.createLineChart(defaultStatsJson.mainStats, chartSettings)
+
+            if (defaultStatsJson.commands.length > 0) this.commandStats = this.createPieChart(defaultStatsJson.commands, chartSettings)
+
+            this.customStats = this.createCustomChart(defaultStatsJson.custom, chartSettings)
+
+            const lastPost = defaultStatsJson.mainStats[defaultStatsJson.mainStats.length-1]
+            this.cards = [
+                {
+                    name: "Guilds",
+                    value: lastPost.guildCount
+                },
+                {
+                    name: "Members",
+                    value: lastPost.members
+                },
+                {
+                    name: "Users",
+                    value: lastPost.userCount
+                }
+            ]
+        },
+
     }
 }
 </script>

@@ -119,11 +119,13 @@ export const schema = {
 const fetchFromInflux = async (options) => {
 	const queryApi = influxClient.getQueryApi("disstat")
 
-	const fluxQuery = flux`from(bucket:"defaultBucket") 
+	const fluxQuery = flux`import "math"
+	from(bucket:"defaultBucket") 
 	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop})) 
 	|> filter(fn: (r) => r._measurement == ${options.measurement})
 	|> filter(fn: (r) => r["botid"] == ${options.botID})
 	|> aggregateWindow(every: ${fluxDuration(options.groupBy ?? "1d")}, fn: mean, createEmpty: false)
+    |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
 	|> yield(name: "mean")`
 	// this slows down requests by 9.92%
 	// |> group(columns: ["_time", "_field"])
