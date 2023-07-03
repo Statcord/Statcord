@@ -178,11 +178,11 @@ export default {
 
             const data = []
             const labels = []
-            chartData.map(row => {
+            chartData.forEach(row => {
                 labels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 keys.shift()
-                keys.map(key => {
+                keys.forEach(key => {
                     const indexTwo = chartSettings.findIndex(a=>a.chartid===key)
                     const thisChartSettings = chartSettings[indexTwo]
                     if (thisChartSettings.enabled) {
@@ -217,8 +217,8 @@ export default {
             const timeStamp = new Date().getTime()
 
             const holder = {};
-            chartData.map(d => {
-                Object.keys(d).map(key => {
+            chartData.forEach(d => {
+                Object.keys(d).forEach(key => {
                     if (key === "time") return
                     if (holder[key]) holder[key]+= d[key]
                     else holder[key] = d[key]
@@ -261,14 +261,14 @@ export default {
         createCustomChart(chartData, chartSettings){
             const customData = []
             const customLabels = []
-            chartData.map(row => {
+            chartData.forEach(row => {
             	customLabels.push(this.formatDate(row.time))
                 const keys = Object.keys(row)
                 const id = row.customChartID
                 keys.shift()
                 keys.shift()
                 console.log(keys)
-            	keys.map(key => {
+            	keys.forEach(key => {
                     const indexTwo = chartSettings.findIndex(a=>a.chartid===id)
                     const thisChartSettings = chartSettings[indexTwo]
                     if (thisChartSettings.enabled) {

@@ -15,13 +15,8 @@
 </template>
 
 <script>
-import modal from '../../../components/modal.vue';
-
 export default {
   name: 'userSettings',
-  components: {
-    modal
-  },
   data() {
     return {
     };

@@ -16,15 +16,39 @@ export default eventHandler(
 		if (!botExisits[0]) return sendNoContent(a, 404)
 		if (botExisits[0].ownerid !== session.discordUserInfo.id) return sendNoContent(a, 401)
 
+		const chartSettings = await db`SELECT * from chartsettings WHERE botid = ${a.context.params.id}`.catch(() => {})
 
-        return {
-            "access":{
-                public: {
+
+        const settings = {
+            "Access":{
+                "Public": {
                     state: botExisits[0].public,
-                    type: "checkbox"
+                    type: "checkbox",
+                    enabled: false
+                },
+                "URL": {
+                    state: `/bots/${a.context.params.id}`,
+                    type: "text",
+                    enabled: false
                 }
+            },
+            "Default charts": {
+
+            },
+            "Custom charts": {
+
             }
         }
+
+        chartSettings.forEach((chart)=>{
+            settings['Default charts'][chart.name] = {
+                state: chart.enabled,
+                type: "checkbox",
+                enabled: false
+            }
+        })
+
+        return settings
     }
 )
 export const file = "settings/get.mjs"

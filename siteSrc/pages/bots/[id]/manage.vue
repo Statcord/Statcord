@@ -11,16 +11,35 @@
             <h5>{{value[0]}}</h5>
 
             <div v-for="(valuae, indexa) in Object.entries(value[1])" :key="indexa">
-                <input :type="valuae[1].type" class="filled-in" :checked="valuae[1].state" />
+                <input :type="valuae[1].type" :disabled="!valuae[1].enabled" :checked="valuae[1].state" :placeholder="valuae[1].state" />
                 <span>{{ valuae[0] }}</span>
             </div>
         </div>
        
         <div class="section">
-            <div class="waves-effect waves-light btn  modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div>            
+            <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
+            <div class="waves-effect waves-light btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
             <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
             <div class="waves-effect waves-light btn disabled" @click="sync">Save<i class="material-icons left">save</i></div>
             <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
+        </div>
+    </div>
+
+
+    <div id="importModal1" ref="importModal1" class="modal hide">
+        <div class="modal-content">
+            <h4>Import/export</h4>
+           
+            <!-- <div v-if="apiKey">
+                <input type="text" disabled :value="apiKey">
+                <div class="waves-effect waves-light btn" @click="copyKey">copy<i class="material-icons left">content_copy</i></div>
+            </div> -->
+        </div>
+        <div class="modal-footer">
+            <div>
+                <div class="modal-close waves-effect waves-light btn left">Close</div>
+                <div class="waves-effect waves-light btn" @click="reGenKey">Regenerate API key<i class="material-icons left">autorenew</i></div>
+            </div>
         </div>
     </div>
 
@@ -109,7 +128,10 @@ export default {
         this.$M.Modal.init(this.$refs.delModal1, {
             onOpenStart: ()=> this.$refs.delModal1.classList.remove("hide")
         })
-
+        this.$M.Modal.init(this.$refs.importModal1, {
+            onOpenStart: ()=> this.$refs.importModal1.classList.remove("hide")
+        })
+        
         const {data: botSettingsJson} = await useFetch(`/siteApi/bots/${this.$route.params.id}/settings/get`, {
             server: false
         })

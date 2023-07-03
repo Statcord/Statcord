@@ -9,7 +9,6 @@
       <h4>Add your bot</h4>
       <label for="botid">Enter the Bot ID</label>
       <input type="text" ref="botid" pattern="[0-9]{17,21}" placeholder="685166801394335819">
-
     </div>
     <div class="modal-footer">
       <div>
