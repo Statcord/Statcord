@@ -39,7 +39,7 @@ export default eventHandler(
 export const file = "bots/delete.mjs"
 export const schema = {
 	method: 'DELETE',
-	url: '/siteApi/bots/delete',
+	url: '/api/bots/delete',
 	schema: {
         hide: true,
         body: {

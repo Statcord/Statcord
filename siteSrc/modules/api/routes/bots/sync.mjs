@@ -30,7 +30,7 @@ export default eventHandler(
 export const file = "bots/sync.mjs"
 export const schema = {
 	method: 'POST',
-	url: '/siteApi/bots/sync',
+	url: '/api/bots/sync',
 	schema: {
 		body: {
 			type: 'object',

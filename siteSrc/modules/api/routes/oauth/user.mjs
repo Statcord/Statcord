@@ -15,7 +15,7 @@ export default eventHandler(
 export const file = "oauth/user.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/discordOauth/user',
+	url: '/api/discordOauth/user',
 	schema: {
         response: {
             401: {},

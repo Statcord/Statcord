@@ -11,7 +11,9 @@
   "devDependencies": {
     "@nuxt/devtools": "^0.6.6",
     "chart.js": "^4.3.0",
-    "nuxt": "^3.6.1"
+    "nuxt": "^3.6.1",
+    "@fastify/swagger": "^8.6.0",
+    "fastify": "^4.19.2"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.33.2",

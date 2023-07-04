@@ -28,7 +28,7 @@ export default eventHandler(
 export const file = "bots/genkey.mjs"
 export const schema = {
 	method: 'POST',
-	url: '/siteApi/bots/genKey',
+	url: '/api/bots/genKey',
 	schema: {
         hide: true,
         body: {

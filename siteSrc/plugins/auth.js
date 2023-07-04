@@ -5,7 +5,7 @@ class auth{
   }
 
   async canSeeBot(botid, privileged) {
-    const {data: rawBotuseFetch} = await useFetch(() => `/siteApi/bots/${botid}`)
+    const {data: rawBotuseFetch} = await useFetch(() => `/api/bots/${botid}`)
 
     const isOwner = this.isLoggedIn() && rawBotuseFetch.value.ownerid === this.#session.id
     const isPublic = rawBotuseFetch.value.public
@@ -23,6 +23,6 @@ class auth{
 }
 
 export default defineNuxtPlugin(async nuxtApp => {
-  const {data: user} = await useFetch(() => `/siteApi/discordOauth/user`)
+  const {data: user} = await useFetch(() => `/api/discordOauth/user`)
   nuxtApp.provide('auth', new auth(user.value))
 })

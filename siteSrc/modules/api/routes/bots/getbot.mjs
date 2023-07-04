@@ -24,7 +24,7 @@ export default eventHandler(
 export const file = "bots/getbot.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/bots/:id',
+	url: '/api/bots/:id',
 	schema: {
         path: {
 			id: { type: 'string' }

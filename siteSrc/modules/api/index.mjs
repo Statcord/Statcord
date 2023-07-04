@@ -9,16 +9,16 @@ export default defineNuxtModule({
     const { resolve } = createResolver(import.meta.url)
 
     const routeCatagorys = await fs.readdir("./modules/api/routes")
-    Promise.all(routeCatagorys.map(async routeCatagory => {
+    routeCatagorys.map(async routeCatagory => {
       const endpoints = await fs.readdir(`./modules/api/routes/${routeCatagory}`)
-      Promise.all(endpoints.map(async endpoint => {
+      endpoints.map(async endpoint => {
         const { schema } = await import(`./routes/${routeCatagory}/${endpoint}`)
         addServerHandler({
           route: schema.url,
           method: schema.method.toLowerCase(),
           handler: resolve(`./routes/${routeCatagory}/${endpoint}`)
         })
-      }))
-    }))
+      })
+    })
   }
 })

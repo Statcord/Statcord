@@ -24,7 +24,7 @@ export default eventHandler(
 export const file = "stats/chartTypes.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/stats/types/:id',
+	url: '/api/stats/types/:id',
 	schema: {
         hide: true,
 		path: {

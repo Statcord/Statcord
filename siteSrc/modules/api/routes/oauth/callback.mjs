@@ -36,7 +36,7 @@ export default eventHandler(
 export const file = "oauth/callback.mjs"
 export const schema = {
     method: 'GET',
-    url: '/siteApi/discordOauth/callback',
+    url: '/api/discordOauth/callback',
 	schema: {
         hide: true,
         querystring: {

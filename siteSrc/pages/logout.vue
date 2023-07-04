@@ -1,7 +1,7 @@
 <template></template>
 
 <script setup>
-  useFetch("/siteApi/discordOauth/logout").then(()=>{})
+  useFetch("/api/discordOauth/logout").then(()=>{})
   await navigateTo("/")
 
   useSeoMeta({

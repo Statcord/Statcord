@@ -76,7 +76,7 @@
     import { useRoute } from 'vue-router';
     const route = useRoute()
     // const id = ref(route.params.id)
-    const bot = await $fetch(`/siteApi/bots/${route.params.id}`)
+    const bot = await $fetch(`/api/bots/${route.params.id}`)
     // console.log(route)
     useSeoMeta({
         title: () =>`DisStat - ${bot?.username}`,
@@ -136,7 +136,7 @@ export default {
 
         this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
         this.$M.FormSelect.init(this.$refs.groupBySelector)
-        const {data: botJson} = await useFetch(`/siteApi/bots/${this.botid}`, {
+        const {data: botJson} = await useFetch(`/api/bots/${this.botid}`, {
             server: false
         })
 
@@ -300,10 +300,10 @@ export default {
             return customData
         },
         async getData() {
-            const {data: rawDefaultStatsFetch} = await useFetch(() => `/siteApi/stats/getDefault/${this.botid}?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const {data: rawDefaultStatsFetch} = await useFetch(() => `/api/stats/getDefault/${this.botid}?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
             const defaultStatsJson = rawDefaultStatsFetch.value
 
-            const {data: rawChartSettings} = await useFetch(() => `/siteApi/stats/types/${this.botid}`)
+            const {data: rawChartSettings} = await useFetch(() => `/api/stats/types/${this.botid}`)
             const chartSettings = rawChartSettings.value
 
             this.stats = this.createLineChart(defaultStatsJson.mainStats, chartSettings)

@@ -37,7 +37,7 @@ export default eventHandler(
 export const file = "bots/add.mjs"
 export const schema = {
 	method: 'POST',
-	url: '/siteApi/bots/add',
+	url: '/api/bots/add',
 	schema: {
         hide: true,
         body: {

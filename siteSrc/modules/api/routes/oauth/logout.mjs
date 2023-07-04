@@ -20,7 +20,7 @@ export default eventHandler(
 export const file = "oauth/logout.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/discordOauth/logout',
+	url: '/api/discordOauth/logout',
 	schema: {
 		hide: true,
         response: {

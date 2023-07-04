@@ -56,8 +56,6 @@ export default eventHandler(
 		})
 		// console.timeEnd("thrid")
 
-		if (!mainStats) return sendNoContent(a, 404)
-
 		return {
 			mainStats,
 			commands,
@@ -68,7 +66,7 @@ export default eventHandler(
 export const file = "stats/getDefualt.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/stats/getDefault/:id',
+	url: '/api/stats/getDefault/:id',
 	schema: {
         hide: true,
 		path: {

@@ -11,7 +11,7 @@ export default eventHandler(
 export const file = "bots/list.mjs"
 export const schema = {
     method: 'GET',
-	url: '/siteApi/bots',
+	url: '/api/bots',
 	schema: {
         querystring: {
 			page: { type: 'number', default: 0 }

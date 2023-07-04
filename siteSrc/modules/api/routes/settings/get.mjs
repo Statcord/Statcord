@@ -1,4 +1,4 @@
-import { eventHandler, sendNoContent, getCookie, readBody } from 'h3'
+import { eventHandler, sendNoContent, getCookie } from 'h3'
 if (import.meta.env) {
     var {default: db} = await import('~/utils/postgres.mjs')
     var {default: redis} = await import('~/utils/redis.mjs')
@@ -54,7 +54,7 @@ export default eventHandler(
 export const file = "settings/get.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/bots/:id/settings/get',
+	url: '/api/bots/:id/settings/get',
 	schema: {
         response: {
             401: {},

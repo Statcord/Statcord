@@ -78,7 +78,7 @@
  import { useRoute } from 'vue-router';
     const route = useRoute()
     // const id = ref(route.params.id)
-    const bot = await $fetch(`/siteApi/bots/${route.params.id}`)
+    const bot = await $fetch(`/api/bots/${route.params.id}`)
     // console.log(route)
     useSeoMeta({
         title: () =>`DisStat - ${bot?.username}`,
@@ -132,7 +132,7 @@ export default {
             onOpenStart: ()=> this.$refs.importModal1.classList.remove("hide")
         })
         
-        const {data: botSettingsJson} = await useFetch(`/siteApi/bots/${this.$route.params.id}/settings/get`, {
+        const {data: botSettingsJson} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`, {
             server: false
         })
         
@@ -140,7 +140,7 @@ export default {
     },
     methods: {
         async reGenKey() {
-            const {data} = await useFetch(() => `/siteApi/bots/genKey`, {
+            const {data} = await useFetch(() => `/api/bots/genKey`, {
                 method: 'post',
                 body: JSON.stringify({id: this.botid}),
                 headers: {'Content-Type': 'application/json'}
@@ -154,7 +154,7 @@ export default {
         },
         async sync() {
             this.$M.toast({text: 'bot is syncing'})
-            const ajaxdata = await $fetch(`/siteApi/bots/sync`, {
+            const ajaxdata = await $fetch(`/api/bots/sync`, {
                 method: 'post',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}
@@ -163,7 +163,7 @@ export default {
             else this.$M.toast({text: 'An error has occurred'})
         },
         async confirmedDelete() {
-            const {error} = await useFetch(() => `/siteApi/bots/delete`, {
+            const {error} = await useFetch(() => `/api/bots/delete`, {
                 method: 'delete',
                 body: JSON.stringify({id:this.botid}),
                 headers: {'Content-Type': 'application/json'}

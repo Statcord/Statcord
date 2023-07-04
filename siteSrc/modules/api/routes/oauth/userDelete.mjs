@@ -11,10 +11,8 @@ export default eventHandler(
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
 
         if (!session) return sendNoContent(a, 401)
-        if (session){
-			redis.del(`sess:${sessionID}`)
-			deleteCookie(a, "sessionId")
-		}
+        redis.del(`sess:${sessionID}`)
+        deleteCookie(a, "sessionId")
 
         const myBots = await db`SELECT botid FROM bots WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
         myBots.map(bot => {
@@ -40,7 +38,7 @@ export default eventHandler(
 export const file = "oauth/userDelete.mjs"
 export const schema = {
     method: 'DELETE',
-    url: '/siteApi/discordOauth/user/delete',
+    url: '/api/discordOauth/user/delete',
     schema: {
         hide: true,
         body: {},

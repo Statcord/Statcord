@@ -67,7 +67,7 @@ export default eventHandler(
 export const file = "stats/post.mjs"
 export const schema = {
 	method: 'POST',
-	url: '/siteApi/stats/post',
+	url: '/api/stats/post',
 	schema: {
 		body: {
 			type: 'object',

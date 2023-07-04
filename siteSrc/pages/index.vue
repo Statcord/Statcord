@@ -12,7 +12,7 @@
     <router-link to="/login">Add your bot now!</router-link>
     <h2>All currently tracked, public bots</h2>
 
-    <botlist botListRoute="/siteApi/bots"></botlist>
+    <botlist botListRoute="/api/bots"></botlist>
   </div>
 </template>
 

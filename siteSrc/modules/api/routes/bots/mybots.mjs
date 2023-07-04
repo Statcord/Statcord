@@ -17,7 +17,7 @@ export default eventHandler(
 export const file = "bots/mybots.mjs"
 export const schema = {
 	method: 'GET',
-	url: '/siteApi/mybots',
+	url: '/api/mybots',
 	schema: {
         hide: true,
         querystring: {
