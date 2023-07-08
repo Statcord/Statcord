@@ -1,4 +1,4 @@
-class auth{
+class Auth {
   #session
   constructor(sessionData){
     this.#session = sessionData
@@ -10,7 +10,7 @@ class auth{
     const isOwner = this.isLoggedIn() && rawBotuseFetch.value.ownerid === this.#session.id
     const isPublic = rawBotuseFetch.value.public
 
-    return ((!!privileged || !isPublic) && isOwner) || (isPublic && this.isLoggedIn())
+    return ((Boolean(privileged) || !isPublic) && isOwner) || (isPublic && this.isLoggedIn())
   }
 
   isLoggedIn(){
@@ -24,5 +24,5 @@ class auth{
 
 export default defineNuxtPlugin(async nuxtApp => {
   const {data: user} = await useFetch(() => `/api/discordOauth/user`)
-  nuxtApp.provide('auth', new auth(user.value))
+  nuxtApp.provide('auth', new Auth(user.value))
 })

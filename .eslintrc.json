@@ -7,7 +7,6 @@
 	"parserOptions": {
 		"sourceType": "module"
 	},
-	"ignorePatterns": ["apiSrc/utils/oauth2/*.mjs"],
 	"rules": {
 		"array-bracket-spacing": 2,
 		"array-callback-return": 2,
