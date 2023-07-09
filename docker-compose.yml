@@ -1,8 +1,6 @@
 version: "3"
 
 volumes:
-  config:
-    external: true
   cacheData:
     external: true
   dbData:
@@ -33,17 +31,24 @@ services:
         - dbData:/var/lib/postgresql/data
       container_name: DB
 
-  site:
+  nginx:
     restart: unless-stopped
-    build: ./siteSrc
-    container_name: site
+    build: ./nginx
+    container_name: nginx
     ports:
       - 80:80
-    volumes:
-      - config:/config
+    depends_on:
+      - app
+      - swagger
+  
+  app:
+    restart: unless-stopped
+    build: ./siteSrc
+    container_name: app
     depends_on:
       - postgres
       - cache
+      - influxdb
   
   swagger:
     image: swaggerapi/swagger-ui

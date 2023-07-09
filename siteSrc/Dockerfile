@@ -1,12 +1,18 @@
-FROM node:19.9.0-alpine3.16 as build-stage
+FROM node:20.3.0-alpine3.17 as build-stage
 
-WORKDIR /app
-COPY . /app
+WORKDIR /preApp
 
+COPY . /preApp
 RUN npm install
+RUN node ./tools/docs.mjs
 RUN npm run build
 
-FROM nginx as production-stage
+
+
+FROM node:20.3.0-alpine3.17 as production-stage
 RUN mkdir /app
-COPY --from=build-stage /app/dist /app
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY --from=build-stage /preApp /app
+
+EXPOSE 3000
+
+CMD ["node", "/app/.output/server/index.mjs"]
