@@ -2,7 +2,7 @@
     <div class="row" style="gap: 1rem;">
         <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots" v-bind:key="bot.id">
             <div class="card">
-                <div class="card-image">
+                <div class="card-image no-overflow">
                     <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'" :alt="bot.username+`'s profile picture`" :class="bot.nsfw? 'blur':''">
                 </div>
                 <div class="card-stacked">

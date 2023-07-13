@@ -39,7 +39,11 @@ export default {
   -webkit-font-smoothing: antialiased;
 }
 
-.blur{
-  filter: blur(1.5rem);
+.blur {
+  filter: blur(1.3rem);
+}
+
+.no-overflow {
+  overflow: hidden;
 }
 </style>
