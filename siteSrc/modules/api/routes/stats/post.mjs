@@ -37,7 +37,7 @@ export default eventHandler(
 				.tag('botid',  body.id)
 				.tag('customChartID',  customChart.id)
 
-				Object.keys(customChart.data).map(key => {
+				Object.keys(customChart.data).forEach(key => {
 					const value = customChart.data[key]
 					if (value.toString().includes('.')) customChartsPoint.floatField(key, value)
 					else customChartsPoint.intField(key, value)

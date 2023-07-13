@@ -11,11 +11,13 @@ export default eventHandler(
     async (a)=>{
         const { code } = getQuery(a);
         if (!code) return sendNoContent(400)
-
+        
         const tokens = await tokenRequest({
             code,
             redirectUri: oauth2.apihost + "/discordOauth/callback"
         });
+
+        if (!tokens.access_token) return sendNoContent(400)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0] ?? sessionIdGen()
 
@@ -30,7 +32,7 @@ export default eventHandler(
             "expires": expires
         })
    
-        sendRedirect(a, oauth2.redirectUri, 302)
+        return sendRedirect(a, oauth2.redirectUri, 302)
     }
 )
 export const file = "oauth/callback.mjs"

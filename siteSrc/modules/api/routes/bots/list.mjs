@@ -5,7 +5,7 @@ if (import.meta.env) {
 
 export default eventHandler(
     async (a)=>{
-        return db`SELECT username, avatar, botid FROM bots WHERE public = true LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch(() => {})
+        return db`SELECT username, avatar, botid, nsfw FROM bots WHERE public = true LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch(() => {})
     }
 )
 export const file = "bots/list.mjs"

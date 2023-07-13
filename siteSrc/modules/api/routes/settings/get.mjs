@@ -12,7 +12,7 @@ export default eventHandler(
 
         if (!session) return sendNoContent(a, 401)
 
-		const botExisits = await db`SELECT ownerid, public from bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+		const botExisits = await db`SELECT ownerid, public, nsfw from bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!botExisits[0]) return sendNoContent(a, 404)
 		if (botExisits[0].ownerid !== session.discordUserInfo.id) return sendNoContent(a, 401)
 
@@ -26,11 +26,16 @@ export default eventHandler(
                     type: "checkbox",
                     enabled: false
                 },
+                "NSFW": {
+                    state: botExisits[0].nsfw,
+                    type: "checkbox",
+                    enabled: false
+                },
                 "URL": {
                     state: `/bots/${a.context.params.id}`,
                     type: "text",
                     enabled: false
-                }
+                },
             },
             "Default charts": {
 

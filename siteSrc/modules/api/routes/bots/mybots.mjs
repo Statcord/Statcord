@@ -11,7 +11,7 @@ export default eventHandler(
 
         if (!session?.discordUserInfo.id) return sendNoContent(a, 401)
 
-		return db`SELECT username, avatar, bots.botid FROM bots WHERE ownerid = ${session.discordUserInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch().catch(() => {})
+		return db`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${session.discordUserInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch().catch(() => {})
     }
 )
 export const file = "bots/mybots.mjs"

@@ -1,5 +1,12 @@
 <template>
-    <div class="row">
+    <div v-if="botNSFW">
+        <h3 class="center-align">this bot has been marked NSFW
+            <br>
+            <div class="btn" @click="dismissNSFW">I understand</div>
+        </h3>
+        <!-- <span>dshafsa</span> -->
+    </div>
+    <div class="row" :class="botNSFW ? 'blur':''">
         <div class="col s12 m2">
             <div class="row">
                 <div class="col s6 m12">
@@ -128,7 +135,8 @@ export default {
             showDateRange: false,
             startDate: null,
             endDate: Date.now(),
-            groupByTimeFrame: 'd'
+            groupByTimeFrame: 'd',
+            botNSFW: true
         }
     },
     async mounted() {
@@ -140,6 +148,7 @@ export default {
             server: false
         })
 
+        this.botNSFW = botJson.value.nsfw
         this.public = botJson.value.public
         this.isOwner = botJson.value.isOwner
         this.addedOn = botJson.value.addedon
@@ -148,6 +157,9 @@ export default {
         this.getData()
     },
     methods:{
+        dismissNSFW(){
+            this.botNSFW = false
+        },
         dateOrAllTimeChanged(event) {
             this.showDateRange = event.target.value === "dateRange"
             if (event.target.value === "allTime") {

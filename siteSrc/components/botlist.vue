@@ -1,9 +1,9 @@
 <template>
     <div class="row" style="gap: 1rem;">
-        <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots">
+        <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots" v-bind:key="bot.id">
             <div class="card">
                 <div class="card-image">
-                    <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'" alt="">
+                    <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'" :alt="bot.username+`'s profile picture`" :class="bot.nsfw? 'blur':''">
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
@@ -38,7 +38,7 @@ export default {
     methods: {
         async load() {
             const fetchData = await useFetch(() => `${this.$props.botListRoute}?page=${this.page}`)
-            this.bots = fetchData.data
+            this.bots = this.bots.concat(fetchData.data._rawValue)
             if (this.page === 0) this.loadNext()
         },
         loadNext() {

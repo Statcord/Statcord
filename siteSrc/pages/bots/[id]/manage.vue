@@ -29,16 +29,29 @@
     <div id="importModal1" ref="importModal1" class="modal hide">
         <div class="modal-content">
             <h4>Import/export</h4>
+            <select ref="importExportSelector" :onchange="importExportChanged">
+                <option value="import">Import</option>
+                <option value="export">Export</option>
+            </select>
+            <label>Would you like to import or export</label>
            
-            <!-- <div v-if="apiKey">
-                <input type="text" disabled :value="apiKey">
-                <div class="waves-effect waves-light btn" @click="copyKey">copy<i class="material-icons left">content_copy</i></div>
-            </div> -->
+            <div v-if="importExport === 'import'">
+                <select ref="importSourceSelector" :onchange="importSourceChange">
+                    <option value="disStat">DisStat</option>
+                    <option value="statcord">Statcord</option>
+                    <option value="json">JSON</option>
+                </select>
+
+                <div v-if="importExportMode === 'disStat' || importExportMode === 'json'" class="btn">Upload</div>
+                <div v-else class="btn">Go</div>
+            </div>
+            <div v-else>
+                <div class="btn"><span>Download zip</span></div>
+            </div>
         </div>
         <div class="modal-footer">
             <div>
                 <div class="modal-close waves-effect waves-light btn left">Close</div>
-                <div class="waves-effect waves-light btn" @click="reGenKey">Regenerate API key<i class="material-icons left">autorenew</i></div>
             </div>
         </div>
     </div>
@@ -113,7 +126,9 @@ export default {
         return {
             botid: "",
             apiKey: undefined,
-            settings:{}
+            settings:{},
+            importExport: "import",
+            importExportMode:""
         }
     },
     async mounted() {
@@ -121,7 +136,9 @@ export default {
 
         this.botid = this.$route.params.id
 
-        this.$M.FormSelect.init(document.querySelectorAll('select'));
+        this.$M.FormSelect.init(this.$refs.importExportSelector)
+        this.$M.FormSelect.init(this.$refs.importSourceSelector)
+
         this.$M.Modal.init(this.$refs.keyModal1, {
             onOpenStart: ()=> this.$refs.keyModal1.classList.remove("hide")
         })
@@ -131,7 +148,8 @@ export default {
         this.$M.Modal.init(this.$refs.importModal1, {
             onOpenStart: ()=> this.$refs.importModal1.classList.remove("hide")
         })
-        
+
+
         const {data: botSettingsJson} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`, {
             server: false
         })
@@ -139,6 +157,12 @@ export default {
         this.settings = botSettingsJson.value
     },
     methods: {
+        importExportChanged(event){
+            this.importExport = event.target.value
+        },
+        importSourceChange(event){
+            this.importExportMode = event.target.value
+        },
         async reGenKey() {
             const {data} = await useFetch(() => `/api/bots/genKey`, {
                 method: 'post',

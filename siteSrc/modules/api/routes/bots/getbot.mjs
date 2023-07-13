@@ -7,7 +7,7 @@ if (import.meta.env) {
 export default eventHandler(
     async (a)=>{
 		if (!a.context.params.id) return sendNoContent(a, 404)
-		const bot = await db`SELECT addedon, bots.username, avatar, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${a.context.params.id}`.catch(() => {})
+		const bot = await db`SELECT addedon, bots.username, avatar, nsfw, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]

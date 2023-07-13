@@ -7,7 +7,7 @@
             <ul class="left hide-on-med-and-down">
                 <li><router-link to="/">Home</router-link></li>
                 <li><a href="/docs">Docs</a></li>
-                <li><router-link to="/support">Support</router-link></li>
+                <li><a href="/support">Support</a></li>
                 <li><router-link to="/privacy">Privacy</router-link></li>
                 <li><router-link to="/guide">Setup guide</router-link></li>
             </ul>
@@ -29,7 +29,7 @@
     <ul class="sidenav black" ref="sidenav" id="mobile-demo">
         <li><router-link to="/" class="white-text">Home</router-link></li>
         <li><a href="/docs" class="white-text">Docs</a></li>
-        <li><router-link to="/support" class="white-text">Support</router-link></li>
+        <li><a href="/support" class="white-text">Support</a></li>
         <li><router-link to="/privacy" class="white-text">Privacy</router-link></li>
         <li><router-link to="/guide" class="white-text">Setup guide</router-link></li>
     </ul>

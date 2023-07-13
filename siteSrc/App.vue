@@ -38,4 +38,8 @@ export default {
   -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
+
+.blur{
+  filter: blur(1.5rem);
+}
 </style>
