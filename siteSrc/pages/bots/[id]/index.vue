@@ -21,7 +21,7 @@
             <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
 
             <div>
-                <select ref="allTimeOrDateRange" :onchange="dateOrAllTimeChanged">
+                <select ref="allTimeOrDateRange" @change="dateOrAllTimeChanged">
                     <option value="allTime" selected>All Time</option>
                     <option value="dateRange">Date Range</option>
                 </select>
@@ -29,7 +29,7 @@
             </div>
 
             <div>
-                <select ref="groupBySelector" :onchange="groupBySelectorChanged">
+                <select ref="groupBySelector" @change="groupBySelectorChanged">
                     <option value="d" selected>Day</option>
                     <option value="mo">Month</option>
                     <option value="y">Year</option>
@@ -39,10 +39,10 @@
 
             <div v-if="showDateRange">
                 <label>Start date:</label>
-                <input type="date" :onChange="updateStartDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMin">
+                <input type="date" @change="updateStartDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMin">
 
                 <label>End date:</label>
-                <input type="date" :onChange="updateEndDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMax">
+                <input type="date" @change="updateEndDate" :min="datePickerMin" :max="datePickerMax" :value="datePickerMax">
             </div>
         </div>
 
@@ -328,15 +328,15 @@ export default {
             this.cards = [
                 {
                     name: "Guilds",
-                    value: lastPost.guildCount
+                    value: lastPost?.guildCount
                 },
                 {
                     name: "Members",
-                    value: lastPost.members
+                    value: lastPost?.members
                 },
                 {
                     name: "Users",
-                    value: lastPost.userCount
+                    value: lastPost?.userCount
                 }
             ]
         },

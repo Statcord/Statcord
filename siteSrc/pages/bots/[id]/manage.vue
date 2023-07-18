@@ -29,14 +29,14 @@
     <div id="importModal1" ref="importModal1" class="modal hide">
         <div class="modal-content">
             <h4>Import/export</h4>
-            <select ref="importExportSelector" :onchange="importExportChanged">
+            <select ref="importExportSelector" @change="importExportChanged">
                 <option value="import">Import</option>
                 <option value="export">Export</option>
             </select>
             <label>Would you like to import or export</label>
            
             <div v-if="importExport === 'import'">
-                <select ref="importSourceSelector" :onchange="importSourceChange">
+                <select ref="importSourceSelector" @change="importSourceChange">
                     <option value="disStat">DisStat</option>
                     <option value="statcord">Statcord</option>
                     <option value="json">JSON</option>

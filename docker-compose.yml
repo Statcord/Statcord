@@ -13,6 +13,8 @@ services:
     restart: unless-stopped
     image: redis:7.0.7-alpine
     command: redis-server --loglevel warning
+    ports:
+      - 6379:6379
     volumes:
       - cacheData:/data
     container_name: Cache
@@ -56,6 +58,8 @@ services:
     - BASE_URL=/docs
     - API_URL=/api/docs/json
     container_name: swagger
+    ports:
+      - 8030:8080
 
   influxdb:
     image: influxdb:2.7.1-alpine
@@ -63,7 +67,7 @@ services:
       - '8086:8086'
     container_name: influxdb
     volumes:
-      - influxdbData:/var/lib/influxdb
+      - influxdbData:/var/lib/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_ORG=disstat
