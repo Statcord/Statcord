@@ -12,7 +12,7 @@
         You are free to delete this data at any time by visiting <router-link to="/me/settings">your user settings</router-link> and clicking "Delete all data".
         <br>
         We do not track you or sell or otherwise use your data, the data is only stored for the purpose it's intended for and deleted after that.
-        You can have a look at our GitHub repository to check for yourself.
+        You can have a look at our <a href="https://github.com/DisStat/DisStat">GitHub repository</a> to check for yourself.
       </p>
     </div>
 
@@ -31,11 +31,7 @@
       <p>You <b>must not</b>:</p>
       <ol>
         <li>Spam our API with unnecessary/garbage data</li>
-      </ol>
-
-      <p>You <b>should not</b>:</p>
-      <ol>
-        <li>Post your bot general stats more than once a minute, you might get ratelimited otherwise</li>
+        <li>Post your bot stats more than once per minute, you might get ratelimited or temporarily banned otherwise</li>
       </ol>
     </div>
   </div>

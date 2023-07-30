@@ -1,12 +1,12 @@
-import { eventHandler, sendNoContent, getCookie, readBody } from 'h3'
+import { eventHandler, sendNoContent, getCookie, readBody } from "h3"
 if (import.meta.env) {
-    var {default: db} = await import('~/utils/postgres.mjs')
-    var {default: redis} = await import('~/utils/redis.mjs')
-	var {default: genKey} = await import('~/utils/genKey.mjs')
+    var {default: db} = await import("~/utils/postgres.mjs")
+    var {default: redis} = await import("~/utils/redis.mjs")
+	var {default: genKey} = await import("~/utils/genKey.mjs")
 }
 
 export default eventHandler(
-    async (a)=>{
+    async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
 
@@ -27,23 +27,23 @@ export default eventHandler(
 )
 export const file = "bots/genkey.mjs"
 export const schema = {
-	method: 'POST',
-	url: '/api/bots/genKey',
+	method: "POST",
+	url: "/api/bots/genKey",
 	schema: {
         hide: true,
         body: {
-			type: 'object',
+			type: "object",
 			properties: {
-				id: { type: 'string' }
+				id: { type: "string" }
 			}
         },
 		response: {
             401: {},
             404: {},
 			200: {
-				type: 'object',
+				type: "object",
 				properties: {
-					key: { type: 'string'}
+					key: { type: "string"}
 				}
 			}
 		}

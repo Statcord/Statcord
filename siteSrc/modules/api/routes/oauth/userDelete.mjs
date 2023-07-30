@@ -1,12 +1,12 @@
-import { eventHandler, sendNoContent, getCookie, deleteCookie } from 'h3'
+import { eventHandler, sendNoContent, getCookie, deleteCookie } from "h3"
 if (import.meta.env) {
-    var {default: redis} = await import('~/utils/redis.mjs')
-    var {default: db} = await import('~/utils/postgres.mjs')
-	var {influxDelete} = await import('~/utils/influxdb.mjs')
+    var {default: redis} = await import("~/utils/redis.mjs")
+    var {default: db} = await import("~/utils/postgres.mjs")
+	var {influxDelete} = await import("~/utils/influxdb.mjs")
 }
 
 export default eventHandler(
-    async (a)=>{
+    async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
 
@@ -37,8 +37,8 @@ export default eventHandler(
 )
 export const file = "oauth/userDelete.mjs"
 export const schema = {
-    method: 'DELETE',
-    url: '/api/discordOauth/user/delete',
+    method: "DELETE",
+    url: "/api/discordOauth/user/delete",
     schema: {
         hide: true,
         body: {},

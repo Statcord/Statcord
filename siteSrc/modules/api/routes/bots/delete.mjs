@@ -1,12 +1,12 @@
-import { eventHandler, readBody, sendNoContent, getCookie } from 'h3'
+import { eventHandler, readBody, sendNoContent, getCookie } from "h3"
 if (import.meta.env) {
-    var {default: db} = await import('~/utils/postgres.mjs')
-    var {default: redis} = await import('~/utils/redis.mjs')
-	var {influxDelete} = await import('~/utils/influxdb.mjs')
+    var {default: db} = await import("~/utils/postgres.mjs")
+    var {default: redis} = await import("~/utils/redis.mjs")
+	var {influxDelete} = await import("~/utils/influxdb.mjs")
 }
 
 export default eventHandler(
-    async (a)=>{
+    async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
 
@@ -38,14 +38,14 @@ export default eventHandler(
 )
 export const file = "bots/delete.mjs"
 export const schema = {
-	method: 'DELETE',
-	url: '/api/bots/delete',
+	method: "DELETE",
+	url: "/api/bots/delete",
 	schema: {
         hide: true,
         body: {
-			type: 'object',
+			type: "object",
 			properties: {
-				id: { type: 'string' }
+				id: { type: "string" }
 			}
         },
 		response: {

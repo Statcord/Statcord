@@ -1,21 +1,21 @@
-import { eventHandler, sendNoContent, getCookie, getQuery } from 'h3'
-import { flux, fluxDuration } from '@influxdata/influxdb-client'
+import { eventHandler, sendNoContent, getCookie, getQuery } from "h3"
+import { flux, fluxDuration } from "@influxdata/influxdb-client"
 
 if (import.meta.env) {
-    var {default: db} = await import('~/utils/postgres.mjs')
-	var {influxClient} = await import('~/utils/influxdb.mjs')
-    var {default: redis} = await import('~/utils/redis.mjs')
+    var {default: db} = await import("~/utils/postgres.mjs")
+	var {influxClient} = await import("~/utils/influxdb.mjs")
+    var {default: redis} = await import("~/utils/redis.mjs")
 }
 
 export default eventHandler(
-    async (a)=>{
+    async a => {
 		if (!a.context.params.id) return sendNoContent(a, 404)
 		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
-		
+
 		const isOwner = !!session && bot[0].ownerid === session.discordUserInfo.id
 		const isPublic = bot[0].public
 
@@ -65,38 +65,38 @@ export default eventHandler(
 )
 export const file = "stats/getDefualt.mjs"
 export const schema = {
-	method: 'GET',
-	url: '/api/stats/getDefault/:id',
+	method: "GET",
+	url: "/api/stats/getDefault/:id",
 	schema: {
         hide: true,
 		path: {
-			id: { type: 'string' }
+			id: { type: "string" }
 		},
 		querystring: {
-			start: { type: 'number', default: 0 },
-			end: { type: 'number', default: 0 },
-			groupBy: { type: 'string' },
+			start: { type: "number", default: 0 },
+			end: { type: "number", default: 0 },
+			groupBy: { type: "string" },
         },
         response: {
 			404: {},
             401: {},
             200: {
-				type: 'object',
+				type: "object",
 				properties: {
 					mainStats: {
 						type: "array",
 						items: {
-							type: 'object',
+							type: "object",
 							properties: {
-								time: { type: 'string' },
-								type: { type: 'number' },
-								cpuUsage: { type: 'number' },
-								guildCount: { type: 'number' },
-								members: { type: 'number' },
-								ramUsage: { type: 'number' },
-								shardCount: { type: 'number' },
-								totalRam: { type: 'number' },
-								userCount: { type: 'number' },
+								time: { type: "string" },
+								type: { type: "number" },
+								cpuUsage: { type: "number" },
+								guildCount: { type: "number" },
+								members: { type: "number" },
+								ramUsage: { type: "number" },
+								shardCount: { type: "number" },
+								totalRam: { type: "number" },
+								userCount: { type: "number" },
 							}
 						}
 					},
@@ -118,8 +118,8 @@ const fetchFromInflux = async (options) => {
 	const queryApi = influxClient.getQueryApi("disstat")
 
 	const fluxQuery = flux`import "math"
-	from(bucket:"defaultBucket") 
-	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop})) 
+	from(bucket:"defaultBucket")
+	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop}))
 	|> filter(fn: (r) => r._measurement == ${options.measurement})
 	|> filter(fn: (r) => r["botid"] == ${options.botID})
 	|> aggregateWindow(every: ${fluxDuration(options.groupBy ?? "1d")}, fn: mean, createEmpty: false)

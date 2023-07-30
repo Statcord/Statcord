@@ -1,17 +1,17 @@
-import { eventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from 'h3'
+import { eventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from "h3"
 
 if (import.meta.env) {
-    var {oauth2} = await import('~/config.mjs')
-    var {default: sessionIdGen} = await import('~/utils/sessionIdGen.mjs')
-    var {tokenRequest, getDiscordUser} = await import('~/utils/oauth.mjs')
-    var {default: redis} = await import('~/utils/redis.mjs')
+    var {oauth2} = await import("~/config.mjs")
+    var {default: sessionIdGen} = await import("~/utils/sessionIdGen.mjs")
+    var {tokenRequest, getDiscordUser} = await import("~/utils/oauth.mjs")
+    var {default: redis} = await import("~/utils/redis.mjs")
 }
 
 export default eventHandler(
-    async (a)=>{
+    async a => {
         const { code } = getQuery(a);
         if (!code) return sendNoContent(400)
-        
+
         const tokens = await tokenRequest({
             code,
             redirectUri: oauth2.apihost + "/discordOauth/callback"
@@ -31,18 +31,18 @@ export default eventHandler(
         setCookie(a, "sessionId", sessionID, {
             "expires": expires
         })
-   
+
         return sendRedirect(a, oauth2.redirectUri, 302)
     }
 )
 export const file = "oauth/callback.mjs"
 export const schema = {
-    method: 'GET',
-    url: '/api/discordOauth/callback',
+    method: "GET",
+    url: "/api/discordOauth/callback",
 	schema: {
         hide: true,
         querystring: {
-            code: { type: 'string' }
+            code: { type: "string" }
         },
         response: {
             302: {}
