@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import {oauth2} from './config.mjs'
 export default defineNuxtConfig({
   devtools: {
     enabled: true
@@ -19,7 +18,7 @@ export default defineNuxtConfig({
   routeRules:{
     '/login': {
       redirect: {
-        to:`https://discord.com/api/oauth2/authorize?client_id=${oauth2.clientID}&response_type=code&redirect_uri=${encodeURIComponent(oauth2.apihost + "/discordOauth/callback")}&scope=identify&prompt=none`,
+        to:`https://discord.com/api/oauth2/authorize?client_id=${process.env.discordBotID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.domain + "/api/discordOauth/callback")}&scope=identify&prompt=none`,
         statusCode: 308
       }
     },

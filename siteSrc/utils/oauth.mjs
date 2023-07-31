@@ -1,8 +1,5 @@
 // import RequestHandler from './RequestHandler.mjs'
-import {oauth2, bot_token} from '../config.mjs'
-
 // const requestHandler = new RequestHandler()
-
 function encode(obj) {
 	let string = "";
 
@@ -16,8 +13,8 @@ function encode(obj) {
 
 export const tokenRequest = (options) => {
 	const obj = {
-		client_id: oauth2.clientID,
-		client_secret: oauth2.clientSecret,
+		client_id: process.env.discordBotID,
+		client_secret: process.env.discordBotClientSecret,
 		grant_type: "authorization_code",
 		code: options.code,
 		redirect_uri: options.redirectUri,
@@ -44,7 +41,7 @@ export const getBot = async(botId) => {
 	const botData = await request("GET", `/users/${botId}`, undefined, {
 		auth: {
 			type: "Bot",
-			creds: bot_token,
+			creds: process.env.discordBotToken,
 		},
 	});
 

@@ -1,7 +1,6 @@
 import { eventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from 'h3'
 
 if (import.meta.env) {
-    var {oauth2} = await import('~/config.mjs')
     var {default: sessionIdGen} = await import('~/utils/sessionIdGen.mjs')
     var {tokenRequest, getDiscordUser} = await import('~/utils/oauth.mjs')
     var {default: redis} = await import('~/utils/redis.mjs')
@@ -14,7 +13,7 @@ export default eventHandler(
         
         const tokens = await tokenRequest({
             code,
-            redirectUri: oauth2.apihost + "/discordOauth/callback"
+            redirectUri: process.env.domain + "/api/discordOauth/callback"
         });
 
         if (!tokens.access_token) return sendNoContent(400)
@@ -32,7 +31,7 @@ export default eventHandler(
             "expires": expires
         })
    
-        return sendRedirect(a, oauth2.redirectUri, 302)
+        return sendRedirect(a, process.env.domain, 302)
     }
 )
 export const file = "oauth/callback.mjs"

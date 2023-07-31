@@ -1,8 +1,14 @@
 FROM node:20.3.0-alpine3.17 as build-stage
 
-WORKDIR /preApp
+ARG discordBotID
+ENV discordBotID $discordBotID
 
-COPY . /preApp
+ARG domain
+ENV domain $domain
+
+WORKDIR /preApp
+COPY ./siteSrc /preApp
+
 RUN npm install
 RUN node ./tools/docs.mjs
 RUN npm run build

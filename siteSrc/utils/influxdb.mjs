@@ -1,8 +1,10 @@
 import { InfluxDB } from '@influxdata/influxdb-client'
 import {DeleteAPI} from '@influxdata/influxdb-client-apis'
-import { influxConfig } from '../config.mjs'
 
-const influx = new InfluxDB(influxConfig)
+const influx = new InfluxDB({
+    url: 'http://192.168.0.23:8086',
+    token: process.env.influxToken
+})
 const deleteAPI = new DeleteAPI(influx)
 
 export const influxClient = influx
