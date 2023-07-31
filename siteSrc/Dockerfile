@@ -1,4 +1,4 @@
-FROM node:20.3.0-alpine3.17 as build-stage
+FROM node:20.5.0-alpine3.17 as build-stage
 
 ARG discordBotID
 ENV discordBotID $discordBotID
@@ -15,7 +15,7 @@ RUN npm run build
 
 
 
-FROM node:20.3.0-alpine3.17 as production-stage
+FROM node:20.5.0-alpine3.17 as production-stage
 RUN mkdir /app
 COPY --from=build-stage /preApp /app
 
