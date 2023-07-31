@@ -1,11 +1,11 @@
-import { eventHandler, sendNoContent, getCookie } from 'h3'
+import { eventHandler, sendNoContent, getCookie } from "h3"
 if (import.meta.env) {
-    var {default: db} = await import('~/utils/postgres.mjs')
-    var {default: redis} = await import('~/utils/redis.mjs')
+    var {default: db} = await import("~/utils/postgres.mjs")
+    var {default: redis} = await import("~/utils/redis.mjs")
 }
 
 export default eventHandler(
-    async (a)=>{
+    async a => {
         if (!a.context.params.id) return sendNoContent(a, 404)
         const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
@@ -18,9 +18,8 @@ export default eventHandler(
 
 		const chartSettings = await db`SELECT * from chartsettings WHERE botid = ${a.context.params.id}`.catch(() => {})
 
-
         const settings = {
-            "Access":{
+            "Access": {
                 "Public": {
                     state: botExisits[0].public,
                     type: "checkbox",
@@ -45,8 +44,8 @@ export default eventHandler(
             }
         }
 
-        chartSettings.forEach((chart)=>{
-            settings['Default charts'][chart.name] = {
+        chartSettings.forEach(chart => {
+            settings["Default charts"][chart.name] = {
                 state: chart.enabled,
                 type: "checkbox",
                 enabled: false
@@ -58,14 +57,15 @@ export default eventHandler(
 )
 export const file = "settings/get.mjs"
 export const schema = {
-	method: 'GET',
-	url: '/api/bots/:id/settings/get',
+	method: "GET",
+	url: "/api/bots/:id/settings/get",
 	schema: {
+        hide: true,
         response: {
             401: {},
             404: {},
             200: {
-				type: 'object',
+				type: "object",
                 properties: {
                 }
             }
