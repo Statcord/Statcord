@@ -24,11 +24,11 @@ export const schema = {
 					properties: {
                         botid: {
                             type: "string",
-                            example: "685166801394335819"
+                            // example: "685166801394335819"
                         },
                         username: {
                             type: "string",
-                            example: "TomatenKuchen"
+                            // example: "TomatenKuchen"
                         },
 						avatar: { type: "string" }
 					}

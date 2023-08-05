@@ -74,7 +74,7 @@ export const schema = {
 			properties: {
 				id: {
 					type: "string",
-					required: true
+					// required: true
 				},
 				guildCount: { type: "number", default: 0 },
 				shardCount: { type: "number", default: 0 },

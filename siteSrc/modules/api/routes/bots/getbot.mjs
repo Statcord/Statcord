@@ -31,7 +31,7 @@ export const schema = {
 			properties: {
 				id: {
 					type: "string",
-					example: "685166801394335819"
+					// example: "685166801394335819"
 				}
 			}
         },
@@ -43,20 +43,20 @@ export const schema = {
 				properties: {
 					botid: {
 						type: "string",
-						example: "685166801394335819"
+						// example: "685166801394335819"
 					},
 					username: {
 						type: "string",
-						example: "TomatenKuchen"
+						// example: "TomatenKuchen"
 					},
 					avatar: { type: "string" },
 					username: {
 						type: "string",
-						example: "TomatoCake"
+						// example: "TomatoCake"
 					},
 					ownerid: {
 						type: "string",
-						example: "581146486646243339"
+						// example: "581146486646243339"
 					},
 					public: {
 						type: "boolean",
