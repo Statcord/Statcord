@@ -1,4 +1,0 @@
-- docker
-- use middleware/plugin/module for user auth instead of api route
-- fill in settings page
-- set settings page
