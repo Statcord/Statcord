@@ -7,7 +7,7 @@ ARG domain
 ENV domain $domain
 
 WORKDIR /preApp
-COPY ./siteSrc /preApp
+COPY . /preApp
 
 RUN npm install
 RUN node ./tools/docs.mjs
