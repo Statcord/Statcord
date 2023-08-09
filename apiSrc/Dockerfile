@@ -1,4 +1,4 @@
-FROM node:20.3.0-alpine3.17
+FROM node:20.5-alpine3.17
 ENV NODE_ENV production
 
 EXPOSE 8090
