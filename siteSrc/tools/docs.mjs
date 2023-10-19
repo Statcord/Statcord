@@ -7,11 +7,11 @@ const API = fastify();
 API.register(fastifySwagger, {
 
 }).after(async () => {
-  const routeCatagorys = await readdir("./modules/api/routes")
+  const routeCatagorys = await readdir("./server/api/")
   await Promise.all(routeCatagorys.map(async routeCatagory => {
-    const endpoints = await readdir(`./modules/api/routes/${routeCatagory}`)
+    const endpoints = await readdir(`./modules/api/${routeCatagory}`)
     await Promise.all(endpoints.map(async endpoint => {
-      const { schema } = await import(`../modules/api/routes/${routeCatagory}/${endpoint}`)
+      const { schema } = await import(`../modules/api/${routeCatagory}/${endpoint}`)
       API.route({ ...schema, handler: () => { } })
     }))
   }))

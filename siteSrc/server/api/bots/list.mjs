@@ -1,9 +1,7 @@
-import { eventHandler, getQuery } from "h3"
-if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
-}
+import { defineEventHandler, getQuery } from "h3"
+import db from '~/utils/postgres.mjs'
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
         return db`SELECT username, avatar, botid, nsfw FROM bots WHERE public = true LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch(() => {})
     }

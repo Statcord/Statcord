@@ -1,13 +1,13 @@
-import { eventHandler, getCookie, readBody, sendNoContent } from "h3"
+import { defineEventHandler, getCookie, readBody, sendNoContent } from "h3"
 if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
-    var {default: redis} = await import("~/utils/redis.mjs")
 	var {getBot} = await import("~/utils/oauth.mjs")
-	var {default: genKey} = await import("~/utils/genKey.mjs")
 	var {defaultChartSettings} = await import("~/utils/supportedCharts.mjs")
 }
+import db from '~/utils/postgres.mjs'
+import redis from "~/utils/redis.mjs"
+import genKey from "~/utils/genKey.mjs"
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null

@@ -1,10 +1,8 @@
-import { eventHandler, sendNoContent, getCookie, getQuery } from "h3"
-if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
-    var {default: redis} = await import("~/utils/redis.mjs")
-}
+import { defineEventHandler, sendNoContent, getCookie, getQuery } from "h3"
+import db from '~/utils/postgres.mjs'
+import redis from "~/utils/redis.mjs"
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null

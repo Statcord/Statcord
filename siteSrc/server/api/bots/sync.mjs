@@ -1,11 +1,11 @@
-import { eventHandler, sendNoContent, getCookie, readBody } from "h3"
+import { defineEventHandler, sendNoContent, getCookie, readBody } from "h3"
+import db from '~/utils/postgres.mjs'
+import redis from "~/utils/redis.mjs"
 if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
-    var {default: redis} = await import("~/utils/redis.mjs")
 	var {getBot} = await import("~/utils/oauth.mjs")
 }
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		const botID = await readBody(a)
 		if (!botID.id) return sendNoContent(a, 400)

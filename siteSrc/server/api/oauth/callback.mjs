@@ -1,12 +1,12 @@
-import { eventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from "h3"
+import { defineEventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from "h3"
+import redis from "~/utils/redis.mjs"
 
 if (import.meta.env) {
     var {default: sessionIdGen} = await import("~/utils/sessionIdGen.mjs")
     var {tokenRequest, getDiscordUser} = await import("~/utils/oauth.mjs")
-    var {default: redis} = await import("~/utils/redis.mjs")
 }
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
         const { code } = getQuery(a);
         if (!code) return sendNoContent(400)

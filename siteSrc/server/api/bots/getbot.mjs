@@ -1,10 +1,8 @@
-import { eventHandler, sendNoContent, getCookie } from "h3"
-if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
-    var {default: redis} = await import("~/utils/redis.mjs")
-}
+import { defineEventHandler, sendNoContent, getCookie } from "h3"
+import db from '~/utils/postgres.mjs'
+import redis from "~/utils/redis.mjs"
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		if (!a.context.params.id) return sendNoContent(a, 404)
 		const bot = await db`SELECT addedon, bots.username, avatar, nsfw, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${a.context.params.id}`.catch(() => {})

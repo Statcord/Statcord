@@ -1,9 +1,9 @@
-import { eventHandler } from "h3"
+import { defineEventHandler } from "h3"
 if (import.meta.env) {
     var {default: swaggerRoutes} = await import("~/swaggerRoutes.mjs")
 }
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
         return swaggerRoutes
     }

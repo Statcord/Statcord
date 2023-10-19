@@ -1,11 +1,11 @@
-import { eventHandler, sendNoContent, getCookie, deleteCookie } from "h3"
+import { defineEventHandler, sendNoContent, getCookie, deleteCookie } from "h3"
+import db from '~/utils/postgres.mjs'
+import redis from "~/utils/redis.mjs"
 if (import.meta.env) {
-    var {default: redis} = await import("~/utils/redis.mjs")
-    var {default: db} = await import("~/utils/postgres.mjs")
 	var {influxDelete} = await import("~/utils/influxdb.mjs")
 }
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null

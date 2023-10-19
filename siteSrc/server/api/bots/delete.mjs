@@ -1,11 +1,11 @@
-import { eventHandler, sendNoContent, getCookie, readBody } from "h3"
+import { defineEventHandler, readBody, sendNoContent, getCookie } from "h3"
+import db from '~/utils/postgres.mjs'
+import redis from "~/utils/redis.mjs"
 if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
-    var {default: redis} = await import("~/utils/redis.mjs")
-	var {default: genKey} = await import("~/utils/genKey.mjs")
+	var {influxDelete} = await import("~/utils/influxdb.mjs")
 }
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
 		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
@@ -19,16 +19,27 @@ export default eventHandler(
 		if (!botExisits[0]) return sendNoContent(a, 404)
 		if (botExisits[0].ownerid !== session.discordUserInfo.id) return sendNoContent(a, 401)
 
-		const key = genKey()
+		db`DELETE FROM chartsettings WHERE botid = ${botID.id}`.catch(() => {})
+		db`DELETE FROM bots WHERE botid = ${botID.id}`.catch(() => {})
 
-		db`UPDATE bots SET token = ${key} WHERE botid = ${botID.id}`.catch(() => {})
-		return {key}
+		influxDelete.postDelete({
+			org: "disstat",
+			bucket:"defaultBucket",
+			body: {
+				start: new Date(0),
+				stop: new Date(),
+				// see https://docs.influxdata.com/influxdb/latest/reference/syntax/delete-predicate/
+				predicate: `botid="${botID.id}"`,
+			}
+		})
+
+		sendNoContent(a, 200)
     }
 )
-export const file = "bots/genkey.mjs"
+export const file = "bots/delete.mjs"
 export const schema = {
-	method: "POST",
-	url: "/api/bots/genKey",
+	method: "DELETE",
+	url: "/api/bots/delete",
 	schema: {
         hide: true,
         body: {
@@ -40,12 +51,7 @@ export const schema = {
 		response: {
             401: {},
             404: {},
-			200: {
-				type: "object",
-				properties: {
-					key: { type: "string"}
-				}
-			}
+			201: {}
 		}
 	}
 }

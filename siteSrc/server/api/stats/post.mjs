@@ -1,12 +1,12 @@
-import { eventHandler, sendNoContent, readBody, getHeader } from "h3"
+import { defineEventHandler, sendNoContent, readBody, getHeader } from "h3"
 import { Point } from "@influxdata/influxdb-client"
+import db from '~/utils/postgres.mjs'
 
 if (import.meta.env) {
-    var {default: db} = await import("~/utils/postgres.mjs")
 	var {influxClient} = await import("~/utils/influxdb.mjs")
 }
 
-export default eventHandler(
+export default defineEventHandler(
     async a => {
 		const body = await readBody(a)
 		if (!body.id) return sendNoContent(a, 400)
