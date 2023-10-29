@@ -1,19 +1,16 @@
-import { defineEventHandler, sendNoContent, getCookie, readBody } from "h3"
+import { defineEventHandler, sendNoContent, readBody } from "h3"
 import genKey from "~/utils/genKey.mjs"
 
 export default defineEventHandler(
     async a => {
-		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
-
-        if (!session) return sendNoContent(a, 401)
+        if (!event.context.session.accessToken) return sendNoContent(a, 401)
 
 		const botID = await readBody(a)
 		if (!botID.id) return sendNoContent(a, 400)
 
 		const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
 		if (!botExisits[0]) return sendNoContent(a, 404)
-		if (botExisits[0].ownerid !== session.discordUserInfo.id) return sendNoContent(a, 401)
+		if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendNoContent(a, 401)
 
 		const key = genKey()
 

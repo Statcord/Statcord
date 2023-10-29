@@ -1,8 +1,19 @@
 <template></template>
 
 <script setup>
-  useFetch("/api/discordOauth/logout").then(()=>{})
-  await navigateTo("/")
+// const {
+//   session,
+//   refresh,
+//   remove,
+//   reset,
+//   update,
+//   overwrite
+// } = await useSession()
+
+// await remove()
+
+  // useFetch("/api/discordOauth/logout").then(()=>{})
+  // await navigateTo("/")
 
   useSeoMeta({
     title: 'DisStat - Logout',

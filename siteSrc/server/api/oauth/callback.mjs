@@ -1,8 +1,4 @@
-import { defineEventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from "h3"
-
-if (import.meta.env) {
-    var {default: sessionIdGen} = await import("~/utils/sessionIdGen.mjs")
-}
+import { defineEventHandler, sendNoContent, sendRedirect, getQuery } from "h3"
 
 export default defineEventHandler(
     async a => {
@@ -16,18 +12,8 @@ export default defineEventHandler(
 
         if (!tokens.access_token) return sendNoContent(400)
 
-		const sessionID = getCookie(a, "sessionId")?.split(".")[0] ?? sessionIdGen()
-
-        event.context.redis.set(`sess:${sessionID}`, JSON.stringify({
-            discordAccessToken: tokens.access_token,
-            discordUserInfo: await event.context.oauth.getDiscordUser(tokens.access_token)
-        }), "EX", 604800)
-
-        const expires = new Date()
-        expires.setSeconds(expires.getSeconds()+604800)
-        setCookie(a, "sessionId", sessionID, {
-            "expires": expires
-        })
+        event.context.session.accessToken = tokens.access_token,
+        event.context.session.userInfo = await event.context.oauth.getDiscordUser(tokens.access_token)
    
         return sendRedirect(a, process.env.domain, 302)
     }

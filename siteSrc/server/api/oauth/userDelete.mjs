@@ -1,15 +1,10 @@
-import { defineEventHandler, sendNoContent, getCookie, deleteCookie } from "h3"
+import { defineEventHandler, sendNoContent } from "h3"
 
 export default defineEventHandler(
     async a => {
-		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
+        if (!event.context.session.accessToken) return sendNoContent(a, 401)
 
-        if (!session) return sendNoContent(a, 401)
-        event.context.redis.del(`sess:${sessionID}`)
-        deleteCookie(a, "sessionId")
-
-        const myBots = await event.context.pgPool`SELECT botid FROM bots WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
+        const myBots = await event.context.pgPool`SELECT botid FROM bots WHERE ownerid = ${event.context.session.userInfo.id}`.catch(() => {})
         myBots.map(bot => {
             event.context.pgPool`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(() => {})
 
@@ -25,7 +20,7 @@ export default defineEventHandler(
             })
         })
 
-        event.context.pgPool`DELETE FROM owners WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
+        event.context.pgPool`DELETE FROM owners WHERE ownerid = ${event.context.session.userInfo.id}`.catch(() => {})
 
         sendNoContent(a, 200)
     }

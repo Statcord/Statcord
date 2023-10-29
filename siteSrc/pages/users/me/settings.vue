@@ -15,6 +15,16 @@
 </template>
 
 <script>
+// const {
+//   session,
+//   refresh,
+//   remove,
+//   reset,
+//   update,
+//   overwrite
+// } = await useSession()
+
+// await remove()
 export default {
   name: 'userSettings',
   data() {
@@ -23,6 +33,7 @@ export default {
   },
   methods: {
     async confirmedDelete() {
+      
       const { error } = await useFetch(() => `/api/discordOauth/user/delete`, {
         method: 'delete',
       })

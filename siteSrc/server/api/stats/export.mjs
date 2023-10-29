@@ -1,4 +1,4 @@
-import { defineEventHandler, sendNoContent, getCookie, getQuery } from 'h3'
+import { defineEventHandler, sendNoContent } from 'h3'
 import { flux, fluxDuration } from '@influxdata/influxdb-client'
 
 export default defineEventHandler(
@@ -6,11 +6,8 @@ export default defineEventHandler(
 		if (!a.context.params.id) return sendNoContent(a, 404)
 		const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
-
-		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 		
-		const isOwner = !!session && bot[0].ownerid === session.discordUserInfo.id
+		const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
 		if (!isOwner) return sendNoContent(a, 401)
 
 		// console.time("first")

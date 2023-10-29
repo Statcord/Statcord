@@ -1,12 +1,9 @@
-import { defineEventHandler, sendNoContent, getCookie } from "h3"
+import { defineEventHandler, sendNoContent } from "h3"
 
 export default defineEventHandler(
     async a => {
-		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
-
-        if (session) return session.discordUserInfo
-        sendNoContent(a, 401)
+        if (!event.context.session.accessToken) return sendNoContent(a, 401)
+        return event.context.session.userInfo
     }
 )
 export const file = "oauth/user.mjs"

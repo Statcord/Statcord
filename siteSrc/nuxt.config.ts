@@ -15,6 +15,19 @@ export default defineNuxtConfig({
       mode: 'client'
     }
   ],
+  modules: [
+    '@sidebase/nuxt-session'
+  ],
+   session: {
+    session: {
+      storageOptions: {
+        driver: 'redis',
+        options: {
+          url: 'redis://192.168.0.21:6379'
+        }
+      }
+    }
+  },
   routeRules:{
     '/login': {
       redirect: {

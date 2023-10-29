@@ -1,4 +1,4 @@
-import { defineEventHandler, sendNoContent, getCookie } from "h3"
+import { defineEventHandler, sendNoContent } from "h3"
 
 export default defineEventHandler(
     async a => {
@@ -6,10 +6,7 @@ export default defineEventHandler(
 		const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
 
-		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
-
-		const isOwner = !!session && bot[0].ownerid === session.discordUserInfo.id
+		const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
 		const isPublic = bot[0].public
 
 		if ((!isPublic && !isOwner)) return sendNoContent(a, 401)
