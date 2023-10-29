@@ -1,22 +1,20 @@
 import { defineEventHandler, sendNoContent, getCookie } from "h3"
-import db from '~/utils/postgres.mjs'
-import redis from "~/utils/redis.mjs"
 
 export default defineEventHandler(
     async a => {
 		if (!a.context.params.id) return sendNoContent(a, 404)
-		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+		const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
+		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 
 		const isOwner = !!session && bot[0].ownerid === session.discordUserInfo.id
 		const isPublic = bot[0].public
 
 		if ((!isPublic && !isOwner)) return sendNoContent(a, 401)
 
-		return db`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${a.context.params.id}`.catch(() => {})
+		return event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${a.context.params.id}`.catch(() => {})
     }
 )
 export const file = "stats/chartTypes.mjs"

@@ -1,10 +1,9 @@
 import { defineEventHandler, sendNoContent, getCookie } from "h3"
-import redis from "~/utils/redis.mjs"
 
 export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
+		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 
         if (session) return session.discordUserInfo
         sendNoContent(a, 401)

@@ -1,22 +1,17 @@
 import { defineEventHandler, sendNoContent, readBody, getHeader } from "h3"
 import { Point } from "@influxdata/influxdb-client"
-import db from '~/utils/postgres.mjs'
-
-if (import.meta.env) {
-	var {influxClient} = await import("~/utils/influxdb.mjs")
-}
 
 export default defineEventHandler(
     async a => {
 		const body = await readBody(a)
 		if (!body.id) return sendNoContent(a, 400)
 
-		const botExisits = await db`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
+		const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
 		if (!botExisits[0]) return sendNoContent(a,404)
 		if (getHeader(a, "authorization") !== botExisits[0].token) return sendNoContent(a, 401)
 		if (body.customCharts?.length > botExisits[0].maxcustomcharts) return sendNoContent(a, 400)
 
-		const writeClient = influxClient.getWriteApi("disstat", "defaultBucket")
+		const writeClient = event.context.influx.influxClient.getWriteApi("disstat", "defaultBucket")
 
 		const mainStatsPoint = new Point("botStats")
 		.tag("botid",  body.id)
@@ -31,7 +26,7 @@ export default defineEventHandler(
 
 		if (body.customCharts) {
 			body.customCharts.map(customChart => {
-				db`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, "line") ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+				event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, "line") ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 
 				const customChartsPoint = new Point("customCharts")
 					.tag("botid",  body.id)

@@ -1,9 +1,7 @@
 import { defineEventHandler, sendNoContent, getCookie, setCookie, sendRedirect, getQuery } from "h3"
-import redis from "~/utils/redis.mjs"
 
 if (import.meta.env) {
     var {default: sessionIdGen} = await import("~/utils/sessionIdGen.mjs")
-    var {tokenRequest, getDiscordUser} = await import("~/utils/oauth.mjs")
 }
 
 export default defineEventHandler(
@@ -11,7 +9,7 @@ export default defineEventHandler(
         const { code } = getQuery(a);
         if (!code) return sendNoContent(400)
 
-        const tokens = await tokenRequest({
+        const tokens = await event.context.oauth.tokenRequest({
             code,
             redirectUri: process.env.domain + "/api/discordOauth/callback"
         });
@@ -20,9 +18,9 @@ export default defineEventHandler(
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0] ?? sessionIdGen()
 
-        redis.set(`sess:${sessionID}`, JSON.stringify({
+        event.context.redis.set(`sess:${sessionID}`, JSON.stringify({
             discordAccessToken: tokens.access_token,
-            discordUserInfo: await getDiscordUser(tokens.access_token)
+            discordUserInfo: await event.context.oauth.getDiscordUser(tokens.access_token)
         }), "EX", 604800)
 
         const expires = new Date()

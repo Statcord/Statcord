@@ -1,15 +1,13 @@
 import { defineEventHandler, sendNoContent, getCookie, getQuery } from "h3"
-import db from '~/utils/postgres.mjs'
-import redis from "~/utils/redis.mjs"
 
 export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
+		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 
         if (!session?.discordUserInfo.id) return sendNoContent(a, 401)
 
-		return db`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${session.discordUserInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch().catch(() => {})
+		return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${session.discordUserInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch().catch(() => {})
     }
 )
 export const file = "bots/mybots.mjs"

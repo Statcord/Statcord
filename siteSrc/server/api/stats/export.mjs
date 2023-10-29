@@ -1,20 +1,14 @@
 import { defineEventHandler, sendNoContent, getCookie, getQuery } from 'h3'
 import { flux, fluxDuration } from '@influxdata/influxdb-client'
-import db from '~/utils/postgres.mjs'
-import redis from "~/utils/redis.mjs"
-
-if (import.meta.env) {
-	var {influxClient} = await import('~/utils/influxdb.mjs')
-}
 
 export default defineEventHandler(
     async (a)=>{
 		if (!a.context.params.id) return sendNoContent(a, 404)
-		const bot = await db`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+		const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
 		if (!bot[0]) return sendNoContent(a, 404)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
+		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 		
 		const isOwner = !!session && bot[0].ownerid === session.discordUserInfo.id
 		if (!isOwner) return sendNoContent(a, 401)
@@ -109,7 +103,7 @@ export const schema = {
 }
 
 const fetchFromInflux = async (options) => {
-	const queryApi = influxClient.getQueryApi("disstat")
+	const queryApi = event.context.influx.influxClient.getQueryApi("disstat")
 
 	const fluxQuery = flux`import "math"
 	from(bucket:"defaultBucket") 

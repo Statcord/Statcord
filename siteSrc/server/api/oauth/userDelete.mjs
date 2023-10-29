@@ -1,24 +1,19 @@
 import { defineEventHandler, sendNoContent, getCookie, deleteCookie } from "h3"
-import db from '~/utils/postgres.mjs'
-import redis from "~/utils/redis.mjs"
-if (import.meta.env) {
-	var {influxDelete} = await import("~/utils/influxdb.mjs")
-}
 
 export default defineEventHandler(
     async a => {
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
+		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 
         if (!session) return sendNoContent(a, 401)
-        redis.del(`sess:${sessionID}`)
+        event.context.redis.del(`sess:${sessionID}`)
         deleteCookie(a, "sessionId")
 
-        const myBots = await db`SELECT botid FROM bots WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
+        const myBots = await event.context.pgPool`SELECT botid FROM bots WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
         myBots.map(bot => {
-            db`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(() => {})
+            event.context.pgPool`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(() => {})
 
-            influxDelete.postDelete({
+            event.context.influx.influxDelete.postDelete({
                 org: "disstat",
                 bucket:"defaultBucket",
                 body: {
@@ -30,7 +25,7 @@ export default defineEventHandler(
             })
         })
 
-        db`DELETE FROM owners WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
+        event.context.pgPool`DELETE FROM owners WHERE ownerid = ${session.discordUserInfo.id}`.catch(() => {})
 
         sendNoContent(a, 200)
     }

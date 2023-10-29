@@ -1,9 +1,4 @@
 import { defineEventHandler, sendNoContent, getCookie, readBody } from "h3"
-import db from '~/utils/postgres.mjs'
-import redis from "~/utils/redis.mjs"
-if (import.meta.env) {
-	var {getBot} = await import("~/utils/oauth.mjs")
-}
 
 export default defineEventHandler(
     async a => {
@@ -11,18 +6,18 @@ export default defineEventHandler(
 		if (!botID.id) return sendNoContent(a, 400)
 
 		const sessionID = getCookie(a, "sessionId")?.split(".")[0]
-		const session = sessionID ? JSON.parse(await redis.get(`sess:${sessionID}`)) : null
+		const session = sessionID ? JSON.parse(await event.context.redis.get(`sess:${sessionID}`)) : null
 
         if (!session?.discordUserInfo.id) return sendNoContent(a, 401)
 
-		const botExisits = await db`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
+		const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
 		if (!botExisits[0]) return sendNoContent(a, 404)
 		if (botExisits[0].ownerid !== session.discordUserInfo.id) return sendNoContent(a, 401)
 
-		const bot = await getBot(botID.id)
+		const bot = await event.context.oauth.getBot(botID.id)
 		if (!bot) return sendNoContent(a, 404)
 
-		db`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${botID.id}`.catch(() => {})
+		event.context.pgPool`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${botID.id}`.catch(() => {})
 
 		return {success: true, message: "The bot has been synced!"}
     }
