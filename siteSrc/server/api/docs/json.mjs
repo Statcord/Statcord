@@ -3,11 +3,10 @@ if (import.meta.env) {
     var {default: swaggerRoutes} = await import("~/swaggerRoutes.mjs")
 }
 
-export default defineEventHandler(
-    async a => {
-        return swaggerRoutes
-    }
-)
+export default defineEventHandler(async event => {
+	return swaggerRoutes
+})
+
 export const file = "docs/json.mjs"
 export const schema = {
 	method: "GET",

@@ -1,23 +1,31 @@
-import { defineEventHandler, sendNoContent, readBody } from "h3"
+import { defineEventHandler, createError, readBody } from "h3"
 import genKey from "~/utils/genKey.mjs"
 
-export default defineEventHandler(
-    async a => {
-        if (!event.context.session.accessToken) return sendNoContent(a, 401)
+export default defineEventHandler(async event => {
+	if (!event.context.session.accessToken) throw createError({
+		statusCode: 401
+	})
 
-		const botID = await readBody(a)
-		if (!botID.id) return sendNoContent(a, 400)
+	const botID = await readBody(event)
+	if (!botID.id) throw createError({
+		statusCode: 400
+	})
 
-		const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
-		if (!botExisits[0]) return sendNoContent(a, 404)
-		if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendNoContent(a, 401)
+	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
+	if (!botExisits[0]) throw createError({
+		statusCode: 404
+	})
+	if (botExisits[0].ownerid !== event.context.session.userInfo.id) throw createError({
+		statusCode: 401
+	})
 
-		const key = genKey()
+	const key = genKey()
 
-		event.context.pgPool`UPDATE bots SET token = ${key} WHERE botid = ${botID.id}`.catch(() => {})
-		return {key}
-    }
-)
+	event.context.pgPool`UPDATE bots SET token = ${key} WHERE botid = ${botID.id}`.catch(() => {})
+
+	return {key}
+})
+
 export const file = "bots/genkey.mjs"
 export const schema = {
 	method: "POST",

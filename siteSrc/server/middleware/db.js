@@ -21,5 +21,5 @@ const pgPool = postgres(
 )
 
 export default defineEventHandler((event) => {
-    event.context.pgPool` = pgPool
+    event.context.pgPool = pgPool
 })

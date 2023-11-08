@@ -1,59 +1,64 @@
-import { defineEventHandler, sendNoContent, getQuery } from "h3"
+import { defineEventHandler, getQuery, createError } from "h3"
 import { flux, fluxDuration } from "@influxdata/influxdb-client"
 
-export default defineEventHandler(
-    async a => {
-		if (!a.context.params.id) return sendNoContent(a, 404)
-		const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
-		if (!bot[0]) return sendNoContent(a, 404)
+export default defineEventHandler(async event => {
+	if (!a.context.params.id) throw createError({
+		statusCode: 404
+	})
+	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+	if (!bot[0]) throw createError({
+		statusCode: 404
+	})
 
-		const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
-		const isPublic = bot[0].public
+	const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
+	const isPublic = bot[0].public
 
-		if ((!isPublic && !isOwner)) return sendNoContent(a, 401)
+	if ((!isPublic && !isOwner)) throw createError({
+		statusCode: 401
+	})
 
-		const query = getQuery(a)
+	const query = getQuery(event)
 
-		const start = new Date(Number(query.start ?? 0)).toISOString()
-		const stop = query.end ? new Date(Number(query.end)).toISOString() : new Date().toISOString()
+	const start = new Date(Number(query.start ?? 0)).toISOString()
+	const stop = query.end ? new Date(Number(query.end)).toISOString() : new Date().toISOString()
 
-		// console.time("first")
-		const mainStats = await fetchFromInflux({
-			measurement: "botStats",
-			start,
-			stop,
-			groupBy: query.groupBy,
-			botID: a.context.params.id
-		})
-		// console.timeEnd("first")
+	// console.time("first")
+	const mainStats = await fetchFromInflux({
+		measurement: "botStats",
+		start,
+		stop,
+		groupBy: query.groupBy,
+		botID: a.context.params.id
+	})
+	// console.timeEnd("first")
 
-		// console.time("second")
-		const commands = await fetchFromInflux({
-			measurement: "customCharts",
-			start,
-			stop,
-			groupBy: query.groupBy,
-			botID: a.context.params.id
-		})
-		// console.timeEnd("second")
+	// console.time("second")
+	const commands = await fetchFromInflux({
+		measurement: "customCharts",
+		start,
+		stop,
+		groupBy: query.groupBy,
+		botID: a.context.params.id
+	})
+	// console.timeEnd("second")
 
-		// console.time("thrid")
-		const custom = await fetchFromInflux({
-			measurement: "topCommands",
-			start,
-			stop,
-			groupBy: query.groupBy,
-			botID: a.context.params.id
-		})
-		// console.timeEnd("thrid")
+	// console.time("thrid")
+	const custom = await fetchFromInflux({
+		measurement: "topCommands",
+		start,
+		stop,
+		groupBy: query.groupBy,
+		botID: a.context.params.id
+	})
+	// console.timeEnd("thrid")
 
-		return {
-			mainStats,
-			commands,
-			custom
-		}
-    }
-)
+	return {
+		mainStats,
+		commands,
+		custom
+	}
+})
+
 export const file = "stats/getDefualt.mjs"
 export const schema = {
 	method: "GET",

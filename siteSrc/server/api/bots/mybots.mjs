@@ -1,12 +1,13 @@
-import { defineEventHandler, sendNoContent, getQuery } from "h3"
+import { defineEventHandler, getQuery, createError } from "h3"
 
-export default defineEventHandler(
-    async a => {
-        if (!event.context.session.accessToken) return sendNoContent(a, 401)
+export default defineEventHandler(async event => {
+	if (!event.context.session.accessToken) throw createError({
+		statusCode: 401
+	})
 
-		return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${event.context.session.userInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch().catch(() => {})
-    }
-)
+	return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${event.context.session.userInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(event).page ?? 0)}`.catch().catch(() => {})
+})
+
 export const file = "bots/mybots.mjs"
 export const schema = {
 	method: "GET",

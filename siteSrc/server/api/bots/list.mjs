@@ -1,10 +1,9 @@
 import { defineEventHandler, getQuery } from "h3"
 
-export default defineEventHandler(
-    async a => {
-        return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE public = true LIMIT 30 OFFSET 30*${Number(getQuery(a).page ?? 0)}`.catch(() => {})
-    }
-)
+export default defineEventHandler(async event => {
+    return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE public = true LIMIT 30 OFFSET 30*${Number(getQuery(event).page ?? 0)}`.catch(() => {})
+})
+
 export const file = "bots/list.mjs"
 export const schema = {
     method: "GET",

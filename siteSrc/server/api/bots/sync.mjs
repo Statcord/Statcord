@@ -1,24 +1,33 @@
-import { defineEventHandler, sendNoContent, readBody } from "h3"
+import { defineEventHandler, readBody, createError } from "h3"
 
-export default defineEventHandler(
-    async a => {
-		const botID = await readBody(a)
-		if (!botID.id) return sendNoContent(a, 400)
+export default defineEventHandler(async event => {
+	const botID = await readBody(event)
+	if (!botID.id) throw createError({
+		statusCode: 400
+	})
 
-        if (!event.context.session.accessToken) return sendNoContent(a, 401)
+	if (!event.context.session.accessToken) throw createError({
+		statusCode: 401
+	})
 
-		const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
-		if (!botExisits[0]) return sendNoContent(a, 404)
-		if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendNoContent(a, 401)
+	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
+	if (!botExisits[0]) throw createError({
+		statusCode: 404
+	})
+	if (botExisits[0].ownerid !== event.context.session.userInfo.id) throw createError({
+		statusCode: 401
+	})
 
-		const bot = await event.context.oauth.getBot(botID.id)
-		if (!bot) return sendNoContent(a, 404)
+	const bot = await event.context.oauth.getBot(botID.id)
+	if (!bot) throw createError({
+		statusCode: 404
+	})
 
-		event.context.pgPool`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${botID.id}`.catch(() => {})
+	event.context.pgPool`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${botID.id}`.catch(() => {})
 
-		return {success: true, message: "The bot has been synced!"}
-    }
-)
+	return {success: true, message: "The bot has been synced!"}
+})
+
 export const file = "bots/sync.mjs"
 export const schema = {
 	method: "POST",

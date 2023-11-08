@@ -1,33 +1,39 @@
-import { defineEventHandler, readBody, sendNoContent } from "h3"
+import { defineEventHandler, readBody, sendNoContent, createError } from "h3"
 if (import.meta.env) {
 	var {defaultChartSettings} = await import("~/utils/supportedCharts.mjs")
 }
 import genKey from "~/utils/genKey.mjs"
 
-export default defineEventHandler(
-    async a => {
-        if (!event.context.session.accessToken) return sendNoContent(a, 401)
+export default defineEventHandler(async event => {
+	if (!event.context.session.accessToken) throw createError({
+		statusCode: 401
+	})
 
-		const botID = await readBody(a)
-		if (!botID.id) return sendNoContent(a, 400)
+	const botID = await readBody(event)
+	if (!botID.id) throw createError({
+		statusCode: 400
+	})
 
-		const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
-		if (botExisits[0]) return sendNoContent(a, 404)
+	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
+	if (botExisits[0]) throw createError({
+		statusCode: 404
+	})
 
-		const bot = await event.context.oauth.getBot(botID.id)
-		if (!bot) return sendNoContent(a, 404)
+	const bot = await event.context.oauth.getBot(botID.id)
+	if (!bot) throw createError({
+		statusCode: 404
+	})
 
-		event.context.pgPool`INSERT INTO owners(username, ownerid) VALUES (${event.context.session.userInfo.username}, ${event.context.session.userInfo.id}) ON CONFLICT (ownerid) DO NOTHING`.catch(() => {})
-		event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon) VALUES (${botID.id}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${event.context.session.userInfo.id}, now())`.catch(() => {})
+	event.context.pgPool`INSERT INTO owners(username, ownerid) VALUES (${event.context.session.userInfo.username}, ${event.context.session.userInfo.id}) ON CONFLICT (ownerid) DO NOTHING`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon) VALUES (${botID.id}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${event.context.session.userInfo.id}, now())`.catch(() => {})
 
-		Object.keys(defaultChartSettings).forEach(chartID => {
-			const chart = defaultChartSettings[chartID]
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${botID.id}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
-		})
+	Object.keys(defaultChartSettings).forEach(chartID => {
+		const chart = defaultChartSettings[chartID]
+		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${botID.id}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
+	})
 
-		sendNoContent(a, 200)
-	}
-)
+	sendNoContent(event, 200)
+})
 
 export const file = "bots/add.mjs"
 export const schema = {
