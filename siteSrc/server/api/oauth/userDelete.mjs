@@ -26,10 +26,9 @@ export default defineEventHandler(async event => {
     sendNoContent(event, 200)
 })
 
-export const file = "oauth/userDelete.mjs"
 export const schema = {
     method: "DELETE",
-    url: "/api/discordOauth/user/delete",
+    url: "/api/oauth/user/delete",
     schema: {
         hide: true,
         body: {},

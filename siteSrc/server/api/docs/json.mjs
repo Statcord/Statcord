@@ -7,7 +7,6 @@ export default defineEventHandler(async event => {
 	return swaggerRoutes
 })
 
-export const file = "docs/json.mjs"
 export const schema = {
 	method: "GET",
 	url: "/api/docs/json",

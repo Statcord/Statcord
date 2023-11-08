@@ -64,7 +64,6 @@ export default defineEventHandler(async event => {
 	sendNoContent(event, 200)
 })
 
-export const file = "stats/post.mjs"
 export const schema = {
 	method: "POST",
 	url: "/api/stats/post",

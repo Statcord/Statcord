@@ -23,6 +23,6 @@ class Auth {
 }
 
 export default defineNuxtPlugin(async nuxtApp => {
-  const {data: user} = await useFetch(() => `/api/discordOauth/user`)
+  const {data: user} = await useFetch(() => `/api/oauth/user`)
   nuxtApp.provide('auth', new Auth(user.value))
 })

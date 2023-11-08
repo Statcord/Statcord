@@ -1,11 +1,13 @@
-import { defineEventHandler, getQuery, createError } from "h3"
+import { defineEventHandler, getQuery, createError, getRouterParams } from "h3"
 import { flux, fluxDuration } from "@influxdata/influxdb-client"
 
 export default defineEventHandler(async event => {
-	if (!a.context.params.id) throw createError({
+	const path = getRouterParams(event)
+
+	if (!path.botID) throw createError({
 		statusCode: 404
 	})
-	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!bot[0]) throw createError({
 		statusCode: 404
 	})
@@ -24,31 +26,34 @@ export default defineEventHandler(async event => {
 
 	// console.time("first")
 	const mainStats = await fetchFromInflux({
+		event,
 		measurement: "botStats",
 		start,
 		stop,
 		groupBy: query.groupBy,
-		botID: a.context.params.id
+		botID: path.botID
 	})
 	// console.timeEnd("first")
 
 	// console.time("second")
 	const commands = await fetchFromInflux({
+		event,
 		measurement: "customCharts",
 		start,
 		stop,
 		groupBy: query.groupBy,
-		botID: a.context.params.id
+		botID: path.botID
 	})
 	// console.timeEnd("second")
 
 	// console.time("thrid")
 	const custom = await fetchFromInflux({
+		event,
 		measurement: "topCommands",
 		start,
 		stop,
 		groupBy: query.groupBy,
-		botID: a.context.params.id
+		botID: path.botID
 	})
 	// console.timeEnd("thrid")
 
@@ -59,10 +64,9 @@ export default defineEventHandler(async event => {
 	}
 })
 
-export const file = "stats/getDefualt.mjs"
 export const schema = {
 	method: "GET",
-	url: "/api/stats/getDefault/:id",
+	url: "/api/bots/:botID/stats/default",
 	schema: {
         hide: true,
 		path: {
@@ -111,7 +115,7 @@ export const schema = {
 }
 
 const fetchFromInflux = async (options) => {
-	const queryApi = event.context.influx.influxClient.getQueryApi("disstat")
+	const queryApi = options.event.context.influx.influxClient.getQueryApi("disstat")
 
 	const fluxQuery = flux`import "math"
 	from(bucket:"defaultBucket")

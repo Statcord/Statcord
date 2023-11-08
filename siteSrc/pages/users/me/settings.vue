@@ -34,7 +34,7 @@ export default {
   methods: {
     async confirmedDelete() {
       
-      const { error } = await useFetch(() => `/api/discordOauth/user/delete`, {
+      const { error } = await useFetch(() => `/api/oauth/user/delete`, {
         method: 'delete',
       })
       if (!error.value) {

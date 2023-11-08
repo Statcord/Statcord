@@ -1,11 +1,13 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler, createError, getRouterParams } from 'h3'
 import { flux, fluxDuration } from '@influxdata/influxdb-client'
 
 export default defineEventHandler(async event => {
-	if (!a.context.params.id) throw createError({
+	const path = getRouterParams(event)
+
+	if (!path.id) throw createError({
 		statusCode: 404
 	})
-	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${path.id}`.catch(() => {})
 	if (!bot[0]) throw createError({
 		statusCode: 404
 	})
@@ -21,7 +23,7 @@ export default defineEventHandler(async event => {
 		start,
 		stop,
 		groupBy: query.groupBy,
-		botID: a.context.params.id
+		botID: path.id
 	})
 	// console.timeEnd("first")
 
@@ -31,7 +33,7 @@ export default defineEventHandler(async event => {
 		start,
 		stop,
 		groupBy: query.groupBy,
-		botID: a.context.params.id
+		botID: path.id
 	})
 	// console.timeEnd("second")
 
@@ -41,7 +43,7 @@ export default defineEventHandler(async event => {
 		start,
 		stop,
 		groupBy: query.groupBy,
-		botID: a.context.params.id
+		botID: path.id
 	})
 	// console.timeEnd("thrid")
 
@@ -55,7 +57,6 @@ export default defineEventHandler(async event => {
 		}
 	}
 })
-export const file = "stats/export.mjs"
 export const schema = {
 	method: 'GET',
 	url: '/api/stats/export/:id',

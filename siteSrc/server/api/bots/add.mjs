@@ -35,7 +35,6 @@ export default defineEventHandler(async event => {
 	sendNoContent(event, 200)
 })
 
-export const file = "bots/add.mjs"
 export const schema = {
 	method: "POST",
 	url: "/api/bots/add",

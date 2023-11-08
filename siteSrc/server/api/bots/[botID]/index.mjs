@@ -1,10 +1,12 @@
-import { defineEventHandler, createError } from "h3"
+import { defineEventHandler, createError, getRouterParams } from "h3"
 
 export default defineEventHandler(async event => {
-	if (!a.context.params.id) throw createError({
+	const path = getRouterParams(event)
+
+	if (!path.botID) throw createError({
 		statusCode: 404
 	})
-	const bot = await event.context.pgPool`SELECT addedon, bots.username, avatar, nsfw, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${a.context.params.id}`.catch(() => {})
+	const bot = await event.context.pgPool`SELECT addedon, bots.username, avatar, nsfw, public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${path.botID}`.catch(() => {})
 	if (!bot[0]) throw createError({
 		statusCode: 404
 	})
@@ -19,15 +21,14 @@ export default defineEventHandler(async event => {
 	return {...bot[0], isOwner}
 })
 
-export const file = "bots/getbot.mjs"
 export const schema = {
 	method: "GET",
-	url: "/api/bots/:id",
+	url: "/api/bots/:botID",
 	schema: {
 		params: {
 			type: "object",
 			properties: {
-				id: {
+				botID: {
 					type: "string",
 					// example: "685166801394335819"
 				}

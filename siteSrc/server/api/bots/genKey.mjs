@@ -26,7 +26,6 @@ export default defineEventHandler(async event => {
 	return {key}
 })
 
-export const file = "bots/genkey.mjs"
 export const schema = {
 	method: "POST",
 	url: "/api/bots/genKey",

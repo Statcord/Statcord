@@ -28,7 +28,6 @@ export default defineEventHandler(async event => {
 	return {success: true, message: "The bot has been synced!"}
 })
 
-export const file = "bots/sync.mjs"
 export const schema = {
 	method: "POST",
 	url: "/api/bots/sync",

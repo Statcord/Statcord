@@ -8,7 +8,6 @@ export default defineEventHandler(async event => {
 	return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${event.context.session.userInfo.id} LIMIT 30 OFFSET 30*${Number(getQuery(event).page ?? 0)}`.catch().catch(() => {})
 })
 
-export const file = "bots/mybots.mjs"
 export const schema = {
 	method: "GET",
 	url: "/api/mybots",

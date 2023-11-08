@@ -21,7 +21,6 @@ export default defineEventHandler(async event => {
     return sendRedirect(event, process.env.domain, 302)
 })
 
-export const file = "oauth/callback.mjs"
 export const schema = {
     method: "GET",
     url: "/api/discordOauth/callback",

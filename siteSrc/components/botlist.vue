@@ -3,7 +3,17 @@
         <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots" v-bind:key="bot.id">
             <div class="card">
                 <div class="card-image no-overflow">
-                    <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'" :alt="bot.username+`'s profile picture`" :class="bot.nsfw? 'blur':''">
+                    <object
+                        :data="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'"
+                        type="image/png"
+                        aria-label="aaa"
+                        loading="lazy"
+                        :class="bot.nsfw? 'blur':''"
+                        :alt="bot.username+`'s profile picture`"
+                        >
+                        <img src="/img/error.png" alt="Not found image" class="circle guildimg" />
+                    </object>
+                    <!-- <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'" :alt="bot.username+`'s profile picture`" :class="bot.nsfw? 'blur':''"> -->
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">

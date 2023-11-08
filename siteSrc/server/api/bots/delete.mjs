@@ -35,7 +35,6 @@ export default defineEventHandler(async event => {
 	sendNoContent(event, 200)
 })
 
-export const file = "bots/delete.mjs"
 export const schema = {
 	method: "DELETE",
 	url: "/api/bots/delete",

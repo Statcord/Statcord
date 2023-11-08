@@ -1,14 +1,16 @@
-import { defineEventHandler, createError } from "h3"
+import { defineEventHandler, createError, getRouterParams } from "h3"
 
 export default defineEventHandler(async event => {
-    if (!a.context.params.id) throw createError({
+    const path = getRouterParams(event)
+
+    if (!path.id) throw createError({
         statusCode: 404
     })
     if (!event.context.session.accessToken) throw createError({
         statusCode: 401
     })
 
-    const botExisits = await event.context.pgPool`SELECT ownerid, public, nsfw from bots WHERE botid = ${a.context.params.id}`.catch(() => {})
+    const botExisits = await event.context.pgPool`SELECT ownerid, public, nsfw from bots WHERE botid = ${path.id}`.catch(() => {})
     if (!botExisits[0]) throw createError({
         statusCode: 404
     })
@@ -16,7 +18,7 @@ export default defineEventHandler(async event => {
         statusCode: 401
     })
 
-    const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${a.context.params.id}`.catch(() => {})
+    const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.id}`.catch(() => {})
 
     const settings = {
         "Access": {
@@ -31,7 +33,7 @@ export default defineEventHandler(async event => {
                 enabled: false
             },
             "URL": {
-                state: `/bots/${a.context.params.id}`,
+                state: `/bots/${path.id}`,
                 type: "text",
                 enabled: false
             },
@@ -55,7 +57,6 @@ export default defineEventHandler(async event => {
     return settings
 })
 
-export const file = "settings/get.mjs"
 export const schema = {
 	method: "GET",
 	url: "/api/bots/:id/settings/get",

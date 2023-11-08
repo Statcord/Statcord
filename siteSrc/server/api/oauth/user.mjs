@@ -8,10 +8,9 @@ export default defineEventHandler(async event => {
     return event.context.session.userInfo
 })
 
-export const file = "oauth/user.mjs"
 export const schema = {
 	method: "GET",
-	url: "/api/discordOauth/user",
+	url: "/api/oauth/user",
 	schema: {
         response: {
             401: {},

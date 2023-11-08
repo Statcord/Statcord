@@ -312,10 +312,10 @@ export default {
             return customData
         },
         async getData() {
-            const {data: rawDefaultStatsFetch} = await useFetch(() => `/api/stats/getDefault/${this.botid}?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const {data: rawDefaultStatsFetch} = await useFetch(() => `/api/bots/${this.botid}/stats/default?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
             const defaultStatsJson = rawDefaultStatsFetch.value
 
-            const {data: rawChartSettings} = await useFetch(() => `/api/stats/types/${this.botid}`)
+            const {data: rawChartSettings} = await useFetch(() => `/api/bots/${this.botid}/stats/types`)
             const chartSettings = rawChartSettings.value
 
             this.stats = this.createLineChart(defaultStatsJson.mainStats, chartSettings)
