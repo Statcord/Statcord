@@ -10,7 +10,7 @@ export default defineEventHandler(async event => {
 
 export const schema = {
 	method: "GET",
-	url: "/api/mybots",
+	url: "/api/bots/mybots",
 	schema: {
         hide: true,
         querystring: {

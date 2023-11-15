@@ -3,14 +3,14 @@ import { defineEventHandler, createError, getRouterParams } from "h3"
 export default defineEventHandler(async event => {
     const path = getRouterParams(event)
 
-    if (!path.id) throw createError({
+    if (!path.botID) throw createError({
         statusCode: 404
     })
     if (!event.context.session.accessToken) throw createError({
         statusCode: 401
     })
 
-    const botExisits = await event.context.pgPool`SELECT ownerid, public, nsfw from bots WHERE botid = ${path.id}`.catch(() => {})
+    const botExisits = await event.context.pgPool`SELECT ownerid, public, nsfw from bots WHERE botid = ${path.botID}`.catch(() => {})
     if (!botExisits[0]) throw createError({
         statusCode: 404
     })
@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
         statusCode: 401
     })
 
-    const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.id}`.catch(() => {})
+    const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.botID}`.catch(() => {})
 
     const settings = {
         "Access": {
@@ -33,7 +33,7 @@ export default defineEventHandler(async event => {
                 enabled: false
             },
             "URL": {
-                state: `/bots/${path.id}`,
+                state: `/bots/${path.botID}`,
                 type: "text",
                 enabled: false
             },

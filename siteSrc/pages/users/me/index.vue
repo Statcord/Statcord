@@ -2,7 +2,7 @@
   <div class="waves-effect waves-light btn-large modal-trigger" data-target="modal1"><i class="material-icons left">add</i>Add your bot</div>
   <router-link class="waves-effect waves-light btn-large" to="/users/me/settings"><i class="material-icons left">settings</i>User Settings</router-link>
   <h1>Your bots</h1>
-  <botlist botListRoute="/api/mybots"></botlist>
+  <botlist botListRoute="/api/bots/mybots"></botlist>
 
   <div id="modal1" ref="modal" class="modal hide">
     <div class="modal-content">

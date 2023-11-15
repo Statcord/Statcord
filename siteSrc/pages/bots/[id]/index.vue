@@ -279,7 +279,7 @@ export default {
                 const id = row.customChartID
                 keys.shift()
                 keys.shift()
-                console.log(keys)
+                // console.log(keys)
             	keys.forEach(key => {
                     const indexTwo = chartSettings.findIndex(a=>a.chartid===id)
                     const thisChartSettings = chartSettings[indexTwo]
