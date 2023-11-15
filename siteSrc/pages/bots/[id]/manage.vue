@@ -6,13 +6,14 @@
     </div>
 
     <div class="container">
-        <div v-for="(value, index) in Object.entries(settings)" :key="index">
+        <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
             <div class="section"></div>
-            <h5>{{value[0]}}</h5>
-
-            <div v-for="(valuae, indexa) in Object.entries(value[1])" :key="indexa">
-                <input :type="valuae[1].type" :disabled="!valuae[1].enabled" :checked="valuae[1].state" :placeholder="valuae[1].state" />
-                <span>{{ valuae[0] }}</span>
+            <h5>{{catagory[0]}}</h5>
+            
+            <div v-for="(setting, settingIndex) in Object.entries(catagory[1])" :key="settingIndex">
+                <!-- <span>{{ setting }}</span> -->
+                <input :type="setting[1].type" :disabled="!setting[1].enabled" :checked="setting[1].state" :placeholder="setting[1].state" :ref="'setting:'+setting[1].id" :name="'name:'+setting[1].id"/>
+                <span>{{ setting[0] }}</span>
             </div>
         </div>
        
@@ -20,7 +21,7 @@
             <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
             <div class="waves-effect waves-light btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
             <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
-            <div class="waves-effect waves-light btn disabled" @click="sync">Save<i class="material-icons left">save</i></div>
+            <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
             <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
         </div>
     </div>
@@ -120,6 +121,13 @@ useHead({
 </script>
 
 <script>
+const inputTypeToValue = (input)=> {
+    return {
+        "checkbox": input.checked,
+        "text": input.value
+    }
+}
+
 export default {
     name: 'server',
     data() {
@@ -153,8 +161,16 @@ export default {
         const {data: botSettingsJson} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`, {
             server: false
         })
+
         
-        this.settings = botSettingsJson.value
+        botSettingsJson.value.forEach(chart => {
+            if (this.settings[chart.catagory]) {
+                this.settings[chart.catagory][chart.name] = chart
+            } else {
+                this.settings[chart.catagory]={}
+                this.settings[chart.catagory][chart.name] = chart
+            }
+        })
     },
     methods: {
         importExportChanged(event){
@@ -195,6 +211,26 @@ export default {
             if (!error.value) {
                 await navigateTo("/users/me")
             }
+        },
+        async save(a){
+            const settings = {}
+            Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).forEach(a=>{
+                settings[a.replace("setting:", "")] = inputTypeToValue(this.$refs[a][0])[this.$refs[a][0].type]
+            })
+
+            const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {
+                method: 'post',
+                body: JSON.stringify(settings),
+                headers: {'Content-Type': 'application/json'}
+            })
+            // console.log(error.value)
+            this.$M.toast({text: error.value? 'Error saving' : 'Saved'})
+            // if (!error.value) {
+            //     this.apiKey = data.value.key
+            // }
+
+
+            console.log(settings)
         }
     }
 }

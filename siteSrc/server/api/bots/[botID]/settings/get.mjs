@@ -20,39 +20,42 @@ export default defineEventHandler(async event => {
 
     const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.botID}`.catch(() => {})
 
-    const settings = {
-        "Access": {
-            "Public": {
-                state: botExisits[0].public,
-                type: "checkbox",
-                enabled: false
-            },
-            "NSFW": {
-                state: botExisits[0].nsfw,
-                type: "checkbox",
-                enabled: false
-            },
-            "URL": {
-                state: `/bots/${path.botID}`,
-                type: "text",
-                enabled: false
-            },
-        },
-        "Default charts": {
-
-        },
-        "Custom charts": {
-
-        }
-    }
-
-    chartSettings.forEach(chart => {
-        settings["Default charts"][chart.name] = {
-            state: chart.enabled,
+    const settings = [
+        {
+            state: botExisits[0].public,
             type: "checkbox",
-            enabled: false
-        }
-    })
+            enabled: true,
+            catagory: "Access",
+            name: "Public",
+            id: "public"
+        },
+        {
+            state: botExisits[0].nsfw,
+            type: "checkbox",
+            enabled: true,
+            catagory: "Access",
+            name: "NSFW",
+            id: "nsfw"
+        },
+        {
+            state: `/bots/${path.botID}`,
+            type: "text",
+            enabled: false,
+            catagory: "Access",
+            name: "URL",
+            id: "customurl"
+        },
+    ]
+
+    // chartSettings.forEach(chart => {
+    //     settings.push({
+    //         state: chart.enabled,
+    //         type: "checkbox",
+    //         enabled: false,
+    //         catagory: "Default charts",
+    //         name: chart.name
+    //     })
+    // })
 
     return settings
 })
