@@ -9,10 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
 
       - name: "🛸 install eslint html plugins"
-        run: npm i eslint-plugin-html @html-eslint/parser @html-eslint/eslint-plugin
+        run: npm i --omit=optional --include=dev --no-fund --progress=false
 
       - name: "🔍 lint code"
-        run: npx eslint --ext .html,.js,.mjs . --report-unused-disable-directives
+        run: npm run lint
