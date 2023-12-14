@@ -5,7 +5,17 @@ body {
 }
 
 main {
-	padding: 0 20px;
+	padding: 25px 100px 0;
+}
+@media screen and (max-width: 900px) {
+	main {
+		padding: 25px 50px 0;
+	}
+}
+@media screen and (max-width: 500px) {
+	main {
+		padding: 10px 20px 0;
+	}
 }
 
 img.avatar {
@@ -30,27 +40,41 @@ button:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
 }
-button.danger {
+
+.green {
+	background-color: #3ed13e;
+}
+.red {
 	background-color: #ec3f3f;
+}
+
+h1 {
+	text-align: center;
+	text-wrap: balance;
+}
+
+p {
+	font-size: 19px;
+}
+a {
+	text-decoration: none;
 }
 
 nav {
 	background-color: #CCC;
 	padding: 15px;
 }
-nav a, nav span {
-	padding: 12px;
-	font-size: 22px;
-	text-decoration: none;
+nav a {
+	padding: 15px;
+	font-size: 21px;
 	color: #227;
 }
-nav span {
+nav a.active {
 	text-decoration: underline;
 }
 
 .link {
 	color: #3e4dd1;
-	text-decoration: none;
 	font-size: 22px;
 }
 .link:visited {
@@ -133,7 +157,7 @@ canvas {
 .dialog-content {
 	position: relative;
 	margin: auto;
-	width: 70%;
+	width: 75%;
 	padding: 20px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	animation-name: animateDialog;
@@ -148,7 +172,7 @@ canvas {
 
 @keyframes animateDialog {
 	from {width: 0; opacity: 0;}
-	to {width: 70%; opacity: 1;}
+	to {width: 75%; opacity: 1;}
 }
 
 .close {

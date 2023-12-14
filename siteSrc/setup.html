@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="The privacy policy and Terms of Service of DisStat.">
+		<title>DisStat - Setup guide</title>
+		<link rel="shortcut icon" href="./assets/icon.png">
+
+		<script src="./assets/main.js"></script>
+		<script src="./assets/api.js"></script>
+		<link rel="stylesheet" href="./assets/style.css">
+	</head>
+	<body>
+		<global-navbar></global-navbar>
+
+		<main>
+			<h1>How to setup statistics tracking</h1>
+
+			While we are still in development you can already post your data. You can either implement the endpoints yourself using our API documentation or you use one of our API wrappers.
+			You should post your bots general data at most once a minute.
+			Commands, events etc. may be posted when they occur or combined with the general bot data posting.
+
+			<h2>API wrappers</h2>
+			<ul>
+				<li>
+					<b>Node.js</b>: <a href="https://www.npmjs.com/package/disstat">disstat</a> by TomatoCake
+				</li>
+			</ul>
+
+			<h2>Importing data from Statcord</h2>
+			We're already tracking Statcord data from a few bots, but yours might not be included in that list. You can import your bots data from Statcord when setting it up.
+		</main>
+
+		<script src="./assets/instantclick.min.js" data-no-instant></script>
+		<script data-no-instant>InstantClick.init();</script>
+	</body>
+</html>

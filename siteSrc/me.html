@@ -48,6 +48,9 @@
 				key.select()
 				key.setSelectionRange(0, 99999)
 				navigator.clipboard.writeText(key.value)
+
+				document.getElementById("copy-apikey").classList.add("green")
+				setTimeout(() => document.getElementById("copy-apikey").classList.remove("green"), 1000)
 			}
 		</script>
 
@@ -62,7 +65,7 @@
 
 				<br>
 				<br>
-				<button type="button" id="addbotbutton" onclick="addBot(document.getElementById('botid').value)">Add bot</button>
+				<button type="button" id="addbotbutton" onclick="addBot()" disabled>Add bot</button>
 			</div>
 		</div>
 
@@ -71,13 +74,13 @@
 				<span class="close">&times;</span>
 				<h2 style="font-size: 32px;">Add your bot</h2>
 
-				<label for="botid">View your API key</label>
+				<label for="botid">Your DisStat API key, used for all bots on your account</label>
 				<input type="text" id="botapikey" size="27" disabled>
-				<button type="button" onclick="copyKey()">Copy key</button>
+				<button type="button" id="copy-apikey" onclick="copyKey()">Copy key</button>
 
 				<br>
 				<br>
-				<button type="button" id="regen-apikey" class="danger" onclick="regenKey()">Regenerate key</button>
+				<button type="button" id="regen-apikey" class="red" onclick="regenKey()">Regenerate key</button>
 			</div>
 		</div>
 

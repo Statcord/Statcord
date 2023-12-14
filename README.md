@@ -18,3 +18,20 @@ or open an issue on GitHub.
 - Custom graphs like statcord has
 - Custom urls for bots
 - Pypi package
+
+- data import from statcord
+- docs on how to setup stats
+- link ^ somewhere after adding a bot
+- fix api key not showing unless reset on manage bot page
+- show api key after bot adding
+- add group by selector allowing to group by the day/month/year etc
+- add toggle for private in bot settings
+- make settings api routes
+- command tracking usage
+- use dynamic name, type, label, and enabled status
+- add customCharts
+- add settings menu for chart types
+- add settings menu to delete custom stats
+- add setting for chart name
+- add individual stat counters in addition to charts (sum up data displayed on charts)
+- amount of unique users for commands

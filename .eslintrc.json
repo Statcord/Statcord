@@ -10,7 +10,8 @@
 			"parser": "@html-eslint/parser",
 			"extends": ["plugin:@html-eslint/recommended"],
 			"rules": {
-				"@html-eslint/no-multiple-h1": 0
+				"@html-eslint/no-multiple-h1": 0,
+				"@html-eslint/element-newline": 0
 			}
 		}
 	],

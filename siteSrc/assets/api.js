@@ -44,11 +44,15 @@ const getAvatar = async id => {
 	const avatar = json.a ? "https://cdn.discordapp.com/avatars/" + id + "/" + json.a + ".webp?size=64" : "https://cdn.discordapp.com/embed/avatars/" + (id % 5) + ".png"
 	document.getElementById("avatarpreview").src = avatar
 	document.getElementById("addbotbutton").disabled = !json.b
+	document.getElementById("botid").setCustomValidity(json.b ? "" : "This is not a bot!")
+	document.getElementById("botid").reportValidity()
 }
-const addBot = async id => {
+const addBot = async () => {
+	const id = document.getElementById("botid").value
 	if (!/^[0-9]{17,21}$/.test(id)) return
+
 	const result = await post("bots", {id}, true)
-	if (result.success) location.href = "/bot/?id=" + encode(id)
+	if (result.success) location.href = "/bot?id=" + id
 	else alert(result.message)
 }
 const getKey = async () => {

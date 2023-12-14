@@ -24,7 +24,6 @@
 				Information about <strong id="botname"></strong>
 			</h1>
 			<ul id="status"></ul>
-			<div id="cards"></div>
 			<div id="charts"></div>
 		</main>
 		<script>
@@ -32,17 +31,18 @@
 				const params = new URLSearchParams(location.search)
 				if (!params.has("id")) return location.href = "/"
 				const bot = await getBot(params.get("id"))
-				if (!bot.name) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
+				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
-				document.getElementById("botname").innerText = bot.name
-				document.querySelector("title").innerText = "DisStat - View statistics of " + bot.name
+				document.getElementById("botname").innerText = bot.username
+				document.querySelector("title").innerText = "DisStat - View statistics of " + bot.username
 
 				bot.charts.forEach(chart => {
 					const parentElement = document.createElement("div")
-					parentElement.setAttribute("width", "100%")
 
 					const chartElement = document.createElement("canvas")
 					chartElement.setAttribute("id", chart.name)
+					chartElement.setAttribute("width", "570")
+					chartElement.setAttribute("height", "330")
 					chartElement.setAttribute("aria-label", "Chart for " + chart.name)
 					chartElement.setAttribute("role", "img")
 
@@ -50,7 +50,7 @@
 					document.getElementById("charts").appendChild(parentElement)
 
 					new Chart(chartElement.getContext("2d"), {
-						type: chart.type,
+						type: chart.type || "line",
 						data: {
 							labels: chart.labels,
 							datasets: [{
@@ -67,7 +67,7 @@
 								}
 							},
 							layout: {
-								padding: 20
+								padding: 15
 							},
 							maintainAspectRatio: false,
 							plugins: {
@@ -82,17 +82,6 @@
 						}
 					})
 				})
-
-				for (const key in bot.cards) {
-					const card = bot.cards[key]
-					const cardElement = document.createElement("div")
-					cardElement.setAttribute("class", "card")
-					cardElement.innerHTML =
-						"<p>" + encode(key) + "</p>" +
-						"<p class='val'>" + encode(card.toString()) + "</p>"
-
-					document.getElementById("cards").appendChild(cardElement)
-				}
 
 				const statusElement = document.getElementById("status")
 				statusElement.innerHTML =
