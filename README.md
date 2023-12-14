@@ -29,3 +29,4 @@ or open an issue on GitHub.
 - add settings menu to delete custom stats
 - add setting for chart name
 - amount of unique users for commands
+- instead of having a /sync api endpoint, automatically sync every few days

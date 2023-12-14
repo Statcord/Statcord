@@ -2,7 +2,7 @@ const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g,
 
 const nav = {
 	"/me": "Dashboard",
-	"/support": "Support",
+	"/discord": "Discord",
 	"/docs": "API Docs",
 	"/setup": "Setup",
 	"/privacy": "Privacy"
@@ -38,7 +38,7 @@ function updateCard(elem) {
 		"<div class='botcard'>" +
 		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.botId) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.username) +
 		"' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.botId % 5) + ".png\"' />" +
-		"<a href='/bot?id=" + encode(bot.botId) + "'>" + encode(bot.username) + "</a>" +
+		"<a href='/bot?id=" + encode(bot.slug || bot.botId) + "'>" + encode(bot.username) + "</a>" +
 		"</div>"
 }
 class BotCard extends HTMLElement {

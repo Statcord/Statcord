@@ -77,20 +77,27 @@
 				</ul>
 			</p>
 
-			<h2>Syncing bot data</h2>
+			<h2>Posting a ran command</h2>
 
 			<p>
-				This endpoint updates the username, avatar and verification status of the bot.
+				Stores a ran command for the bot. This is used to track the most used commands.
+				You might want to exclude the prefix from the command name, and not include custom commands to protect user privacy.
 				<br>
 				An API key authorized for the bot must be provided in the Authorization header.
 				<br>
 				Method: <code>POST</code>
 				<br>
-				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;/sync</code>
+				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;/cmd</code>
 				<br>
 				Headers:
 				<ul>
 					<li>Authorization: API token from the DisStat dashboard</li>
+				</ul>
+				Body:
+				<ul>
+					<li>command: The command name without the prefix</li>
+					<li>user (optional): The user ID or another per-user identifier to track the amount of engaged users</li>
+					<li>guild (optional): The guild ID or another per-guild identifier to track the amount of active guilds</li>
 				</ul>
 			</p>
 		</main>
