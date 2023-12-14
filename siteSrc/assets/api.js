@@ -28,10 +28,7 @@ const post = async (route, data = {}, returnError = false) => {
 	return json
 }
 
-const getBot = async id => {
-	if (!/^[0-9]{17,21}$/.test(id)) return
-	return await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=100")
-}
+const getBot = async id => await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=80")
 const getBots = async () => await get("bots")
 const getBotsFromUser = async () => await get("bots?user=1", true)
 const login = async code => {
