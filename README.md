@@ -17,4 +17,4 @@ or open an issue on GitHub.
 - Vote buckets like statcord has
 - Custom graphs like statcord has
 - Custom urls for bots
-- npm and pypi packages
+- Pypi package

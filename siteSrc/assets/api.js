@@ -36,6 +36,7 @@ const login = async code => {
 	localStorage.setItem("token", result.token)
 	localStorage.setItem("user", result.user)
 	localStorage.setItem("avatar", result.avatar)
+	location.href = location.href.split("?")[0]
 }
 const getAvatar = async id => {
 	if (!/^[0-9]{17,21}$/.test(id)) return
@@ -55,6 +56,8 @@ const getKey = async () => {
 	document.getElementById("botapikey").value = result.key
 }
 const regenKey = async () => {
+	document.getElementById("regen-apikey").setAttribute("disabled", "")
 	const result = await post("key")
 	document.getElementById("botapikey").value = result.key
+	document.getElementById("regen-apikey").removeAttribute("disabled")
 }

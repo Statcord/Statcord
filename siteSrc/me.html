@@ -40,7 +40,7 @@
 				load()
 			} else {
 				location.href = "https://discord.com/api/oauth2/authorize?client_id=1080913163077308436&redirect_uri=" +
-					encodeURIComponent("https://disstat.pages.dev/me") + "&prompt=none&response_type=code&scope=identify"
+					encodeURIComponent(location.href) + "&prompt=none&response_type=code&scope=identify"
 			}
 
 			function copyKey() {
@@ -72,12 +72,12 @@
 				<h2 style="font-size: 32px;">Add your bot</h2>
 
 				<label for="botid">View your API key</label>
-				<input type="text" id="botapikey" size="25" disabled>
+				<input type="text" id="botapikey" size="27" disabled>
 				<button type="button" onclick="copyKey()">Copy key</button>
 
 				<br>
 				<br>
-				<button type="button" class="danger" onclick="regenKey()">Regenerate key</button>
+				<button type="button" id="regen-apikey" class="danger" onclick="regenKey()">Regenerate key</button>
 			</div>
 		</div>
 

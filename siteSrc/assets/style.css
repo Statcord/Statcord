@@ -27,7 +27,7 @@ button:hover {
 	background-color: #416bc5;
 }
 button:disabled {
-	background-color: #59609c;
+	opacity: 0.5;
 	cursor: not-allowed;
 }
 button.danger {
@@ -40,7 +40,7 @@ nav {
 }
 nav a, nav span {
 	padding: 12px;
-	font-size: 25px;
+	font-size: 22px;
 	text-decoration: none;
 	color: #227;
 }
