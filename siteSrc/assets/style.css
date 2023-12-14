@@ -59,7 +59,16 @@ p {
 a {
 	text-decoration: none;
 }
+code {
+	background-color: #EEE;
+	padding: 1px 2px;
+	border-radius: 3px;
+}
 
+nav img {
+	width: 110px;
+	vertical-align: text-top;
+}
 nav {
 	background-color: #CCC;
 	padding: 15px;
@@ -71,6 +80,10 @@ nav a {
 }
 nav a.active {
 	text-decoration: underline;
+}
+nav ion-icon {
+	font-size: 22px;
+	vertical-align: text-bottom;
 }
 
 .link {

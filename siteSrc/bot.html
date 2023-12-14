@@ -5,16 +5,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="View statistics of a Discord bot.">
 		<title>DisStat - View statistics of a bot</title>
-		<link rel="shortcut icon" href="../assets/icon.png">
+		<link rel="shortcut icon" href="./assets/icon.png">
 
 		<link rel="preconnect" href="https://disstat-api.tomatenkuchen.com/" crossorigin>
 		<link rel="dns-prefetch" href="https://disstat-api.tomatenkuchen.com/">
 
-		<script src="../assets/main.js"></script>
-		<script src="../assets/api.js"></script>
-		<link rel="stylesheet" href="../assets/style.css">
+		<script src="./assets/main.js"></script>
+		<script src="./assets/api.js"></script>
+		<link rel="stylesheet" href="./assets/style.css">
 
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha512-SIMGYRUjwY8+gKg7nn9EItdD8LCADSDfJNutF9TPrvEo86sQmFMh6MyralfIyhADlajSxqc7G0gs7+MwWF/ogQ=="
+			crossorigin="anonymous" referrerpolicy="no-referrer"
+		></script>
 	</head>
 	<body>
 		<global-navbar></global-navbar>
@@ -67,7 +70,7 @@
 								}
 							},
 							layout: {
-								padding: 15
+								padding: 13
 							},
 							maintainAspectRatio: false,
 							plugins: {
@@ -91,6 +94,10 @@
 			load()
 		</script>
 
+		<script
+			src="https://cdn.jsdelivr.net/npm/ionicons@7.2.0/dist/ionicons/ionicons.esm.js" integrity="sha384-zM76IY+3I2OTF49JR8mjLWUeugc/Q9wVzLMiSITfvgmdy8nQtAhci8m8IsdnTl3q"
+			type="module" crossorigin="anonymous" data-no-instant
+		></script>
 		<script src="./assets/instantclick.min.js" data-no-instant></script>
 		<script data-no-instant>InstantClick.init();</script>
 	</body>

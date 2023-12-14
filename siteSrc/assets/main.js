@@ -1,7 +1,6 @@
 const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
 const nav = {
-	"/": "Home",
 	"/me": "Dashboard",
 	"/support": "Support",
 	"/docs": "API Docs",
@@ -12,7 +11,9 @@ function updateNav(elem) {
 	const current = window.location.pathname
 	elem.innerHTML =
 		"<nav>" +
-		Object.keys(nav).map(path => "<a href='" + encode(path) + "'" + (path == current ? " class='active'" : "") + ">" + encode(nav[path]) + "</a>").join("") +
+		"<a href='/'><img src='/assets/logo.png' alt='DisStat Logo'></a>" +
+		Object.keys(nav).map(path => "<a href='" + encode(path) + "'" + (current == path ? " class='active'" : "") + ">" + encode(nav[path]) + "</a>").join("") +
+		"<ion-icon name='invert-mode-outline'></ion-icon>" +
 		"</nav>"
 }
 class Navbar extends HTMLElement {

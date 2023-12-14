@@ -1,5 +1,5 @@
-const get = async (route, useAuth = false) => {
-	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route, {
+const get = async (route = "", useAuth = false) => {
+	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/\.\.[/\\]/g, ""), {
 		headers: {
 			Authorization: useAuth ? localStorage.getItem("token") : null
 		}
@@ -28,9 +28,12 @@ const post = async (route, data = {}, returnError = false) => {
 	return json
 }
 
+const getBot = async id => {
+	if (!/^[0-9]{17,21}$/.test(id)) return
+	return await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=100")
+}
 const getBots = async () => await get("bots")
-const getBot = async id => await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language)
-const getBotsByUser = async user => await get("bots" + (user ? "?user=" + user : ""))
+const getBotsFromUser = async () => await get("bots?user=1", true)
 const login = async code => {
 	const result = await post("login", {code})
 	localStorage.setItem("token", result.token)

@@ -7,9 +7,17 @@
 		<title>DisStat - API Documentation</title>
 		<link rel="shortcut icon" href="./assets/icon.png">
 
+		<link rel="preconnect" href="https://disstat-api.tomatenkuchen.com/" crossorigin>
+		<link rel="dns-prefetch" href="https://disstat-api.tomatenkuchen.com/">
+
 		<script src="./assets/main.js"></script>
 		<script src="./assets/api.js"></script>
 		<link rel="stylesheet" href="./assets/style.css">
+
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" integrity="sha512-SIMGYRUjwY8+gKg7nn9EItdD8LCADSDfJNutF9TPrvEo86sQmFMh6MyralfIyhADlajSxqc7G0gs7+MwWF/ogQ=="
+			crossorigin="anonymous" referrerpolicy="no-referrer"
+		></script>
 	</head>
 	<body>
 		<global-navbar></global-navbar>
@@ -17,9 +25,80 @@
 		<main>
 			<h1>API Documentation</h1>
 
+			<p>Base URL: <code>https://disstat-api.tomatenkuchen.com/</code></p>
 
+			<h2>Getting bot data</h2>
+
+			<p>
+				This endpoint returns the basic data DisStat has stored about the bot, like it's username and avatar.
+				<br>
+				If the bot is private, an API key authorized for the bot must be provided in the Authorization header.
+				<br>
+				Method: <code>GET</code>
+				<br>
+				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;</code>
+				<br>
+				Headers:
+				<ul>
+					<li>Authorization (optional): API token from the DisStat dashboard</li>
+				</ul>
+				Body:
+				<ul>
+					<li>returnStats: Whether the stats should be returned. Defaults to <code>false</code>.</li>
+				</ul>
+			</p>
+
+			<h2>Posting bot data</h2>
+
+			<p>
+				This endpoint returns the basic data DisStat has stored about the bot, like it's username and avatar.
+				<br>
+				An API key authorized for the bot must be provided in the Authorization header.
+				<br>
+				Method: <code>POST</code>
+				<br>
+				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;</code>
+				<br>
+				Headers:
+				<ul>
+					<li>Authorization: API token from the DisStat dashboard</li>
+				</ul>
+				Body:
+				<ul>
+					<li>returnStats: Whether the updated stats should be returned. Defaults to <code>false</code>.</li>
+
+					<li>servers (optional): The amount of servers (guilds) the bot is in</li>
+					<li>users (optional): The amount of users the bot can see across all servers</li>
+					<li>shards (optional): The amount of shards the bot is running with</li>
+					<li>apiPing (optional): The time in milliseconds how long a ping from/to Discord takes</li>
+					<li>ramUsage (optional): The amount of memory/RAM the bot's process is using currently, in bytes</li>
+					<li>ramTotal (optional): The amount of memory/RAM the bot could use theoretically, in bytes</li>
+					<li>cpu (optional): The current cpu usage of the bot's process</li>
+				</ul>
+			</p>
+
+			<h2>Syncing bot data</h2>
+
+			<p>
+				This endpoint updates the username, avatar and verification status of the bot.
+				<br>
+				An API key authorized for the bot must be provided in the Authorization header.
+				<br>
+				Method: <code>POST</code>
+				<br>
+				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;/sync</code>
+				<br>
+				Headers:
+				<ul>
+					<li>Authorization: API token from the DisStat dashboard</li>
+				</ul>
+			</p>
 		</main>
 
+		<script
+			src="https://cdn.jsdelivr.net/npm/ionicons@7.2.0/dist/ionicons/ionicons.esm.js" integrity="sha384-zM76IY+3I2OTF49JR8mjLWUeugc/Q9wVzLMiSITfvgmdy8nQtAhci8m8IsdnTl3q"
+			type="module" crossorigin="anonymous" data-no-instant
+		></script>
 		<script src="./assets/instantclick.min.js" data-no-instant></script>
 		<script data-no-instant>InstantClick.init();</script>
 	</body>
