@@ -2,7 +2,7 @@ const encode = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g,
 
 const nav = {
 	"/me": "Dashboard",
-	"/discord": "Discord",
+	"https://discord.com/invite/qsHxVUnXqr": "Discord",
 	"/docs": "API Docs",
 	"/setup": "Setup",
 	"/privacy": "Privacy"
@@ -13,7 +13,7 @@ function updateNav(elem) {
 		"<nav>" +
 		"<a href='/'><img src='/assets/logo.png' alt='DisStat Logo'></a>" +
 		Object.keys(nav).map(path => "<a href='" + encode(path) + "'" + (current == path ? " class='active'" : "") + ">" + encode(nav[path]) + "</a>").join("") +
-		"<ion-icon name='invert-mode-outline'></ion-icon>" +
+		"<ion-icon name='invert-mode-outline' onclick='toggleTheme()'></ion-icon>" +
 		"</nav>"
 }
 class Navbar extends HTMLElement {
@@ -26,20 +26,30 @@ class Navbar extends HTMLElement {
 }
 customElements.define("global-navbar", Navbar)
 
+let params = new URLSearchParams(location.search)
 window.addEventListener("load", () => {
+	if (localStorage.getItem("theme") == "light") document.body.classList.add("light")
+
+	InstantClick.init()
 	InstantClick.on("change", () => {
+		if (localStorage.getItem("theme") == "light") document.body.classList.add("light")
+		params = new URLSearchParams(location.search)
+
 		for (const elem of document.querySelectorAll("global-navbar")) updateNav(elem)
 	})
 })
 
+function toggleTheme() {
+	const theme = document.body.classList.toggle("light") ? "light" : "dark"
+	localStorage.setItem("theme", theme == "light" ? "light" : "dark")
+}
+
 function updateCard(elem) {
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	elem.innerHTML =
-		"<div class='botcard'>" +
 		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.botId) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.username) +
 		"' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.botId % 5) + ".png\"' />" +
-		"<a href='/bot?id=" + encode(bot.slug || bot.botId) + "'>" + encode(bot.username) + "</a>" +
-		"</div>"
+		"<a href='/bot?id=" + encode(bot.slug || bot.botId) + "'>" + encode(bot.username) + "</a>"
 }
 class BotCard extends HTMLElement {
 	constructor() {

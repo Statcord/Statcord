@@ -1,7 +1,62 @@
+:root {
+	--primary-text-color: #ffffff;
+	--secondary-text-color: #C1C4DB;
+	--primary-color: #131524;
+	--background-color: #27282e;
+	--dialog-bg: #222;
+	--dialog-shadow: rgba(0, 0, 0, 0.75);
+	--code-bg: #39383b;
+	--nav-bg: #1a1a1a;
+	--link-active: #5663d8;
+	--link-visited: #6e55df;
+	--canvas-bg: #d1e6f7;
+	--table-odd: #32313f;
+	--table-even: #1e1e25;
+	--green: #3ed13e;
+	--red: #ec3f3f;
+
+	--white: #000;
+	--black: #FFF;
+}
+
+.light {
+	--primary-text-color: #000;
+	--secondary-text-color: #3D404E;
+	--background-color: #FFF;
+	--primary-color: #F3F3F8;
+	--dialog-bg: #EEE;
+	--dialog-shadow: rgba(0, 0, 0, 0.25);
+	--code-bg: #EEE;
+	--nav-bg: #CCC;
+	--link-active: #3e4dd1;
+	--link-visited: #653ed1;
+	--canvas-bg: #d1e6f7;
+	--table-odd: #e6e6e6;
+	--table-even: #f3f3f3;
+	--green: #3ed13e;
+	--red: #ec3f3f;
+
+	--white: #FFF;
+	--black: #000;
+}
+
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 18px;
 	margin: 0;
+	background-color: var(--background-color);
+	transition: .2s;
+}
+
+h1, h2, h3, h4, p, b, td, th, a, small, label, input, summary, span, li {
+	color: var(--primary-text-color);
+}
+
+.green {
+	background-color: var(--green);
+}
+.red {
+	background-color: var(--red);
 }
 
 main {
@@ -41,57 +96,60 @@ button:disabled {
 	cursor: not-allowed;
 }
 
-.green {
-	background-color: #3ed13e;
-}
-.red {
-	background-color: #ec3f3f;
-}
-
 h1 {
 	text-align: center;
 	text-wrap: balance;
+}
+h1 strong {
+	color: var(--link-active);
 }
 
 p {
 	font-size: 19px;
 }
-a {
-	text-decoration: none;
-}
 code {
-	background-color: #EEE;
+	background-color: var(--code-bg);
 	padding: 1px 2px;
 	border-radius: 3px;
 }
 
+a {
+	text-decoration: none;
+	color: var(--link-active);
+}
+a:visited {
+	color: var(--link-visited);
+}
+
+nav {
+	background-color: var(--nav-bg);
+	padding: 15px;
+}
 nav img {
 	width: 110px;
 	vertical-align: text-top;
 }
-nav {
-	background-color: #CCC;
-	padding: 15px;
-}
+
 nav a {
 	padding: 15px;
 	font-size: 21px;
-	color: #227;
 }
 nav a.active {
 	text-decoration: underline;
 }
+
 nav ion-icon {
 	font-size: 22px;
 	vertical-align: text-bottom;
+	cursor: pointer;
+	color: var(--black);
 }
 
-.link {
-	color: #3e4dd1;
-	font-size: 22px;
+thead tr:first-child, tr {
+	background-color: var(--table-even);
 }
-.link:visited {
-	color: #3e4dd1;
+tr:nth-child(odd) {
+	background-color: var(--table-odd);
 }
 
 #bots {
@@ -100,25 +158,23 @@ nav ion-icon {
 	grid-gap: 20px;
 }
 
-/* Botstats */
-#cards {
+/* Bot cards */
+bot-card {
+	padding: 15px;
+	border-radius: 5px;
+	background-color: #DDD;
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+	align-items: center;
 }
-.card {
-	padding: 15px 20px;
-	border-radius: 15px;
-	background-color: #b2b7fd;
-	margin-right: 20px;
+bot-card a {
+	font-size: 25px;
+	text-decoration: none;
 }
-.card p {
-	margin: 0;
-	font-size: 30px;
-}
-.card p.val {
-	font-size: 40px;
-	text-align: center;
+bot-card img {
+	border-radius: 50%;
+	margin-right: 10px;
+	width: 64px;
+	height: 64px;
 }
 
 #charts {
@@ -138,21 +194,23 @@ canvas {
 	background-color: #d1e6f7;
 }
 
+input:not([type=checkbox]) {
+	border-radius: 8px;
+	outline: none;
+	padding: 5px;
+	font-size: 18px;
+	min-width: 150px;
+	transition: .3s;
+	background: var(--primary-color);
+}
+input:focus {
+	box-shadow: 0 0 6px 2px var(--primary-color);
+}
+input:invalid, input:out-of-range {
+	box-shadow: 0 0 6px 2px #F00;
+}
+
 /* Dialog */
-:root {
-	--primary-color: #F3F3F8;
-	--secondary-text-color: #3D404E;
-	--dialog-bg: #EEE;
-	--dialog-shadow: rgba(0, 0, 0, 0.25);
-}
-
-.dark-theme {
-	--primary-color: #131524;
-	--secondary-text-color: #C1C4DB;
-	--dialog-bg: #222;
-	--dialog-shadow: rgba(0, 0, 0, 0.75);
-}
-
 .dialog {
 	position: fixed;
 	display: none;
@@ -209,35 +267,6 @@ canvas {
 }
 .dialog input {
 	border-radius: 10px;
-	outline: none;
 	padding: 8px;
 	font-size: 20px;
-	min-width: 150px;
-	transition: .3s;
-	background: var(--primary-color);
-}
-.dialog input:focus {
-	box-shadow: 0 0 6px 2px var(--primary-color);
-}
-.dialog input:invalid, .dialog input:out-of-range {
-	box-shadow: 0 0 6px 2px #F00;
-}
-
-/* Bot cards */
-.botcard {
-	padding: 15px;
-	border-radius: 5px;
-	background-color: #DDD;
-	display: flex;
-	align-items: center;
-}
-.botcard a {
-	font-size: 25px;
-	text-decoration: none;
-}
-.botcard img {
-	border-radius: 50%;
-	margin-right: 10px;
-	width: 64px;
-	height: 64px;
 }

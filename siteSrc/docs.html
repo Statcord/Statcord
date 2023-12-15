@@ -25,7 +25,13 @@
 		<main>
 			<h1>API Documentation</h1>
 
-			<p>Base URL: <code>https://disstat-api.tomatenkuchen.com/</code></p>
+			<p>
+				Base URL: <code>https://disstat-api.tomatenkuchen.com/v1/</code>
+				<br>
+				<br>
+				Authentification can be done using the <code>Authorization</code> header, or the <code>apikey</code> query parameter.
+				The API key can be found on <a href="./me">your dashboard</a> and is the same for all of your bots.
+			</p>
 
 			<h2>Getting bot data</h2>
 
@@ -34,72 +40,218 @@
 				<br>
 				If the bot is private, an API key authorized for the bot must be provided in the Authorization header.
 				<br>
+				<br>
 				Method: <code>GET</code>
 				<br>
-				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;</code>
-				<br>
-				Headers:
-				<ul>
-					<li>Authorization (optional): API token from the DisStat dashboard</li>
-				</ul>
-				Body:
-				<ul>
-					<li>returnStats: Whether the stats should be returned. Defaults to <code>false</code>.</li>
-				</ul>
+				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;</code>
 			</p>
+
+			<p>Headers:</p>
+			<table cellpadding="8" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Description</th>
+						<th>Required</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Authorization</td>
+						<td>string</td>
+						<td>API key authorized for the bot from the DisStat dashboard.</td>
+						<td>Only if the bot is private.</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Query:</p>
+			<table cellpadding="8" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>returnStats</td>
+						<td>boolean</td>
+						<td>Whether the stats should be returned. Defaults to <code>false</code>, set to <code>true</code> to enable.</td>
+					</tr>
+					<tr>
+						<td>groupSize</td>
+						<td>number</td>
+						<td>Amount of data points to return.</td>
+					</tr>
+					<tr>
+						<td>start</td>
+						<td>number</td>
+						<td>The start date to filter the data by. Defaults to no start date.</td>
+					</tr>
+					<tr>
+						<td>end</td>
+						<td>number</td>
+						<td>The end date to filter the data by. Defaults to no end date.</td>
+					</tr>
+				</tbody>
+			</table>
 
 			<h2>Posting bot data</h2>
 
 			<p>
 				This endpoint returns the basic data DisStat has stored about the bot, like it's username and avatar.
 				<br>
-				An API key authorized for the bot must be provided in the Authorization header.
 				<br>
 				Method: <code>POST</code>
 				<br>
-				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;</code>
-				<br>
-				Headers:
-				<ul>
-					<li>Authorization: API token from the DisStat dashboard</li>
-				</ul>
-				Body:
-				<ul>
-					<li>returnStats: Whether the updated stats should be returned. Defaults to <code>false</code>.</li>
-
-					<li>servers (optional): The amount of servers (guilds) the bot is in</li>
-					<li>users (optional): The amount of users the bot can see across all servers</li>
-					<li>shards (optional): The amount of shards the bot is running with</li>
-					<li>apiPing (optional): The time in milliseconds how long a ping from/to Discord takes</li>
-					<li>ramUsage (optional): The amount of memory/RAM the bot's process is using currently, in bytes</li>
-					<li>ramTotal (optional): The amount of memory/RAM the bot could use theoretically, in bytes</li>
-					<li>cpu (optional): The current cpu usage of the bot's process</li>
-				</ul>
+				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;</code>
 			</p>
+
+			<p>Headers:</p>
+			<table cellpadding="8" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Description</th>
+						<th>Required</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Authorization</td>
+						<td>string</td>
+						<td>API key authorized for the bot from the DisStat dashboard.</td>
+						<td>Yes</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Body:</p>
+			<table cellpadding="8" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>returnStats</td>
+						<td>boolean</td>
+						<td>Whether the updated stats should be returned. Defaults to <code>false</code>.</td>
+					</tr>
+					<tr>
+						<td>servers</td>
+						<td>number</td>
+						<td>The amount of servers (guilds) the bot is in</td>
+					</tr>
+					<tr>
+						<td>users</td>
+						<td>number</td>
+						<td>The amount of users the bot can see across all servers</td>
+					</tr>
+					<tr>
+						<td>shards</td>
+						<td>number</td>
+						<td>The amount of shards the bot is running with</td>
+					</tr>
+					<tr>
+						<td>apiPing</td>
+						<td>number</td>
+						<td>The time in milliseconds how long a ping from/to Discord takes</td>
+					</tr>
+					<tr>
+						<td>ramUsage</td>
+						<td>number</td>
+						<td>The amount of memory/RAM the bot's process is using currently, in bytes</td>
+					</tr>
+					<tr>
+						<td>ramTotal</td>
+						<td>number</td>
+						<td>The amount of memory/RAM the bot could use theoretically, in bytes</td>
+					</tr>
+					<tr>
+						<td>cpu</td>
+						<td>number</td>
+						<td>The current cpu usage of the bot's process</td>
+					</tr>
+					<tr>
+						<td>bandwidth</td>
+						<td>number</td>
+						<td>The current bandwidth usage of the bot's process, in bytes</td>
+					</tr>
+				</tbody>
+			</table>
 
 			<h2>Posting a ran command</h2>
 
 			<p>
 				Stores a ran command for the bot. This is used to track the most used commands.
-				You might want to exclude the prefix from the command name, and not include custom commands to protect user privacy.
+				You should remove the prefix and arguments and only send the command name. Also, custom commands shouldn't be sent to protect user privacy.
 				<br>
-				An API key authorized for the bot must be provided in the Authorization header.
 				<br>
 				Method: <code>POST</code>
 				<br>
-				URL: <code>https://disstat-api.tomatenkuchen.com/bot/&lt;Bot ID&gt;/cmd</code>
+				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;/cmd</code>
 				<br>
-				Headers:
-				<ul>
-					<li>Authorization: API token from the DisStat dashboard</li>
-				</ul>
-				Body:
-				<ul>
-					<li>command: The command name without the prefix</li>
-					<li>user (optional): The user ID or another per-user identifier to track the amount of engaged users</li>
-					<li>guild (optional): The guild ID or another per-guild identifier to track the amount of active guilds</li>
-				</ul>
 			</p>
+
+			<p>Headers:</p>
+			<table cellpadding="8" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Description</th>
+						<th>Required</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Authorization</td>
+						<td>string</td>
+						<td>API key authorized for the bot from the DisStat dashboard.</td>
+						<td>Yes</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Body:</p>
+			<table cellpadding="8" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Description</th>
+						<th>Required</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>command</td>
+						<td>string</td>
+						<td>The command name without a prefix.</td>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<td>user</td>
+						<td>string</td>
+						<td>The user ID or another per-user identifier to track the amount of engaged users</td>
+						<td>No</td>
+					</tr>
+					<tr>
+						<td>guild</td>
+						<td>string</td>
+						<td>The guild ID or another per-guild identifier to track the amount of active guilds</td>
+						<td>No</td>
+					</tr>
+				</tbody>
+			</table>
 		</main>
 
 		<script
@@ -107,6 +259,5 @@
 			type="module" crossorigin="anonymous" data-no-instant
 		></script>
 		<script src="./assets/instantclick.min.js" data-no-instant></script>
-		<script data-no-instant>InstantClick.init();</script>
 	</body>
 </html>

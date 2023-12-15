@@ -23,19 +23,38 @@
 		<global-navbar></global-navbar>
 
 		<main id="content">
-			<h1>
-				Edit <strong id="botname"></strong>
-			</h1>
+			<h1 id="loading-text">Loading...</h1>
+			<a id="view-bot-target"><button type="button">View bot</button></a>
+
+			<br>
+			<br>
+			<label for="slug">Slug (Custom URL):</label>
+			<input type="text" id="slug" placeholder="Slug" maxlength="32">
+
+			<br>
+			<label for="public">Public bot:</label>
+			<input type="checkbox" id="public">
+
+			<br>
+			<label for="nsfw">NSFW (Not safe for work) bot name or avatar:</label>
+			<input type="checkbox" id="nsfw">
 		</main>
 		<script>
 			async function load() {
-				const params = new URLSearchParams(location.search)
-				if (!params.has("id")) return location.href = "/"
-				const bot = await getBot(params.get("id"))
-				if (!bot.name) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
+				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
+				const bot = await getBot(new URLSearchParams(location.search).get("id"))
+				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
-				document.getElementById("botname").innerText = bot.name
-				document.querySelector("title").innerText = "DisStat - Modify settings of " + bot.name
+				document.getElementById("loading-text").innerHTML = bot.isOwner ?
+					"Editing bot <strong>" + encode(bot.username) + "</strong>" : "You are not the owner of <strong>" + encode(bot.username) + "</strong>!"
+				document.querySelector("title").innerText = "DisStat - Modify settings of " + bot.username
+
+				document.getElementById("view-bot-target").href = "/bot?id=" + encode(bot.botId)
+				if (!bot.isOwner) return
+
+				document.getElementById("slug").value = bot.slug
+				document.getElementById("public").checked = bot.public
+				document.getElementById("nsfw").checked = bot.nsfw
 			}
 			load()
 		</script>
@@ -45,6 +64,5 @@
 			type="module" crossorigin="anonymous" data-no-instant
 		></script>
 		<script src="../assets/instantclick.min.js" data-no-instant></script>
-		<script data-no-instant>InstantClick.init();</script>
 	</body>
 </html>

@@ -23,21 +23,25 @@
 		<global-navbar></global-navbar>
 
 		<main id="content">
-			<h1>
-				Information about <strong id="botname"></strong>
-			</h1>
+			<h1 id="loading-text">Loading...</h1>
+			<a id="edit-bot-target"><button type="button" id="edit-bot" hidden>Edit bot</button></a>
+
 			<ul id="status"></ul>
 			<div id="charts"></div>
 		</main>
 		<script>
 			async function load() {
-				const params = new URLSearchParams(location.search)
-				if (!params.has("id")) return location.href = "/"
-				const bot = await getBot(params.get("id"))
+				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
+				const bot = await getBot(new URLSearchParams(location.search).get("id"))
 				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
-				document.getElementById("botname").innerText = bot.username
-				document.querySelector("title").innerText = "DisStat - View statistics of " + bot.username
+				document.getElementById("loading-text").innerHTML = "Information about <strong>" + encode(bot.username) + "</strong>"
+				document.querySelector("title").innerText = "DisStat - View statistics of " + encode(bot.username)
+
+				if (bot.isOwner) {
+					document.getElementById("edit-bot").removeAttribute("hidden")
+					document.getElementById("edit-bot-target").href = "/bot/edit?id=" + encode(bot.botId)
+				}
 
 				bot.charts.forEach(chart => {
 					const parentElement = document.createElement("div")
@@ -99,6 +103,5 @@
 			type="module" crossorigin="anonymous" data-no-instant
 		></script>
 		<script src="./assets/instantclick.min.js" data-no-instant></script>
-		<script data-no-instant>InstantClick.init();</script>
 	</body>
 </html>

@@ -30,3 +30,4 @@ or open an issue on GitHub.
 - add setting for chart name
 - amount of unique users for commands
 - instead of having a /sync api endpoint, automatically sync every few days
+- Clustered stats which Statcord had only for whitelisted bots https://docs.statcord.com/#/api?id=post-clustered-stats

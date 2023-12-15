@@ -28,7 +28,7 @@ const post = async (route, data = {}, returnError = false) => {
 	return json
 }
 
-const getBot = async id => await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=90")
+const getBot = async id => await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=90", true)
 const getBots = async () => await get("bots")
 const getBotsFromUser = async () => await get("bots?user=1", true)
 const login = async code => {
