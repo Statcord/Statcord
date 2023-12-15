@@ -9,8 +9,9 @@ const get = async (route = "", useAuth = false) => {
 	if (!res.ok) throw new Error(json.message || "Unknown error, status code: " + res.status)
 	return json
 }
-const post = async (route, data = {}, returnError = false) => {
+const post = async (route = "", data = {}, returnError = false) => {
 	if (route != "login" && !localStorage.getItem("token")) return alert("You are not logged in!")
+
 	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route, {
 		method: "post",
 		body: JSON.stringify(data),
@@ -31,6 +32,8 @@ const post = async (route, data = {}, returnError = false) => {
 const getBot = async id => await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=90", true)
 const getBots = async () => await get("bots")
 const getBotsFromUser = async () => await get("bots?user=1", true)
+const postSettings = async (id, settings) => await post("bots/" + id, settings, true)
+
 const login = async code => {
 	const result = await post("login", {code})
 	localStorage.setItem("token", result.token)

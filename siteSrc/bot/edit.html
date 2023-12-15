@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Modify tracking settings of a Discord bot.">
+		<meta name="description" content="Modify the settings of your Discord bot on DisStat.">
 		<title>DisStat - Modify settings of a bot</title>
 		<link rel="shortcut icon" href="../assets/icon.png">
 
@@ -26,23 +26,30 @@
 			<h1 id="loading-text">Loading...</h1>
 			<a id="view-bot-target"><button type="button">View bot</button></a>
 
-			<br>
-			<br>
-			<label for="slug">Slug (Custom URL):</label>
-			<input type="text" id="slug" placeholder="Slug" maxlength="32">
+			<div id="settings" hidden>
+				<br>
+				<br>
+				<label for="slug">Slug (Custom URL):</label>
+				<input type="text" id="slug" placeholder="Slug" maxlength="32">
 
-			<br>
-			<label for="public">Public bot:</label>
-			<input type="checkbox" id="public">
+				<br>
+				<label for="public">Public bot:</label>
+				<input type="checkbox" id="public">
 
-			<br>
-			<label for="nsfw">NSFW (Not safe for work) bot name or avatar:</label>
-			<input type="checkbox" id="nsfw">
+				<br>
+				<label for="nsfw">NSFW (Not safe for work) bot name or avatar:</label>
+				<input type="checkbox" id="nsfw">
+
+				<br>
+				<br>
+				<button type="button" id="save-button" onclick="saveSettings()">Save</button>
+			</div>
 		</main>
 		<script>
+			let bot = {}
 			async function load() {
 				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
-				const bot = await getBot(new URLSearchParams(location.search).get("id"))
+				bot = await getBot(new URLSearchParams(location.search).get("id"))
 				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
 				document.getElementById("loading-text").innerHTML = bot.isOwner ?
@@ -52,11 +59,24 @@
 				document.getElementById("view-bot-target").href = "/bot?id=" + encode(bot.botId)
 				if (!bot.isOwner) return
 
+				document.getElementById("settings").removeAttribute("hidden")
 				document.getElementById("slug").value = bot.slug
 				document.getElementById("public").checked = bot.public
 				document.getElementById("nsfw").checked = bot.nsfw
 			}
 			load()
+
+			async function saveSettings() {
+				const result = await postSettings(bot.botId, {
+					slug: document.getElementById("slug").value,
+					public: document.getElementById("public").checked,
+					nsfw: document.getElementById("nsfw").checked
+				})
+				if (result.message) return alert(result.message)
+
+				document.getElementById("save-button").classList.add("green")
+				setTimeout(() => document.getElementById("save-button").classList.remove("green"), 1000)
+			}
 		</script>
 
 		<script

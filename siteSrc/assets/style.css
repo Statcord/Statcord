@@ -82,9 +82,9 @@ button {
 	background-color: #3e4dd1;
 	border: none;
 	color: #FFF;
-	padding: 12px 25px;
+	padding: 10px 22px;
 	border-radius: 7px;
-	font-size: 18px;
+	font-size: 19px;
 	cursor: pointer;
 	transition: .3s;
 }
