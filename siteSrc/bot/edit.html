@@ -49,7 +49,7 @@
 			let bot = {}
 			async function load() {
 				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
-				bot = await getBot(new URLSearchParams(location.search).get("id"))
+				bot = await getBot()
 				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
 				document.getElementById("loading-text").innerHTML = bot.isOwner ?

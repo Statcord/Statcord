@@ -26,15 +26,6 @@
 			<h1>User settings</h1>
 			<button type="button" class="red" onclick="deleteData()">Delete all my data</button>
 		</main>
-		<script>
-			async function saveSettings() {
-				const result = await postSettings(bot.botId)
-				if (result.message) return alert(result.message)
-
-				document.getElementById("save-button").classList.add("green")
-				setTimeout(() => document.getElementById("save-button").classList.remove("green"), 1000)
-			}
-		</script>
 
 		<script
 			src="https://cdn.jsdelivr.net/npm/ionicons@7.2.0/dist/ionicons/ionicons.esm.js" integrity="sha384-zM76IY+3I2OTF49JR8mjLWUeugc/Q9wVzLMiSITfvgmdy8nQtAhci8m8IsdnTl3q"

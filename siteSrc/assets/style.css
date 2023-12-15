@@ -14,6 +14,7 @@
 	--table-even: #1e1e25;
 	--green: #3ed13e;
 	--red: #ec3f3f;
+	--info-bg: #494438;
 
 	--white: #000;
 	--black: #FFF;
@@ -35,6 +36,7 @@
 	--table-even: #f3f3f3;
 	--green: #3ed13e;
 	--red: #ec3f3f;
+	--info-bg: #e9dead;
 
 	--white: #FFF;
 	--black: #000;
@@ -121,6 +123,17 @@ a:visited {
 	color: var(--link-visited);
 }
 
+#filter-container {
+	margin: 20px 0 20px 40px;
+}
+
+#setup {
+	margin: 15px 3px;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: var(--info-bg);
+}
+
 nav {
 	background-color: var(--nav-bg);
 	padding: 15px;
@@ -198,6 +211,7 @@ input:not([type=checkbox]) {
 	border-radius: 8px;
 	outline: none;
 	padding: 5px;
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 18px;
 	min-width: 150px;
 	transition: .3s;

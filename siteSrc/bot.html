@@ -19,20 +19,55 @@
 			crossorigin="anonymous" referrerpolicy="no-referrer"
 		></script>
 	</head>
-	<body>
+	<body onload="setupFilters();getKey()">
 		<global-navbar></global-navbar>
 
 		<main id="content">
 			<h1 id="loading-text">Loading...</h1>
 			<a id="edit-bot-target"><button type="button" id="edit-bot" hidden>Edit bot</button></a>
 
+			<div id="setup" hidden>
+				<h2>Setup help</h2>
+
+				<ol>
+					<li><b><a href="./setup">Setup guide</a></b>: Use the API or a package to post stats using the API key <input id="botapikey" size="27" readonly></li>
+					<li><b><a id="edit-bot-target2">Settings</a></b>: Configure settings & charts of your bot</li>
+				</ol>
+			</div>
+
 			<ul id="status"></ul>
+
+			<details id="filter-container">
+				<summary>Filters</summary>
+
+				<label for="start-time">Start time:</label>
+				<input type="datetime-local" id="start-time" min="2023-07-17T00:00" value="2023-07-17T00:00">
+
+				<br>
+				<label for="end-time">End time:</label>
+				<input type="datetime-local" id="end-time" min="2023-07-17T00:00">
+
+				<br>
+				<label for="data-points">Amount of data points:</label>
+				<input type="number" id="data-points" min="2" max="1000" value="90">
+
+				<br>
+				<button type="button" class="green" onclick="load()">Filter</button>
+			</details>
 			<div id="charts"></div>
 		</main>
 		<script>
+			function setupFilters() {
+				const curDate = new Date(new Date().setSeconds(0))
+				document.getElementById("start-time").max = curDate.toISOString().split(".")[0]
+				document.getElementById("end-time").value = curDate.toISOString().split(".")[0]
+				document.getElementById("end-time").max = new Date(Date.now() + 1000 * 60 * 60).toISOString().split(".")[0]
+			}
+			setTimeout(setupFilters, 2500)
+
 			async function load() {
 				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
-				const bot = await getBot(new URLSearchParams(location.search).get("id"))
+				const bot = await getBot()
 				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
 				document.getElementById("loading-text").innerHTML = "Information about <strong>" + encode(bot.username) + "</strong>"
@@ -41,54 +76,62 @@
 				if (bot.isOwner) {
 					document.getElementById("edit-bot").removeAttribute("hidden")
 					document.getElementById("edit-bot-target").href = "/bot/edit?id=" + encode(bot.botId)
+					document.getElementById("edit-bot-target2").href = "/bot/edit?id=" + encode(bot.botId)
+					if (new URLSearchParams(location.search).has("setup")) document.getElementById("setup").removeAttribute("hidden")
 				}
 
-				bot.charts.forEach(chart => {
-					const parentElement = document.createElement("div")
+				if (bot.charts.length == 0) document.getElementById("charts").innerHTML = "<h2>No charts available.</h2>"
+				else {
+					Object.values(Chart.instances).forEach(chart => chart.destroy())
+					document.getElementById("charts").innerHTML = ""
 
-					const chartElement = document.createElement("canvas")
-					chartElement.setAttribute("id", chart.name)
-					chartElement.setAttribute("width", "570")
-					chartElement.setAttribute("height", "330")
-					chartElement.setAttribute("aria-label", "Chart for " + chart.name)
-					chartElement.setAttribute("role", "img")
+					bot.charts.forEach(chart => {
+						const parentElement = document.createElement("div")
 
-					parentElement.appendChild(chartElement)
-					document.getElementById("charts").appendChild(parentElement)
+						const chartElement = document.createElement("canvas")
+						chartElement.setAttribute("id", chart.name)
+						chartElement.setAttribute("width", "570")
+						chartElement.setAttribute("height", "330")
+						chartElement.setAttribute("aria-label", "Chart for " + chart.name)
+						chartElement.setAttribute("role", "img")
 
-					new Chart(chartElement.getContext("2d"), {
-						type: chart.type || "line",
-						data: {
-							labels: chart.labels,
-							datasets: [{
-								label: chart.name,
-								data: chart.data,
-								borderColor: chart.borderColor,
-								backgroundColor: chart.borderColor
-							}]
-						},
-						options: {
-							scales: {
-								y: {
-									beginAtZero: true
-								}
+						parentElement.appendChild(chartElement)
+						document.getElementById("charts").appendChild(parentElement)
+
+						new Chart(chartElement.getContext("2d"), {
+							type: chart.type || "line",
+							data: {
+								labels: chart.labels,
+								datasets: [{
+									label: chart.name,
+									data: chart.data,
+									borderColor: chart.borderColor,
+									backgroundColor: chart.borderColor
+								}]
 							},
-							layout: {
-								padding: 13
-							},
-							maintainAspectRatio: false,
-							plugins: {
-								title: {
-									display: true,
-									text: chart.name
+							options: {
+								scales: {
+									y: {
+										beginAtZero: true
+									}
 								},
-								colors: {
-									enabled: false
+								layout: {
+									padding: 13
+								},
+								maintainAspectRatio: false,
+								plugins: {
+									legend: {
+										display: false
+									},
+									title: {
+										display: true,
+										text: chart.name
+									}
 								}
 							}
-						}
+						})
 					})
-				})
+				}
 
 				const statusElement = document.getElementById("status")
 				statusElement.innerHTML =

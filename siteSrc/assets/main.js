@@ -28,7 +28,7 @@ customElements.define("global-navbar", Navbar)
 
 let params = new URLSearchParams(location.search)
 window.addEventListener("load", () => {
-	if (localStorage.getItem("theme") == "light") document.body.classList.add("light")
+	if (localStorage.getItem("theme") == "light" || (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: light)").matches)) document.body.classList.add("light")
 
 	InstantClick.init()
 	InstantClick.on("change", () => {

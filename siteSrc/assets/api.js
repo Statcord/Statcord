@@ -29,7 +29,18 @@ const post = async (route = "", data = {}, returnError = false) => {
 	return json
 }
 
-const getBot = async id => await get("bots/" + id + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language + "&groupSize=90", true)
+const getBot = async () => {
+	const startTime = document.getElementById("start-time")?.value
+	const endTime = document.getElementById("end-time")?.value
+	const dataPoints = document.getElementById("data-points")?.value || 90
+
+	return await get(
+		"bots/" + new URLSearchParams(location.search).get("id") + "?timezone=" + new Intl.DateTimeFormat().resolvedOptions().timeZone + "&locale=" + navigator.language +
+		(startTime ? "&start=" + startTime : "") +
+		(endTime ? "&end=" + endTime : "") +
+		"&dataPoints=" + dataPoints, true
+	)
+}
 const getBots = async () => await get("bots")
 const getBotsFromUser = async () => await get("bots?user=1", true)
 const postSettings = async (id, settings) => await post("bots/" + id, settings, true)
@@ -55,7 +66,7 @@ const addBot = async () => {
 	if (!/^[0-9]{17,21}$/.test(id)) return
 
 	const result = await post("bots", {id}, true)
-	if (result.success) location.href = "/bot?id=" + id
+	if (result.success) location.href = "/bot/edit?id=" + id + "&setup=1"
 	else alert(result.message)
 }
 const getKey = async () => {

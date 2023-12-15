@@ -15,17 +15,14 @@ or open an issue on GitHub.
 ## TODO
 - Auto fetch bot lists the bot is on and display them on /bot/vote?id= or similar for owners to link to
 - Vote buckets like statcord has
-- Custom graphs like statcord has
 - Pypi package
 - data import from Statcord
 - prevent random users from adding bots they don't own by removing them after one hour or so without any stats posted
-- link docs on how to setup stats somewhere after adding a bot
-- show api key after bot adding
 - command tracking usage
-- add customCharts & use dynamic name, type, label, and enabled status
+- add custom charts & use dynamic name, type, label, and enabled status
 - add settings menu for chart types
 - add settings menu to delete custom stats
 - add setting for chart name
 - amount of unique users for commands
 - instead of having a /sync api endpoint, automatically sync every few days
-- Clustered stats which Statcord had only for whitelisted bots https://docs.statcord.com/#/api?id=post-clustered-stats
+- Clustered stats which Statcord had for whitelisted bots only https://docs.statcord.com/#/api?id=post-clustered-stats
