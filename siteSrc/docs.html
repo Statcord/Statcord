@@ -82,7 +82,7 @@
 						<td>Whether the stats should be returned. Defaults to <code>false</code>, set to <code>true</code> to enable.</td>
 					</tr>
 					<tr>
-						<td>groupSize</td>
+						<td>dataPoints</td>
 						<td>number</td>
 						<td>Amount of data points to return.</td>
 					</tr>
@@ -137,53 +137,57 @@
 						<th>Name</th>
 						<th>Type</th>
 						<th>Description</th>
+						<th>Required</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>returnStats</td>
-						<td>boolean</td>
-						<td>Whether the updated stats should be returned. Defaults to <code>false</code>.</td>
-					</tr>
-					<tr>
-						<td>servers</td>
+						<td>guilds</td>
 						<td>number</td>
-						<td>The amount of servers (guilds) the bot is in</td>
+						<td>The amount of guilds (servers) the bot is in</td>
+						<td>Yes</td>
 					</tr>
 					<tr>
 						<td>users</td>
 						<td>number</td>
 						<td>The amount of users the bot can see across all servers</td>
+						<td>No</td>
 					</tr>
 					<tr>
 						<td>shards</td>
 						<td>number</td>
 						<td>The amount of shards the bot is running with</td>
+						<td>No</td>
 					</tr>
 					<tr>
 						<td>apiPing</td>
 						<td>number</td>
 						<td>The time in milliseconds how long a ping from/to Discord takes</td>
+						<td>No</td>
 					</tr>
 					<tr>
 						<td>ramUsage</td>
 						<td>number</td>
 						<td>The amount of memory/RAM the bot's process is using currently, in bytes</td>
+						<td>No</td>
 					</tr>
 					<tr>
 						<td>ramTotal</td>
 						<td>number</td>
 						<td>The amount of memory/RAM the bot could use theoretically, in bytes</td>
+						<td>No</td>
 					</tr>
 					<tr>
 						<td>cpu</td>
 						<td>number</td>
 						<td>The current cpu usage of the bot's process</td>
+						<td>No</td>
 					</tr>
 					<tr>
 						<td>bandwidth</td>
 						<td>number</td>
 						<td>The current bandwidth usage of the bot's process, in bytes</td>
+						<td>No</td>
 					</tr>
 				</tbody>
 			</table>
