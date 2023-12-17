@@ -29,10 +29,12 @@
 				Base URL: <code>https://disstat-api.tomatenkuchen.com/v1/</code>
 				<br>
 				<br>
-				Authentification can be done using the <code>Authorization</code> header, or the <code>apikey</code> query parameter.
+				Authentification can be done using the <code>Authorization</code> header or the <code>apikey</code> query parameter.
+				<br>
 				The API key can be found on <a href="./me">your dashboard</a> and is the same for all of your bots.
 			</p>
 
+			<br>
 			<h2>Getting bot data</h2>
 
 			<p>
@@ -66,7 +68,7 @@
 				</tbody>
 			</table>
 
-			<p>Query:</p>
+			<p>Query parameters:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
 					<tr>
@@ -84,21 +86,22 @@
 					<tr>
 						<td>dataPoints</td>
 						<td>number</td>
-						<td>Amount of data points to return.</td>
+						<td>Amount of data points to return if returnStats is enabled.</td>
 					</tr>
 					<tr>
 						<td>start</td>
 						<td>number</td>
-						<td>The start date to filter the data by. Defaults to no start date.</td>
+						<td>The start date to filter the data by if returnStats is enabled. Defaults to no start date.</td>
 					</tr>
 					<tr>
 						<td>end</td>
 						<td>number</td>
-						<td>The end date to filter the data by. Defaults to no end date.</td>
+						<td>The end date to filter the data by if returnStats is enabled. Defaults to no end date.</td>
 					</tr>
 				</tbody>
 			</table>
 
+			<br>
 			<h2>Posting bot data</h2>
 
 			<p>
@@ -189,19 +192,44 @@
 						<td>The current bandwidth usage of the bot's process, in bytes</td>
 						<td>No</td>
 					</tr>
+					<tr>
+						<td>...&lt;Custom graph name&gt;</td>
+						<td>Array of objects with strings or numbers, or number</td>
+						<td>
+							You can send any data this way, and DisStat will try to store it somehow.
+							<br>
+							<br>
+							This can be used for simple custom graphs like the total amount
+							<br>
+							of tickets created, or the amount of channels your bot sees -
+							<br>
+							but you can also post an array of objects to create a custom graph.
+							<br>
+							<br>
+							If you're posting a property which we haven't seen before and you have enough
+							<br>
+							unused custom graph slots, it will be automatically created as custom graph.
+						</td>
+						<td>No</td>
+					</tr>
 				</tbody>
 			</table>
 
-			<h2>Posting a ran command</h2>
+			<br>
+			<h2>Posting to custom graphs</h2>
 
 			<p>
-				Stores a ran command for the bot. This is used to track the most used commands.
-				You should remove the prefix and arguments and only send the command name. Also, custom commands shouldn't be sent to protect user privacy.
+				Stores a custom graph value for the bot without relying on the bot posting it above.
+				<br>
+				This does not have a limit on how much you can post <i>as of now</i>.
+				<br>
+				<br>
+				Libraries may implement wrappers around this, like the <code>postCommand()</code> function from the official npm package.
 				<br>
 				<br>
 				Method: <code>POST</code>
 				<br>
-				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;/command</code>
+				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;/custom</code>
 				<br>
 			</p>
 
@@ -237,21 +265,27 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>command</td>
+						<td>type</td>
 						<td>string</td>
-						<td>The command name without a prefix.</td>
+						<td>The name of the custom graph.</td>
 						<td>Yes</td>
 					</tr>
 					<tr>
-						<td>user</td>
-						<td>string</td>
-						<td>The user ID or another per-user identifier to track the amount of engaged users</td>
+						<td>value1</td>
+						<td>number|string</td>
+						<td>The first value as argument for the type</td>
 						<td>No</td>
 					</tr>
 					<tr>
-						<td>guild</td>
-						<td>string</td>
-						<td>The guild ID or another per-guild identifier to track the amount of active guilds</td>
+						<td>value2</td>
+						<td>number|string</td>
+						<td>The second value as argument for the type</td>
+						<td>No</td>
+					</tr>
+					<tr>
+						<td>value3</td>
+						<td>number|string</td>
+						<td>The third value as argument for the type</td>
 						<td>No</td>
 					</tr>
 				</tbody>

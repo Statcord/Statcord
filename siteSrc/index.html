@@ -36,7 +36,7 @@
 			</p>
 
 			<h2>All currently tracked, public bots</h2>
-			<div id="bots"></div>
+			<div id="publicBots" class="bots"></div>
 		</main>
 		<script>
 			async function load() {
@@ -44,7 +44,7 @@
 				bots.forEach(bot => {
 					const botElement = document.createElement("bot-card")
 					botElement.setAttribute("data-bot", JSON.stringify(bot))
-					document.getElementById("bots").appendChild(botElement)
+					document.getElementById("publicBots").appendChild(botElement)
 				})
 			}
 			load()

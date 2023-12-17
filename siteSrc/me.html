@@ -26,7 +26,7 @@
 			<button type="button" onclick="openDialog(document.getElementById('add-dialog'))">Add your bot</button>
 			<button type="button" onclick="getKey();openDialog(document.getElementById('apikey-dialog'))">View API key</button>
 			<h1>Your bots</h1>
-			<div id="bots"></div>
+			<div id="bots" class="bots"></div>
 		</main>
 		<script>
 			if (localStorage.getItem("token") || new URLSearchParams(location.search).has("code")) {
