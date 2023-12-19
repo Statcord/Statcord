@@ -65,6 +65,17 @@
 			}
 			setTimeout(setupFilters, 2500)
 
+			function formatBytes(bytes, decimals = 2) {
+				if (bytes == 0) return "0 Bytes"
+
+				const k = 1024
+				const dm = decimals < 0 ? 0 : decimals
+				const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"]
+
+				const i = Math.floor(Math.log(bytes) / Math.log(k))
+				return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
+			}
+
 			async function load() {
 				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
 				const bot = await getBot()
@@ -112,7 +123,10 @@
 							options: {
 								scales: {
 									y: {
-										beginAtZero: true
+										ticks: {
+											callback: value => chart.format == "byte" ? formatBytes(value) : (chart.format == "%" ? value + "%" : value)
+										},
+										beginAtZero: chart.format == "%"
 									}
 								},
 								layout: {
@@ -126,6 +140,21 @@
 									title: {
 										display: true,
 										text: chart.name
+									},
+									tooltip: {
+										callbacks: {
+											label: context => {
+												let label = context.dataset.label || ""
+
+												if (label) label += ": "
+												if (context.parsed.y !== null) {
+													if (chart.format == "byte") label += formatBytes(context.parsed.y)
+													else if (chart.format == "%") label += context.parsed.y + "%"
+													else label += context.parsed.y
+												}
+												return label
+											}
+										}
 									}
 								}
 							}
@@ -135,7 +164,7 @@
 
 				const statusElement = document.getElementById("status")
 				statusElement.innerHTML =
-					"<li>Last connection to API: " + (bot.lastConnect ? new Date(bot.lastConnect).toLocaleString(navigator.language,
+					"<li>Last stats posted to API: " + (bot.lastStats ? new Date(bot.lastStats).toLocaleString(navigator.language,
 						{timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone}) : "Never") + "</li>"
 			}
 			load()

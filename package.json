@@ -12,7 +12,7 @@
   "devDependencies": {
     "@html-eslint/eslint-plugin": "^0.22.0",
     "@html-eslint/parser": "^0.22.0",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-sonarjs": "^0.23.0",
     "eslint-plugin-unicorn": "^49.0.0",
