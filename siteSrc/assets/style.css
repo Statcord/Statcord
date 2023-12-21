@@ -7,9 +7,10 @@
 	--dialog-shadow: rgba(0, 0, 0, 0.75);
 	--code-bg: #39383b;
 	--nav-bg: #1a1a1a;
-	--link-active: #5663d8;
-	--link-visited: #6e55df;
-	--canvas-bg: #d1e6f7;
+	--card-bg: #221e35;
+	--link-active: #5967e2;
+	--link-visited: #745be0;
+	--canvas-bg: #aab7ff;
 	--table-odd: #32313f;
 	--table-even: #1e1e25;
 	--green: #3ed13e;
@@ -29,9 +30,10 @@
 	--dialog-shadow: rgba(0, 0, 0, 0.25);
 	--code-bg: #EEE;
 	--nav-bg: #CCC;
-	--link-active: #3e4dd1;
-	--link-visited: #653ed1;
-	--canvas-bg: #d1e6f7;
+	--card-bg: #DDD;
+	--link-active: #4353df;
+	--link-visited: #7855da;
+	--canvas-bg: #dae8fc;
 	--table-odd: #e6e6e6;
 	--table-even: #f3f3f3;
 	--green: #3ed13e;
@@ -52,6 +54,11 @@ body {
 
 h1, h2, h3, h4, p, b, td, th, a, small, label, input, summary, span, li {
 	color: var(--primary-text-color);
+}
+
+summary {
+	cursor: pointer;
+	padding: 15px 0;
 }
 
 .green {
@@ -90,7 +97,7 @@ button {
 	cursor: pointer;
 	transition: .3s;
 }
-button:hover {
+button:hover:not(.red):not(.green) {
 	background-color: #416bc5;
 }
 button:disabled {
@@ -125,6 +132,25 @@ a:visited {
 
 #filter-container {
 	margin: 20px 0 20px 40px;
+}
+
+#cards-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	margin: 20px;
+	grid-gap: 15px;
+}
+#cards-container div {
+	padding: 13px;
+	border-radius: 10px;
+	background-color: var(--card-bg);
+	display: flex;
+	flex-direction: column;
+}
+#cards-container div span {
+	color: var(--secondary-text-color);
+	text-transform: uppercase;
+	padding-top: 15px;
 }
 
 #setup {
@@ -168,14 +194,14 @@ tr:nth-child(odd) {
 .bots {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-	grid-gap: 20px;
+	grid-gap: 15px;
 }
 
 /* Bot cards */
 bot-card {
-	padding: 15px;
-	border-radius: 5px;
-	background-color: #DDD;
+	padding: 13px;
+	border-radius: 10px;
+	background-color: var(--card-bg);
 	display: flex;
 	align-items: center;
 }
@@ -204,7 +230,7 @@ bot-card img {
 
 canvas {
 	border-radius: 10px;
-	background-color: #d1e6f7;
+	background-color: var(--canvas-bg);
 }
 
 input:not([type=checkbox]) {
@@ -213,7 +239,7 @@ input:not([type=checkbox]) {
 	padding: 5px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 18px;
-	min-width: 150px;
+	min-width: 120px;
 	transition: .3s;
 	background: var(--primary-color);
 }

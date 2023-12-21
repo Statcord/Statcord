@@ -27,15 +27,20 @@
 			<a id="edit-bot-target"><button type="button" id="edit-bot" hidden>Edit bot</button></a>
 
 			<div id="setup" hidden>
-				<h2>Setup help</h2>
+				<h2>Your bot has been created successfully!</h2>
+
+				<p>Here are some tips to get started:</p>
 
 				<ol>
-					<li><b><a href="./setup">Setup guide</a></b>: Use the API or a package to post stats using the API key <input id="botapikey" size="27" readonly></li>
+					<li>
+						<b><a href="./setup">Setup guide</a></b>: Use the API or a package to post stats using the API key <input id="botapikey" size="27" readonly> -
+						note that your bot gets deleted if you don't start posting with an hour
+					</li>
 					<li><b><a id="edit-bot-target2">Settings</a></b>: Configure settings & charts of your bot</li>
 				</ol>
 			</div>
 
-			<ul id="status"></ul>
+			<div id="cards-container"></div>
 
 			<details id="filter-container">
 				<summary>Filters</summary>
@@ -162,10 +167,16 @@
 					})
 				}
 
-				const statusElement = document.getElementById("status")
-				statusElement.innerHTML =
-					"<li>Last stats posted to API: " + (bot.lastStats ? new Date(bot.lastStats).toLocaleString(navigator.language,
-						{timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone}) : "Never") + "</li>"
+				const cards = []
+
+				cards.push(
+					"<div>" +
+					"<span>Last stats posted to API</span>" +
+					"<p>" + (bot.lastStats ? new Date(bot.lastStats).toLocaleString(navigator.language, {timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone}) : "Never") + "</p>" +
+					"</div>"
+				)
+
+				document.getElementById("cards-container").innerHTML = cards.join("")
 			}
 			load()
 		</script>

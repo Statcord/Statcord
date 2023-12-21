@@ -30,14 +30,15 @@
 				<br>
 				<br>
 				<label for="slug">Slug (Custom URL):</label>
-				<input type="text" id="slug" placeholder="Slug" maxlength="32">
+				<input type="text" id="slug" placeholder="Slug" maxlength="50">
+				<button type="button" id="slug-copy" onclick="copySlug()">Copy</button>
 
 				<br>
 				<label for="public">Public bot:</label>
 				<input type="checkbox" id="public">
 
 				<br>
-				<label for="nsfw">NSFW (Not safe for work) bot name or avatar:</label>
+				<label for="nsfw">NSFW (Not safe for work) bot avatar:</label>
 				<input type="checkbox" id="nsfw">
 
 				<br>
@@ -76,6 +77,20 @@
 
 				document.getElementById("save-button").classList.add("green")
 				setTimeout(() => document.getElementById("save-button").classList.remove("green"), 1000)
+			}
+
+			function copySlug() {
+				const slug = document.getElementById("slug")
+				const oldValue = slug.value
+
+				slug.value = location.origin + "/b/" + slug.value
+				slug.select()
+				slug.setSelectionRange(0, 9999)
+				document.execCommand("copy")
+				document.getElementById("slug-copy").classList.add("green")
+				setTimeout(() => document.getElementById("slug-copy").classList.remove("green"), 1000)
+
+				slug.value = oldValue
 			}
 		</script>
 
