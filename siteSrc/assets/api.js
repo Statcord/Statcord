@@ -1,7 +1,7 @@
 const get = async (route = "", useAuth = false) => {
-	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/\.\.[/\\]/g, ""), {
+	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/\./g, ""), {
 		headers: {
-			Authorization: useAuth ? localStorage.getItem("token") : null
+			Authorization: useAuth ? localStorage.getItem("token") : void 0
 		}
 	})
 	const json = await res.json()
@@ -66,7 +66,7 @@ const addBot = async () => {
 	if (!/^[0-9]{17,21}$/.test(id)) return
 
 	const result = await post("bots", {id}, true)
-	if (result.success) location.href = "/bot/edit?id=" + id + "&setup=1"
+	if (result.success) location.href = "/bot?id=" + id + "&setup=1" + (result.statcordFound ? "&statcord=1" : "")
 	else alert(result.message)
 }
 const getKey = async () => {

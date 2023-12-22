@@ -44,7 +44,7 @@
 				load()
 			} else {
 				location.href = "https://discord.com/api/oauth2/authorize?client_id=1080913163077308436&redirect_uri=" +
-					encodeURIComponent(location.href) + "&prompt=none&response_type=code&scope=identify"
+					encodeURIComponent(location.href) + "&prompt=none&response_type=code&scope=identify+applications.builds.read"
 			}
 
 			function copyKey() {
