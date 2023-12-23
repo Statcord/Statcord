@@ -24,7 +24,7 @@
 
 		<main id="content">
 			<h1 id="loading-text">Loading...</h1>
-			<a id="view-bot-target"><button type="button">View bot</button></a>
+			<a id="view-bot-target" hidden><button type="button">View bot</button></a>
 
 			<div id="settings" hidden>
 				<br>
@@ -47,7 +47,6 @@
 			</div>
 		</main>
 		<script>
-			let bot = {}
 			async function load() {
 				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
 				bot = await getBot()
@@ -58,6 +57,7 @@
 				document.querySelector("title").innerText = "DisStat - Modify settings of " + bot.username
 
 				document.getElementById("view-bot-target").href = "/bot?id=" + encode(bot.botId)
+				document.getElementById("view-bot-target").removeAttribute("hidden")
 				if (!bot.isOwner) return
 
 				document.getElementById("settings").removeAttribute("hidden")
@@ -66,18 +66,6 @@
 				document.getElementById("nsfw").checked = bot.nsfw
 			}
 			load()
-
-			async function saveSettings() {
-				const result = await postSettings(bot.botId, {
-					slug: document.getElementById("slug").value,
-					public: document.getElementById("public").checked,
-					nsfw: document.getElementById("nsfw").checked
-				})
-				if (result.message) return alert(result.message)
-
-				document.getElementById("save-button").classList.add("green")
-				setTimeout(() => document.getElementById("save-button").classList.remove("green"), 1000)
-			}
 
 			function copySlug() {
 				const slug = document.getElementById("slug")

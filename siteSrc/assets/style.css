@@ -2,20 +2,21 @@
 	--primary-text-color: #ffffff;
 	--secondary-text-color: #C1C4DB;
 	--primary-color: #131524;
-	--background-color: #27282e;
+	--background-color: #23232c;
 	--dialog-bg: #222;
 	--dialog-shadow: rgba(0, 0, 0, 0.75);
 	--code-bg: #39383b;
 	--nav-bg: #1a1a1a;
-	--card-bg: #221e35;
-	--link-active: #5967e2;
-	--link-visited: #745be0;
+	--card-bg: #282341;
+	--link-active: #7072e9;
+	--link-visited: #8674d4;
 	--canvas-bg: #aab7ff;
 	--table-odd: #32313f;
 	--table-even: #1e1e25;
 	--green: #3ed13e;
 	--red: #ec3f3f;
-	--info-bg: #494438;
+	--info-bg: #5f5b48;
+	--info-bg-2: #3d523c;
 
 	--white: #000;
 	--black: #FFF;
@@ -38,7 +39,8 @@
 	--table-even: #f3f3f3;
 	--green: #3ed13e;
 	--red: #ec3f3f;
-	--info-bg: #e9dead;
+	--info-bg: #e1e2aa;
+	--info-bg-2: #bae2aa;
 
 	--white: #FFF;
 	--black: #000;
@@ -52,8 +54,9 @@ body {
 	transition: .2s;
 }
 
-h1, h2, h3, h4, p, b, td, th, a, small, label, input, summary, span, li {
+h1, h2, h3, p, b, td, th, a, small, label, input, summary, span, ul, li {
 	color: var(--primary-text-color);
+	margin: 0;
 }
 
 summary {
@@ -91,11 +94,12 @@ button {
 	background-color: #3e4dd1;
 	border: none;
 	color: #FFF;
-	padding: 10px 22px;
-	border-radius: 7px;
+	padding: 8px 17px;
+	border-radius: 10px;
 	font-size: 19px;
 	cursor: pointer;
 	transition: .3s;
+	box-shadow: inset 0px -1px 2px rgba(17,24,39,.15),0 0 0 0 transparent;
 }
 button:hover:not(.red):not(.green) {
 	background-color: #416bc5;
@@ -131,13 +135,13 @@ a:visited {
 }
 
 #filter-container {
-	margin: 20px 0 20px 40px;
+	margin: 20px 0 20px 30px;
 }
 
 #cards-container {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-	margin: 20px;
+	margin: 15px 0;
 	grid-gap: 15px;
 }
 #cards-container div {
@@ -150,14 +154,16 @@ a:visited {
 #cards-container div span {
 	color: var(--secondary-text-color);
 	text-transform: uppercase;
-	padding-top: 15px;
 }
 
 #setup, #statcord {
-	margin: 15px 3px;
-	padding: 10px;
+	margin: 15px 0;
+	padding: 12px;
 	border-radius: 10px;
 	background-color: var(--info-bg);
+}
+#statcord {
+	background-color: var(--info-bg-2);
 }
 
 nav {
@@ -217,7 +223,6 @@ bot-card img {
 }
 
 #charts {
-	margin: 15px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 20px;

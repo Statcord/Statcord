@@ -29,6 +29,7 @@ const post = async (route = "", data = {}, returnError = false) => {
 	return json
 }
 
+let bot = {}
 const getBot = async () => {
 	const startTime = document.getElementById("start-time")?.value
 	const endTime = document.getElementById("end-time")?.value
@@ -78,4 +79,16 @@ const regenKey = async () => {
 	const result = await post("key")
 	document.getElementById("botapikey").value = result.key
 	document.getElementById("regen-apikey").removeAttribute("disabled")
+}
+
+async function saveSettings() {
+	const result = await postSettings(bot.botId, {
+		slug: document.getElementById("slug").value,
+		public: document.getElementById("public").checked,
+		nsfw: document.getElementById("nsfw").checked
+	})
+	if (result.message) return alert(result.message)
+
+	document.getElementById("save-button").classList.add("green")
+	setTimeout(() => document.getElementById("save-button").classList.remove("green"), 1000)
 }

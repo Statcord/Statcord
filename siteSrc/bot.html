@@ -19,7 +19,7 @@
 			crossorigin="anonymous" referrerpolicy="no-referrer"
 		></script>
 	</head>
-	<body onload="setupFilters();getKey()">
+	<body onload="setupFilters()">
 		<global-navbar></global-navbar>
 
 		<main id="content">
@@ -31,13 +31,12 @@
 
 				<p>Here are some tips to get started:</p>
 
-				<ol>
+				<ul>
 					<li>
-						<b><a href="./setup">Setup guide</a></b>: Use the API or a package to post stats using the API key <input id="botapikey" size="27" readonly> -
-						note that your bot gets deleted if you don't start posting with an hour
+						<b><a href="./setup">Setup guide</a></b>: Use the API or a package to post stats using the API key <input id="botapikey" size="27" onfocus="this.select()" readonly>
 					</li>
 					<li><b><a id="edit-bot-target2">Settings</a></b>: Configure settings & charts of your bot</li>
-				</ol>
+				</ul>
 			</div>
 
 			<div id="statcord" hidden>
@@ -93,7 +92,9 @@
 
 			async function load() {
 				if (!new URLSearchParams(location.search).has("id")) return location.href = "/"
-				const bot = await getBot()
+
+				if (new URLSearchParams(location.search).has("setup")) getKey()
+				bot = await getBot()
 				if (!bot.username) return document.getElementById("content").innerHTML = "<h1>Bot not found.</h1>"
 
 				document.getElementById("loading-text").innerHTML = "Information about <strong>" + encode(bot.username) + "</strong>"
@@ -161,9 +162,8 @@
 									tooltip: {
 										callbacks: {
 											label: context => {
-												let label = context.dataset.label || ""
+												let label = context.dataset.label + ": "
 
-												if (label) label += ": "
 												if (context.parsed.y !== null) {
 													if (chart.format == "byte") label += formatBytes(context.parsed.y)
 													else if (chart.format == "%") label += context.parsed.y + "%"
@@ -179,14 +179,16 @@
 					})
 				}
 
-				const cards = []
-
-				cards.push(
+				const cards = [
 					"<div>" +
-					"<span>Last stats posted to API</span>" +
-					"<p>" + (bot.lastStats ? new Date(bot.lastStats).toLocaleString(navigator.language, {timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone}) : "Never") + "</p>" +
+						"<span>Last stats posted to API</span>" +
+						"<p>" + (bot.lastStats ? new Date(bot.lastStats).toLocaleString(navigator.language, {timezone: new Intl.DateTimeFormat().resolvedOptions().timeZone}) : "Never") + "</p>" +
+					"</div>",
+					"<div title='Calculates the uptime based on the actual amount of posts (" + bot.actualPosts + ") divided through the expected amount of posts (" + bot.expectedPosts + ")'>" +
+						"<span>Calculated uptime</span>" +
+						"<p>" + (bot.actualPosts / bot.expectedPosts * 100).toFixed(2) + "%</p>" +
 					"</div>"
-				)
+				]
 
 				document.getElementById("cards-container").innerHTML = cards.join("")
 			}
