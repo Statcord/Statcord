@@ -1,5 +1,5 @@
 const get = async (route = "", useAuth = false) => {
-	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/[^\w?&=]/gi, ""), {
+	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/[^\w?&=/-]/gi, ""), {
 		headers: {
 			Authorization: useAuth ? localStorage.getItem("token") : void 0
 		}
@@ -12,7 +12,7 @@ const get = async (route = "", useAuth = false) => {
 const post = async (route = "", data = {}, returnError = false) => {
 	if (route != "login" && !localStorage.getItem("token")) return alert("You are not logged in!")
 
-	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/[^\w?&=]/gi, ""), {
+	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/[^\w?&=/-]/gi, ""), {
 		method: "post",
 		body: JSON.stringify(data),
 		headers: {
