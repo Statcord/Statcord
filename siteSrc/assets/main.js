@@ -47,8 +47,11 @@ function toggleTheme() {
 function updateCard(elem) {
 	const bot = JSON.parse(elem.getAttribute("data-bot"))
 	elem.innerHTML =
-		"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.botId) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.username) +
-		"' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.botId % 5) + ".png\"' />" +
+		(bot.avatar ?
+			"<img src='https://cdn.discordapp.com/avatars/" + encode(bot.botId) + "/" + encode(bot.avatar) + ".webp?size=64' alt='Avatar of " + encode(bot.username) +
+				"' onerror='this.src=\"https://cdn.discordapp.com/embed/avatars/" + (bot.botId % 5) + ".png\"' />"
+			: "<img src='https://cdn.discordapp.com/embed/avatars/" + (bot.botId % 5) + ".png' alt='Avatar of " + encode(bot.username) + "' />"
+		) +
 		"<a href='/bot?id=" + encode(bot.slug || bot.botId) + "'>" + encode(bot.username) + "</a>"
 }
 class BotCard extends HTMLElement {

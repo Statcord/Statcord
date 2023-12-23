@@ -48,6 +48,7 @@
 				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;</code>
 			</p>
 
+			<br>
 			<p>Headers:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
@@ -68,6 +69,7 @@
 				</tbody>
 			</table>
 
+			<br>
 			<p>Query parameters:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
@@ -75,28 +77,33 @@
 						<th>Name</th>
 						<th>Type</th>
 						<th>Description</th>
+						<th>Default value</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>returnStats</td>
 						<td>boolean</td>
-						<td>Whether the stats should be returned. Defaults to <code>false</code>, set to <code>true</code> to enable.</td>
+						<td>Whether the stats should be returned.</td>
+						<td><code>false</code></td>
 					</tr>
 					<tr>
 						<td>dataPoints</td>
 						<td>number</td>
 						<td>Amount of data points to return if returnStats is enabled.</td>
+						<td>90</td>
 					</tr>
 					<tr>
 						<td>start</td>
 						<td>number</td>
 						<td>The start date to filter the data by if returnStats is enabled. Defaults to no start date.</td>
+						<td>None</td>
 					</tr>
 					<tr>
 						<td>end</td>
 						<td>number</td>
 						<td>The end date to filter the data by if returnStats is enabled. Defaults to no end date.</td>
+						<td>None</td>
 					</tr>
 				</tbody>
 			</table>
@@ -105,7 +112,10 @@
 			<h2>Posting bot data</h2>
 
 			<p>
-				This endpoint returns the basic data DisStat has stored about the bot, like it's username and avatar.
+				Post current bot and process statistics of your bot to DisStat.
+				<br>
+				This endpoint should be called at least every three minutes (value used by uptime tracking to determine if a bot is offline),
+				but you may post up to once a minute.
 				<br>
 				<br>
 				Method: <code>POST</code>
@@ -113,6 +123,7 @@
 				URL: <code>https://disstat-api.tomatenkuchen.com/v1/bot/&lt;Bot ID&gt;</code>
 			</p>
 
+			<br>
 			<p>Headers:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
@@ -133,6 +144,7 @@
 				</tbody>
 			</table>
 
+			<br>
 			<p>Body:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
@@ -194,7 +206,7 @@
 					</tr>
 					<tr>
 						<td>custom</td>
-						<td>Array of objects, see the "Posting to custom graphs" section below for the structure</td>
+						<td>Array of objects, see <a href="#custom-structure">Posting to custom graphs</a> for the structure</td>
 						<td>
 							You can send any data this way, and DisStat will try to store it somehow.
 							<br>
@@ -206,9 +218,11 @@
 							but you can also post an array of objects to create a custom graph.
 							<br>
 							<br>
-							If you're posting a property which we haven't seen before and you have enough
+							If you're posting a property which we haven't seen before
 							<br>
-							unused custom graph slots, it will be automatically created as custom graph.
+							and you have enough unused custom graph slots, it will be
+							<br>
+							automatically created as custom graph.
 						</td>
 						<td>No</td>
 					</tr>
@@ -219,7 +233,7 @@
 			<h2>Posting to custom graphs</h2>
 
 			<p>
-				Stores a custom graph value for the bot without relying on the bot posting it above.
+				Stores a custom graph value for the bot without relying on the bot autoposting it using the endpoint above.
 				<br>
 				<br>
 				Libraries can implement wrappers around this, like the <code>postCommand()</code> function from the official <code>disstat</code> npm package.
@@ -231,6 +245,7 @@
 				<br>
 			</p>
 
+			<br>
 			<p>Headers:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
@@ -251,7 +266,8 @@
 				</tbody>
 			</table>
 
-			<p>Body:</p>
+			<br>
+			<p id="custom-structure">Body:</p>
 			<table cellpadding="8" cellspacing="0">
 				<thead>
 					<tr>

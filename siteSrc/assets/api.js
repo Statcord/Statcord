@@ -1,5 +1,5 @@
 const get = async (route = "", useAuth = false) => {
-	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/\./g, ""), {
+	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/[^\w?&=]/gi, ""), {
 		headers: {
 			Authorization: useAuth ? localStorage.getItem("token") : void 0
 		}
@@ -12,7 +12,7 @@ const get = async (route = "", useAuth = false) => {
 const post = async (route = "", data = {}, returnError = false) => {
 	if (route != "login" && !localStorage.getItem("token")) return alert("You are not logged in!")
 
-	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route, {
+	const res = await fetch("https://disstat-api.tomatenkuchen.com/api/" + route.replace(/[^\w?&=]/gi, ""), {
 		method: "post",
 		body: JSON.stringify(data),
 		headers: {
@@ -67,7 +67,7 @@ const addBot = async () => {
 	if (!/^[0-9]{17,21}$/.test(id)) return
 
 	const result = await post("bots", {id}, true)
-	if (result.success) location.href = "/bot?id=" + id + "&setup=1" + (result.statcordFound ? "&statcord=1" : "")
+	if (result.success) location.href = "/bot?id=" + id + "&setup=1"
 	else alert(result.message)
 }
 const getKey = async () => {
@@ -91,4 +91,14 @@ async function saveSettings() {
 
 	document.getElementById("save-button").classList.add("green")
 	setTimeout(() => document.getElementById("save-button").classList.remove("green"), 1000)
+}
+
+async function statcordImport(state) {
+	if (state != "importStarted" && state != "dismissed") return
+
+	const result = await get(bot.botId + "/statcord?state=" + state, true)
+	if (result.message) return alert(result.message)
+
+	if (state == "importStarted") alert("Import has been started and will take a few minutes to complete.")
+	location.href = "/bot?id=" + (bot.slug || bot.botId)
 }

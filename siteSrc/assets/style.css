@@ -70,6 +70,9 @@ summary {
 .red {
 	background-color: var(--red);
 }
+.gray {
+	background-color: var(--secondary-text-color);
+}
 
 main {
 	padding: 25px 100px;

@@ -45,8 +45,14 @@
 				<p>
 					Your bot was registered on Statcord, so we might be able to import data from there.
 					<br>
-					This cannot overwrite any data on DisStat as the Statcord cutoff was on 2023-04-29.
+					This cannot overwrite any data on DisStat as the last time Statcord successfully processed data was on 2023-04-29.
+					<br>
+					Be aware that this may cause a jump in the charts.
 				</p>
+
+				<br>
+				<button type="button" class="red" onclick="statcordImport('importStarted')">Import</button>
+				<button type="button" class="gray" onclick="statcordImport('dismissed')">Dismiss</button>
 			</div>
 
 			<div id="cards-container"></div>
@@ -106,7 +112,7 @@
 					document.getElementById("edit-bot-target2").href = "/bot/edit?id=" + encode(bot.botId)
 
 					if (new URLSearchParams(location.search).has("setup")) document.getElementById("setup").removeAttribute("hidden")
-					if (new URLSearchParams(location.search).has("statcord")) document.getElementById("statcord").removeAttribute("hidden")
+					if (bot.statcordVisible) document.getElementById("statcord").removeAttribute("hidden")
 				}
 
 				if (bot.charts.length == 0) document.getElementById("charts").innerHTML = "<h2>No charts available.</h2>"
