@@ -29,36 +29,6 @@ export default defineEventHandler(async event => {
 	.floatField("cpuUsage", body.cpuUsage)
 	writeClient.writePoint(mainStatsPoint)
 
-	if (body.customCharts) {
-		body.customCharts.map(customChart => {
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, "line") ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
-
-			const customChartsPoint = new Point("customCharts")
-				.tag("botid",  body.id)
-				.tag("customChartID",  customChart.id)
-
-			Object.keys(customChart.data).forEach(key => {
-				const value = customChart.data[key]
-				if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
-				else customChartsPoint.intField(key, value)
-			})
-
-			writeClient.writePoint(customChartsPoint)
-		})
-	}
-
-	if (body.topCommands) {
-		const topCommandsPoint = new Point("topCommands")
-			.tag("botid",  body.id)
-
-		body.topCommands.map(item => {
-			if (item.count.toString().includes(".")) topCommandsPoint.floatField(item.name, item.count)
-			else topCommandsPoint.intField(item.name, item.count)
-		})
-
-		writeClient.writePoint(topCommandsPoint)
-	}
-
 	writeClient.flush()
 
 	sendNoContent(event, 200)
@@ -78,31 +48,10 @@ export const schema = {
 				guildCount: { type: "number", default: 0 },
 				shardCount: { type: "number", default: 0 },
 				userCount: { type: "number", default: 0 },
-				commandsRun: { type: "number", default: 0 },
 				ramUsage: { type: "number", default: 0.0 },
 				totalRam: { type: "number", default: 0.0 },
 				cpuUsage: { type: "number", default: 0.0 },
-				members: { type: "number", default: 0 },
-				topCommands: {
-					type: "array",
-					items: {
-						type: "object",
-						properties: {
-							name: { type: "string" },
-							count: { type: "number" }
-						}
-					}
-				},
-				customCharts: {
-					type: "array",
-					items: {
-						type: "object",
-						properties: {
-							id: { type: "string" },
-							data: { type: "object" }
-						}
-					}
-				}
+				members: { type: "number", default: 0 }
 			}
 		},
 		response: {
