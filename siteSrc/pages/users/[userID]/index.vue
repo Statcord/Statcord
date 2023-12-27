@@ -1,8 +1,18 @@
 <template>
-  <div class="waves-effect waves-light btn-large modal-trigger" data-target="modal1"><i class="material-icons left">add</i>Add your bot</div>
-  <router-link class="waves-effect waves-light btn-large" to="/users/me/settings"><i class="material-icons left">settings</i>User Settings</router-link>
-  <h1>Your bots</h1>
-  <botlist botListRoute="/api/bots/mybots"></botlist>
+  <div v-if="isProfileOwner" class="waves-effect waves-light btn-large modal-trigger" data-target="modal1"><i class="material-icons left">add</i>Add your bot</div>
+  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+this.$route.params.userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
+
+  <div>
+    <h1>{{profileInfo.username}}</h1>
+    <h4>{{ profileInfo.aboutme }}</h4>
+
+    <div v-if="profileInfo.website">
+      <a :href="profileInfo.website" target="_blank" rel="noopener noreferrer"><i class="material-icons">link</i></a>
+    </div>
+  </div>
+
+  <h1>Bots</h1>
+  <botlist :botListRoute="'/api/user/'+this.$route.params.userID+'/bots/'"></botlist>
 
   <div id="modal1" ref="modal" class="modal hide">
     <div class="modal-content">
@@ -55,6 +65,8 @@ export default {
   },
   data() {
     return {
+      isProfileOwner: false,
+      profileInfo: {}
     };
   },
   methods: {
@@ -69,7 +81,12 @@ export default {
     }
   },
   async mounted() {
-    if (!this.$auth.isLoggedIn()) await navigateTo("/login");
+    this.isProfileOwner = this.$auth.getUser()?.id === this.$route.params.userID
+
+    const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
+    // if (!user.value.public) await navigateTo("/login");
+    this.profileInfo = user.value
+    
     this.$M.Modal.init(this.$refs.modal, {
       onOpenStart: ()=> this.$refs.modal.classList.remove("hide")
     })

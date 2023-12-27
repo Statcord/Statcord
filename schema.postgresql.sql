@@ -19,8 +19,12 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.owners (
     ownerid character varying NOT NULL,
-    username character varying NOT NULL
+    username character varying NOT NULL,
+    aboutme character varying NOT NULL,
+    website character varying NOT NULL,
+    public boolean NOT NULL DEFAULT true,
 );
+
 ALTER TABLE public.owners OWNER TO disstat;
 ALTER TABLE ONLY public.owners
     ADD CONSTRAINT owners_pkey PRIMARY KEY (ownerid);

@@ -10,7 +10,7 @@
       <br>
       <router-link to="/bots/685166801394335819">View a demo</router-link>
     </p>
-    <router-link to="/users/me">Add your bot now!</router-link>
+    <!-- <router-link to="/user/me">Add your bot now!</router-link> -->
     <h2>All currently tracked, public bots</h2>
 
     <botlist botListRoute="/api/bots"></botlist>

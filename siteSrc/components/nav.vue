@@ -34,7 +34,7 @@
         <li><router-link to="/guide" class="white-text">Setup guide</router-link></li>
     </ul>
     <ul id="dropdown1" class="dropdown-content valign-wrapper black">
-        <a href="/users/me" class="white-text">User</a>
+        <router-link :to="'/users/'+userID" class="white-text">User</router-link>
         <li class="divider"></li>
         <a href="/logout" class="red-text darken-3">Logout</a>
     </ul>
@@ -47,7 +47,8 @@ export default {
         return {
             username: "",
             avatarURL: "",
-            isLoggedIn: false
+            isLoggedIn: false,
+            userID: ""
         }
     },
     async mounted() {
@@ -61,6 +62,7 @@ export default {
 
             this.username = user.username
             this.avatarURL = `https://cdn.discordapp.com/avatars/${user.avatar ? `${user.id}/${user.avatar}.webp`: `${(user.id >>> 22) % 5}.png`}?size=32`
+            this.userID = user.id
         }
     },
     methods: {

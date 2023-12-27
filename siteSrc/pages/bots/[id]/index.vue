@@ -14,7 +14,7 @@
                 </div>
                 <div class="col s6 m12">
                     <h3>{{ bot.username }}</h3>
-                    <h5>Made by: {{ bot.ownername }}</h5>
+                    <h5>Made by: <router-link :to="'/users/'+ ownerID">{{ bot.ownername }}</router-link></h5>
                 </div>
             </div>
             
@@ -136,7 +136,8 @@ export default {
             startDate: null,
             endDate: Date.now(),
             groupByTimeFrame: 'd',
-            botNSFW: true
+            botNSFW: true,
+            ownerID: ""
         }
     },
     async mounted() {
@@ -144,14 +145,13 @@ export default {
 
         this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
         this.$M.FormSelect.init(this.$refs.groupBySelector)
-        const {data: botJson} = await useFetch(`/api/bots/${this.botid}`, {
-            server: false
-        })
+        const {data: botJson} = await useFetch(`/api/bots/${this.botid}`)
 
         this.botNSFW = botJson.value.nsfw
         this.public = botJson.value.public
         this.isOwner = botJson.value.isOwner
         this.addedOn = botJson.value.addedon
+        this.ownerID = botJson.value.ownerid
         this.datePickerMin = new Date(botJson.value.addedon).toISOString().substring(0, 10)
 
         this.getData()
