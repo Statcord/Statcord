@@ -9,10 +9,8 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@fastify/swagger": "^8.8.0",
     "@nuxt/devtools": "^0.7.4",
     "chart.js": "^4.3.3",
-    "fastify": "^4.21.0",
     "nuxt": "^3.6.5"
   },
   "dependencies": {
