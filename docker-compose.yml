@@ -32,16 +32,6 @@ services:
         - ./schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
         - dbData:/var/lib/postgresql/data
       container_name: DB
-
-  nginx:
-    restart: unless-stopped
-    build: ./nginx
-    container_name: nginx
-    ports:
-      - 80:80
-    depends_on:
-      - app
-      - swagger
   
   app:
     restart: unless-stopped
@@ -56,6 +46,8 @@ services:
       - 'domain=http://127.0.0.1'
       - 'postgresPassword=AQwrMb4WzngykR9v'
     container_name: app
+    ports:
+      - '80:3000'
     depends_on:
       - postgres
       - cache
@@ -68,15 +60,6 @@ services:
       - 'cookieSecret=sdafjksa,dsakd.fbnksladfjnslakdfjsalkdfjasl;fds'
       - 'domain=http://127.0.0.1'
       - 'postgresPassword=AQwrMb4WzngykR9v'
-
-  swagger:
-    image: swaggerapi/swagger-ui
-    environment:
-    - BASE_URL=/docs
-    - API_URL=/api/docs/json
-    container_name: swagger
-    ports:
-      - 8030:8080
 
   influxdb:
     image: influxdb:2.7.1-alpine
