@@ -27,14 +27,15 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-    method: "DELETE",
-    url: "/api/oauth/user/delete",
-    schema: {
-        hide: true,
-        body: {},
-        response: {
-            401: {},
-            200: {}
-        }
+    // body: {},
+    hidden: true,
+	tags: [
+		"Internal"
+	],
+    responses: {
+        401: {
+			description: "You do not have permission to access this user"
+		},
+        200: {}
     }
 }

@@ -30,7 +30,7 @@ export default defineEventHandler(async event => {
 		measurement: "botStats",
 		start,
 		stop,
-		groupBy: query.groupBy,
+		groupBy: query.groupBy ?? "1d",
 		botID: path.botID
 	})
 	// console.timeEnd("first")
@@ -41,7 +41,7 @@ export default defineEventHandler(async event => {
 		measurement: "customCharts",
 		start,
 		stop,
-		groupBy: query.groupBy,
+		groupBy: query.groupBy ?? "1d",
 		botID: path.botID
 	})
 	// console.timeEnd("second")
@@ -52,7 +52,7 @@ export default defineEventHandler(async event => {
 		measurement: "topCommands",
 		start,
 		stop,
-		groupBy: query.groupBy,
+		groupBy: query.groupBy ?? "1d",
 		botID: path.botID
 	})
 	// console.timeEnd("thrid")
@@ -65,52 +65,83 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "GET",
-	url: "/api/bots/:botID/stats/default",
-	schema: {
-        hide: true,
-		path: {
-			id: { type: "string" }
+	// path: {
+	// 	id: { type: "string" }
+	// },
+	// querystring: {
+	// 	start: { type: "number", default: 0 },
+	// 	end: { type: "number", default: 0 },
+	// 	groupBy: { type: "string" },
+	// },
+	// parameters:[
+    //     {
+    //         name: "start",
+    //         in: "query",
+    //         required: false,
+    //         content: {
+    //             media: "application/json"
+    //         },
+    //         "description": "The page number of bots to show"
+    //     },
+	// 	{
+    //         name: "end",
+    //         in: "query",
+    //         required: false,
+    //         content: {
+    //             media: "application/json"
+    //         },
+    //         "description": "The page number of bots to show"
+    //     },
+	// 	{
+    //         name: "groupBy",
+    //         in: "query",
+    //         required: false,
+    //         content: {
+    //             media: "application/json"
+    //         },
+    //         "description": "The page number of bots to show"
+    //     }
+    // ],
+	tags: [
+		"Bot Stats"
+	],
+	responses: {
+		404: {
+			description: "Bot not found"
 		},
-		querystring: {
-			start: { type: "number", default: 0 },
-			end: { type: "number", default: 0 },
-			groupBy: { type: "string" },
-        },
-        response: {
-			404: {},
-            401: {},
-            200: {
-				type: "object",
-				properties: {
-					mainStats: {
-						type: "array",
-						items: {
-							type: "object",
-							properties: {
-								time: { type: "string" },
-								type: { type: "number" },
-								cpuUsage: { type: "number" },
-								guildCount: { type: "number" },
-								members: { type: "number" },
-								ramUsage: { type: "number" },
-								shardCount: { type: "number" },
-								totalRam: { type: "number" },
-								userCount: { type: "number" },
-							}
-						}
-					},
-					commands: {
-						type: "array",
-						contains: { type: "object" }
-					},
-					custom: {
-						type: "array",
-						contains: { type: "object" }
-					}
-				}
-			}
-        }
+		401: {
+			description: "You do not have permission to access this bot"
+		},
+		200: {
+			// type: "object",
+			// properties: {
+			// 	mainStats: {
+			// 		type: "array",
+			// 		items: {
+			// 			type: "object",
+			// 			properties: {
+			// 				time: { type: "string" },
+			// 				type: { type: "number" },
+			// 				cpuUsage: { type: "number" },
+			// 				guildCount: { type: "number" },
+			// 				members: { type: "number" },
+			// 				ramUsage: { type: "number" },
+			// 				shardCount: { type: "number" },
+			// 				totalRam: { type: "number" },
+			// 				userCount: { type: "number" },
+			// 			}
+			// 		}
+			// 	},
+			// 	commands: {
+			// 		type: "array",
+			// 		contains: { type: "object" }
+			// 	},
+			// 	custom: {
+			// 		type: "array",
+			// 		contains: { type: "object" }
+			// 	}
+			// }
+		}
 	}
 }
 

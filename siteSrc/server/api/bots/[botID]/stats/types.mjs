@@ -22,20 +22,19 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "GET",
-	url: "/api/bots/:botID/stats/types",
-	schema: {
-        hide: true,
-		path: {
-			id: { type: "string" }
+	tags: [
+		"Bot Stats"
+	],
+	responses: {
+		404: {
+			description: "Bot not found"
 		},
-        response: {
-			404: {},
-            401: {},
-            200: {
-				type: "array",
-				contains: { type: "object" }
-            }
-        }
+		401: {
+			description: "You do not have permission to access this bot"
+		},
+		200: {
+			// type: "array",
+			// contains: { type: "object" }
+		}
 	}
 }

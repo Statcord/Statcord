@@ -61,18 +61,17 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "GET",
-	url: "/api/bots/:id/settings/get",
-	schema: {
-        hide: true,
-        response: {
-            401: {},
-            404: {},
-            200: {
-				type: "object",
-                properties: {
-                }
-            }
-        }
-	}
+    hidden: true,
+	tags: [
+		"Internal"
+	],
+    responses: {
+        401: {
+			description: "You do not have permission to access this bot"
+		},
+        404: {
+			description: "Bot not found"
+		},
+        200: {}
+    }
 }

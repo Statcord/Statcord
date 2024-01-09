@@ -9,21 +9,19 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "GET",
-	url: "/api/oauth/user",
-	schema: {
-        response: {
-            401: {},
-            200: {
-				type: "object",
-                properties: {
-                    id: { type: "string" },
-                    username: { type: "string" },
-                    avatar: { type: "string" },
-                    discriminator: { type: "string" },
-                    locale: { type: "string" }
-                }
-            }
+    responses: {
+        401: {
+			description: "You do not have permission to access this user"
+		},
+        200: {
+            // type: "object",
+            // properties: {
+            //     id: { type: "string" },
+            //     username: { type: "string" },
+            //     avatar: { type: "string" },
+            //     discriminator: { type: "string" },
+            //     locale: { type: "string" }
+            // }
         }
-	}
+    }
 }

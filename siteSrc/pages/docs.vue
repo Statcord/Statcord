@@ -2,7 +2,7 @@
    <div id="test"></div>
 </template>
   
-  <!-- <script setup> -->
+  <script setup>
     // import { SwaggerUIBundle } from "swagger-ui-dist"
 
 //   useSeoMeta({
@@ -30,7 +30,7 @@
 //       }
 //     ]
 //   })
-  <!-- </script> -->
+</script> 
   <script>
     import { SwaggerUIBundle } from "swagger-ui-dist"
 
@@ -51,5 +51,6 @@
   </script>
   
 <style>
-@import "swagger-ui-dist/swagger-ui.css";
+@import url(https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui.css);
+/* @import "swagger-ui-dist/swagger-ui.css"; */
 </style>

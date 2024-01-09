@@ -1,29 +1,26 @@
 <template>
-    <div class="navbar-fixed  red accent-1">
-        <div class="nav-wrapper">
-            <h4 class="center-align">Not all Settings are supported at this time.</h4>
-        </div>
-    </div>
-
     <div class="container">
-        <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
-            <div class="section"></div>
-            <h5>{{catagory[0]}}</h5>
-            
-            <div v-for="(setting, settingIndex) in Object.entries(catagory[1])" :key="settingIndex">
-                <!-- <span>{{ setting }}</span> -->
-                <input :type="setting[1].type" :disabled="!setting[1].enabled" :checked="setting[1].state" :placeholder="setting[1].state" :ref="'setting:'+setting[1].id" :name="'name:'+setting[1].id"/>
-                <span>{{ setting[0] }}</span>
+        <form action="#">
+            <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
+                <div class="section"></div>
+                <h5>{{catagory[0]}}</h5>
+                
+                <div v-for="(setting, settingIndex) in Object.entries(catagory[1])" :key="settingIndex">
+                    <label>
+                        <input :type="setting[1].type" :disabled="!setting[1].enabled" :checked="setting[1].state" :placeholder="setting[1].state" :ref="'setting:'+setting[1].id" :name="'name:'+setting[1].id"/>
+                        <span>{{ setting[0] }}</span>
+                    </label>
+                </div>
             </div>
-        </div>
-       
-        <div class="section">
-            <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
-            <div class="waves-effect waves-light btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
-            <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
-            <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
-            <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
-        </div>
+           
+            <div class="section">
+                <div class="waves-effect waves-light btn modal-trigger disabled" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
+                <div class="waves-effect waves-light btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
+                <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
+                <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
+                <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
+            </div>
+        </form>
     </div>
 
 
@@ -158,9 +155,7 @@ export default {
         })
 
 
-        const {data: botSettingsJson} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`, {
-            server: false
-        })
+        const {data: botSettingsJson} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`)
 
         
         botSettingsJson.value.forEach(chart => {
@@ -223,14 +218,8 @@ export default {
                 body: JSON.stringify(settings),
                 headers: {'Content-Type': 'application/json'}
             })
-            // console.log(error.value)
+
             this.$M.toast({text: error.value? 'Error saving' : 'Saved'})
-            // if (!error.value) {
-            //     this.apiKey = data.value.key
-            // }
-
-
-            console.log(settings)
         }
     }
 }

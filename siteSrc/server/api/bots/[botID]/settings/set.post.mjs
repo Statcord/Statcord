@@ -33,15 +33,20 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "POST",
-	url: "/api/bots/:id/settings/set",
-	schema: {
-        hide: true,
-        response: {
-            400: {},
-            401: {},
-            404: {},
-            200: {}
-        }
-	}
+    hidden: true,
+	tags: [
+		"Internal"
+	],
+    responses: {
+        400: {
+            description: "Bad request"
+        },
+        401: {
+			description: "You do not have permission to access this bot"
+		},
+        404: {
+			description: "Bot not found"
+		},
+        200: {}
+    }
 }

@@ -7,11 +7,18 @@ export default defineEventHandler(async event => {
     if (!event.context.session.accessToken) throw createError({
         statusCode: 401
     })
+
+    console.log("1")
     if (event.context.session.id !== path.userID) throw createError({
         statusCode: 401
     })
 
+    console.log("2")
+
+
     if (Object.keys(body).length === 0) return;
+
+    console.log("3")
 
     const botExisits = await event.context.pgPool`SELECT ownerid from owners WHERE ownerid = ${path.userID}`.catch(() => {})
     if (!botExisits[0]) throw createError({
@@ -22,15 +29,20 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "POST",
-	url: "/api/bots/:id/settings/set",
-	schema: {
-        hide: true,
-        response: {
-            400: {},
-            401: {},
-            404: {},
-            200: {}
-        }
+    hidden: true,
+	tags: [
+		"Internal"
+	],
+    responses: {
+        400: {
+            description: "Bad request"
+        },
+		404: {
+			description: "Bot not found"
+		},
+		401: {
+			description: "Not authorised"
+		},
+        200: {}
 	}
 }

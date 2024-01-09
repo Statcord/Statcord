@@ -8,29 +8,32 @@ export default defineEventHandler(async event => {
 
     const tokens = await event.context.oauth.tokenRequest({
         code,
-        redirectUri: process.env.domain + "/api/discordOauth/callback"
+        redirectUri: "http://localhost:3000" + "/api/oauth/callback"
     });
 
     if (!tokens.access_token) throw createError({
         statusCode: 400
     })
 
-    event.context.session.accessToken = tokens.access_token,
-    event.context.session.userInfo = await event.context.oauth.getDiscordUser(tokens.access_token)
+    const userInfo = await event.context.oauth.getDiscordUser(tokens.access_token)
 
-    return sendRedirect(event, process.env.domain, 302)
+    event.context.session.accessToken = tokens.access_token,
+    event.context.session.userInfo = userInfo
+
+    event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.username}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.username}, avatar = ${userInfo.avatar}`.catch(() => {})
+
+    return sendRedirect(event, "http://localhost:3000", 302)
 })
 
 export const schema = {
-    method: "GET",
-    url: "/api/discordOauth/callback",
-	schema: {
-        hide: true,
-        querystring: {
-            code: { type: "string" }
-        },
-        response: {
-            302: {}
-        }
+    // querystring: {
+    //     code: { type: "string" }
+    // },
+    hidden: true,
+	tags: [
+		"Internal"
+	],
+    responses: {
+        302: {}
     }
 }

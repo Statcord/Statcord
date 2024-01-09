@@ -1,8 +1,4 @@
 import { defineEventHandler, readBody, sendNoContent, createError } from "h3"
-if (import.meta.env) {
-	var {defaultChartSettings} = await import("~/utils/supportedCharts.mjs")
-}
-import genKey from "~/utils/genKey.mjs"
 
 export default defineEventHandler(async event => {
 	if (!event.context.session.accessToken) throw createError({
@@ -25,10 +21,10 @@ export default defineEventHandler(async event => {
 	})
 
 	event.context.pgPool`INSERT INTO owners(username, ownerid) VALUES (${event.context.session.userInfo.username}, ${event.context.session.userInfo.id}) ON CONFLICT (ownerid) DO NOTHING`.catch(() => {})
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon) VALUES (${botID.id}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${event.context.session.userInfo.id}, now())`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon) VALUES (${botID.id}, ${bot.username}, ${bot.avatar}, ${event.context.utils.genKey()}, ${event.context.session.userInfo.id}, now())`.catch(() => {})
 
-	Object.keys(defaultChartSettings).forEach(chartID => {
-		const chart = defaultChartSettings[chartID]
+	Object.keys(event.context.utils.defaultChartSettings).forEach(chartID => {
+		const chart = event.context.utils.defaultChartSettings[chartID]
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${botID.id}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
 	})
 
@@ -36,20 +32,19 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "POST",
-	url: "/api/bots/add",
-	schema: {
-        hide: true,
-        body: {
-			type: "object",
-			properties: {
-				id: { type: "string" }
-			}
+	// body: {
+	// 	type: "object",
+	// 	properties: {
+	// 		id: { type: "string" }
+	// 	}
+	// },
+	responses: {
+		401: {
+			description: "You do not have permission to access this bot"
+		},
+		400: {
+            description: "Bad request"
         },
-		response: {
-            401: {},
-            400: {},
-			200: {}
-		}
+		200: {}
 	}
 }

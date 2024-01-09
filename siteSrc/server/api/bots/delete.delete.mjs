@@ -36,20 +36,19 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "DELETE",
-	url: "/api/bots/delete",
-	schema: {
-        hide: true,
-        body: {
-			type: "object",
-			properties: {
-				id: { type: "string" }
-			}
-        },
-		response: {
-            401: {},
-            404: {},
-			201: {}
-		}
+	// body: {
+	// 	type: "object",
+	// 	properties: {
+	// 		id: { type: "string" }
+	// 	}
+	// },
+	responses: {
+		401: {
+			description: "You do not have permission to access this bot"
+		},
+		404: {
+			description: "Bot not found"
+		},
+		201: {}
 	}
 }

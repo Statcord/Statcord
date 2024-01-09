@@ -29,27 +29,32 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "POST",
-	url: "/api/bots/sync",
-	schema: {
-		body: {
-			type: "object",
-			properties: {
-				id: { type: "string" }
-			}
+	// body: {
+	// 	type: "object",
+	// 	properties: {
+	// 		id: { type: "string" }
+	// 	}
+	// },
+	hidden: true,
+	tags: [
+		"Internal"
+	],
+	responses: {
+		401: {
+			description: "You do not have permission to access this bot"
 		},
-		response: {
-			401: {},
-			404: {},
-			400: {},
-			200: {
-				type: "object",
-				properties: {
-					success: { type: "boolean", default: true },
-					message: { type: "string", default: "The bot has been synced!" }
-				}
-			}
+		404: {
+			description: "Bot not found"
+		},
+		400: {
+            description: "Bad request"
+        },
+		200: {
+			// type: "object",
+			// properties: {
+			// 	success: { type: "boolean", default: true },
+			// 	message: { type: "string", default: "The bot has been synced!" }
+			// }
 		}
 	}
 }
-

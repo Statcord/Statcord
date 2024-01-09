@@ -36,32 +36,35 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "POST",
-	url: "/api/stats/post",
-	schema: {
-		body: {
-			type: "object",
-			properties: {
-				id: {
-					type: "string",
-					// required: true
-				},
-				topCommands: {
-					type: "array",
-					items: {
-						type: "object",
-						properties: {
-							name: { type: "string" },
-							count: { type: "number" }
-						}
-					}
-				},
-			}
+	// body: {
+	// 	type: "object",
+	// 	properties: {
+	// 		id: {
+	// 			type: "string",
+	// 			// required: true
+	// 		},
+	// 		topCommands: {
+	// 			type: "array",
+	// 			items: {
+	// 				type: "object",
+	// 				properties: {
+	// 					name: { type: "string" },
+	// 					count: { type: "number" }
+	// 				}
+	// 			}
+	// 		},
+	// 	}
+	// },
+	tags: [
+		"Bot Stats"
+	],
+	responses: {
+		401: {
+			description: "You do not have permission to access this bot"
 		},
-		response: {
-			401: {},
-			404: {},
-			200: {}
-		}
+		404: {
+			description: "Bot not found"
+		},
+		200: {}
 	}
 }

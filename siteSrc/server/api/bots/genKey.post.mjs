@@ -1,5 +1,4 @@
 import { defineEventHandler, createError, readBody } from "h3"
-import genKey from "~/utils/genKey.mjs"
 
 export default defineEventHandler(async event => {
 	if (!event.context.session.accessToken) throw createError({
@@ -19,7 +18,7 @@ export default defineEventHandler(async event => {
 		statusCode: 401
 	})
 
-	const key = genKey()
+	const key = event.context.utils.genKey()
 
 	event.context.pgPool`UPDATE bots SET token = ${key} WHERE botid = ${botID.id}`.catch(() => {})
 
@@ -27,25 +26,28 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "POST",
-	url: "/api/bots/genKey",
-	schema: {
-        hide: true,
-        body: {
-			type: "object",
-			properties: {
-				id: { type: "string" }
-			}
-        },
-		response: {
-            401: {},
-            404: {},
-			200: {
-				type: "object",
-				properties: {
-					key: { type: "string"}
-				}
-			}
+	// body: {
+	// 	type: "object",
+	// 	properties: {
+	// 		id: { type: "string" }
+	// 	}
+	// },
+	hidden: true,
+	tags: [
+		"Internal"
+	],
+	responses: {
+		401: {
+			description: "You do not have permission to access this bot"
+		},
+		404: {
+			description: "Bot not found"
+		},
+		200: {
+			// type: "object",
+			// properties: {
+			// 	key: { type: "string"}
+			// }
 		}
 	}
 }

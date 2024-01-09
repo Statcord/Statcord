@@ -12,14 +12,15 @@ COPY . /preApp
 
 RUN apk update && \
     apk add --update git && \
-    apk add --update openssh && \
-    apk add --update curl
+    apk add --update openssh 
+    # && \
+#     apk add --update curl
 
 # install npm pacages
 RUN npm install
 
 # generate docs
-RUN ./genDocs.sh
+# RUN ./genDocs.sh
 
 # build site
 RUN npm run build

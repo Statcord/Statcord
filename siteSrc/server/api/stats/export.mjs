@@ -58,49 +58,48 @@ export default defineEventHandler(async event => {
 	}
 })
 export const schema = {
-	method: 'GET',
-	url: '/api/stats/export/:id',
-	schema: {
-        hide: true,
-		path: {
-			id: { type: 'string' }
+	// querystring: {
+	// },
+	tags: [
+		"Bot Stats"
+	],
+	responses: {
+		404: {
+			description: "Bot not found"
 		},
-		querystring: {
-        },
-        response: {
-			404: {},
-            401: {},
-            200: {
-				type: 'object',
-				properties: {
-					mainStats: {
-						type: "array",
-						items: {
-							type: 'object',
-							properties: {
-								time: { type: 'string' },
-								type: { type: 'number' },
-								cpuUsage: { type: 'number' },
-								guildCount: { type: 'number' },
-								members: { type: 'number' },
-								ramUsage: { type: 'number' },
-								shardCount: { type: 'number' },
-								totalRam: { type: 'number' },
-								userCount: { type: 'number' },
-							}
-						}
-					},
-					commands: {
-						type: "array",
-						contains: { type: "object" }
-					},
-					custom: {
-						type: "array",
-						contains: { type: "object" }
-					}
-				}
-			}
-        }
+		401: {
+			description: "Not authorised"
+		},
+		200: {
+			// type: 'object',
+			// properties: {
+			// 	mainStats: {
+			// 		type: "array",
+			// 		items: {
+			// 			type: 'object',
+			// 			properties: {
+			// 				time: { type: 'string' },
+			// 				type: { type: 'number' },
+			// 				cpuUsage: { type: 'number' },
+			// 				guildCount: { type: 'number' },
+			// 				members: { type: 'number' },
+			// 				ramUsage: { type: 'number' },
+			// 				shardCount: { type: 'number' },
+			// 				totalRam: { type: 'number' },
+			// 				userCount: { type: 'number' },
+			// 			}
+			// 		}
+			// 	},
+			// 	commands: {
+			// 		type: "array",
+			// 		contains: { type: "object" }
+			// 	},
+			// 	custom: {
+			// 		type: "array",
+			// 		contains: { type: "object" }
+			// 	}
+			// }
+		}
 	}
 }
 

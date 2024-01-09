@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isProfileOwner" class="waves-effect waves-light btn-large modal-trigger" data-target="modal1"><i class="material-icons left">add</i>Add your bot</div>
+  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><i class="material-icons left">add</i>Add your bot</router-link>
   <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+this.$route.params.userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
 
   <div>

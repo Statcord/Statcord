@@ -12,26 +12,23 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	method: "GET",
-	url: "/api/bots/mybots",
-	schema: {
-        hide: true,
-        querystring: {
-			page: { type: "number", default: 0 }
-        },
-        response: {
-			401: {},
-            200: {
-                type: "array",
-                items: {
-					type: "object",
-					properties: {
-						botid: { type: "string" },
-						username: { type: "string" },
-						avatar: { type: "string" }
-					}
-				}
-            }
-        }
+	// querystring: {
+	// 	page: { type: "number", default: 0 }
+	// },
+	responses: {
+		401: {
+			description: "You do not have permission to access this user"
+		},
+		200: {
+			// type: "array",
+			// items: {
+			// 	type: "object",
+			// 	properties: {
+			// 		botid: { type: "string" },
+			// 		username: { type: "string" },
+			// 		avatar: { type: "string" }
+			// 	}
+			// }
+		}
 	}
 }
