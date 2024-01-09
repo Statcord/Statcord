@@ -1,4 +1,4 @@
-import { defineEventHandler, sendRedirect, getQuery, createError } from "h3"
+import { defineEventHandler, sendRedirect, getQuery, createError} from "h3"
 
 export default defineEventHandler(async event => {
     const { code } = getQuery(event);
@@ -6,20 +6,37 @@ export default defineEventHandler(async event => {
         statusCode: 400
     })
 
-    const tokens = await event.context.oauth.tokenRequest({
-        code,
-        redirectUri: "http://localhost:3000" + "/api/oauth/callback"
-    });
+    // const config = useRuntimeConfig(event)
 
-    if (!tokens.access_token) throw createError({
+    // console.log(config)
+
+    const tokens = await event.context.oauth.rest.oauth.exchangeCode({
+        code,
+        clientSecret: "wmz0HnGSrm",
+        clientID: "961433265879801936",
+        redirectURI: "http://localhost:3000" + "/api/oauth/callback"
+    }).catch(e=> console.log(e));
+
+    // console.log(tokens)
+
+    if (!tokens.accessToken) throw createError({
         statusCode: 400
     })
 
-    const userInfo = await event.context.oauth.getDiscordUser(tokens.access_token)
+    const OAuthHelper = event.context.oauth.rest.oauth.getHelper(`Bearer ${tokens.accessToken}`)
+    const userInfo = (await OAuthHelper.getCurrentAuthorizationInformation()).user;
 
-    event.context.session.accessToken = tokens.access_token,
+
+    // accessToken: 'QtKOY9TH3oAnpAa',
+    // expiresIn: 604800,
+    // refreshToken: '0tAWgcNjG5W',
+    // scopes: [ 'applications.builds.read', 'identify' ],
+    // tokenType: 'Bearer',
+    // webhook: null
+
+    event.context.session.accessToken = tokens.accessToken,
     event.context.session.userInfo = userInfo
-
+    
     event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.username}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.username}, avatar = ${userInfo.avatar}`.catch(() => {})
 
     return sendRedirect(event, "http://localhost:3000", 302)

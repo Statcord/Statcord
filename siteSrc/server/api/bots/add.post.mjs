@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
 		statusCode: 404
 	})
 
-	const bot = await event.context.oauth.getBot(botID.id)
+	const bot = await event.context.oauth.rest.users.get(botID.id)
 	if (!bot) throw createError({
 		statusCode: 404
 	})
