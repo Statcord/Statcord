@@ -1,9 +1,12 @@
 import postgres from 'postgres'
-import { Postgrelogin } from '../../static/settings.mjs'
 
-const pgPool = postgres(
-    {
-        ...Postgrelogin,
+export default defineEventHandler((event) => {
+    if (event.context.pgPool) return event.context.pgPool;
+
+    const config = useRuntimeConfig(event)
+
+    event.context.pgPool = postgres({
+        ...config.configFile.postgresConfig,
         types: {
             // bigint: postgres.BigInt,
             rect: {
@@ -17,9 +20,5 @@ const pgPool = postgres(
         //     console.log(query)
         //     console.log(params)
         // }
-    }
-)
-
-export default defineEventHandler((event) => {
-    event.context.pgPool = pgPool
+    })
 })
