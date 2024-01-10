@@ -177,8 +177,7 @@ export default {
         async reGenKey() {
             const {data} = await useFetch(() => `/api/bots/genKey`, {
                 method: 'post',
-                body: JSON.stringify({id: this.botid}),
-                headers: {'Content-Type': 'application/json'}
+                body: {id: this.botid}
             })
             if (data.value?.key) {
                 this.apiKey = data.value.key
@@ -191,8 +190,7 @@ export default {
             this.$M.toast({text: 'bot is syncing'})
             const ajaxdata = await $fetch(`/api/bots/sync`, {
                 method: 'post',
-                body: JSON.stringify({id:this.botid}),
-                headers: {'Content-Type': 'application/json'}
+                body: {id: this.botid}
             }).catch(console.error);
             if (ajaxdata) this.$M.toast({text: 'bot has synced'})
             else this.$M.toast({text: 'An error has occurred'})
@@ -200,8 +198,7 @@ export default {
         async confirmedDelete() {
             const {error} = await useFetch(() => `/api/bots/delete`, {
                 method: 'delete',
-                body: JSON.stringify({id:this.botid}),
-                headers: {'Content-Type': 'application/json'}
+                body: {id: this.botid}
             })
             if (!error.value) {
                 await navigateTo("/users/me")
@@ -215,8 +212,7 @@ export default {
 
             const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {
                 method: 'post',
-                body: JSON.stringify(settings),
-                headers: {'Content-Type': 'application/json'}
+                body: settings
             })
 
             this.$M.toast({text: error.value? 'Error saving' : 'Saved'})

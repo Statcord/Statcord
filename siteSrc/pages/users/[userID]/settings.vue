@@ -61,8 +61,7 @@ export default {
 
       const {error} = await useFetch(() => `/api/user/${this.$route.params.userID}/settings/set`, {
         method: 'post',
-        body: JSON.stringify(outOBJ),
-        headers: {'Content-Type': 'application/json'}
+        body: outOBJ
       })
 
       this.$M.toast({text: error.value ? 'Error saving' : 'Saved'})
@@ -72,6 +71,7 @@ export default {
   async mounted() {
     // if (!this.$auth.isLoggedIn()) await navigateTo("/login");
     // if (this.$auth.getUser()?.id === this.$route.params.userID) await navigateTo("/login");
+    // if (!this.$auth.isLoggedIn()) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
 
     const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
     this.profileInfo = user.value
