@@ -7,7 +7,7 @@ class Auth {
   async canSeeBot(botid, privileged) {
     const {data: rawBotuseFetch} = await useFetch(() => `/api/bots/${botid}`)
 
-    const isOwner = this.isLoggedIn() && rawBotuseFetch.value.ownerid === this.#session.userInfo.id
+    const isOwner = this.isLoggedIn() && rawBotuseFetch.value.ownerid === this.#session.id
     const isPublic = rawBotuseFetch.value.public
 
     return ((Boolean(privileged) || !isPublic) && isOwner) || (isPublic && this.isLoggedIn())

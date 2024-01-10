@@ -10,7 +10,16 @@
             <div class="col s12 m2">
                 <div class="row">
                     <div class="col s6 m12">
-                        <img v-if="bot.avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'" :alt="bot.username+'\'s icon'">
+                        <object
+                            :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=256'"
+                            type="image/png"
+                            aria-label="aaa"
+                            loading="lazy"
+                            class="circle"
+                            :alt="username+`'s profile picture`"
+                        >
+                            <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=256'" alt="Defualt Bot icon" class="circle guildimg" />
+                        </object>
                     </div>
                     <div class="col s6 m12">
                         <h3>{{ bot.username }}</h3>
@@ -79,7 +88,7 @@ export default {
     },
     data() {
         return {
-            botid: "",
+            botid: this.$route.params.id,
             public: false,
             isOwner: false,
             botNSFW: true,
@@ -87,8 +96,6 @@ export default {
         }
     },
     async mounted() {
-        this.botid = this.$route.params.id
-
         this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
         this.$M.FormSelect.init(this.$refs.groupBySelector)
         this.$M.Tabs.init(this.$refs.tabs, {

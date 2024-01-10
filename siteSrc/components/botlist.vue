@@ -11,9 +11,8 @@
                         :class="bot.nsfw? 'blur':''"
                         :alt="bot.username+`'s profile picture`"
                         >
-                        <img src="/img/error.png" alt="Not found image" class="circle guildimg" />
+                        <img :src="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=256'" alt="Defualt Bot icon" class="circle guildimg" />
                     </object>
-                    <!-- <img :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'" :alt="bot.username+`'s profile picture`" :class="bot.nsfw? 'blur':''"> -->
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
