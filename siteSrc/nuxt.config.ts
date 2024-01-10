@@ -8,7 +8,9 @@ export default defineNuxtConfig({
 
   runtimeConfig:{
     public: {
-      version: "1.0.0"
+      version: "1.0.0",
+      botID: settings.discord.botID,
+      domain: settings.domain
     },
     configFile: settings
   },
@@ -46,12 +48,6 @@ export default defineNuxtConfig({
   },
 
   routeRules:{
-    '/login': {
-      redirect: {
-        to:`https://discord.com/api/oauth2/authorize?client_id=${settings.discord.botID}&response_type=code&redirect_uri=${encodeURIComponent(settings.domain + "/api/oauth/callback")}&scope=identify+applications.builds.read&prompt=none`,
-        statusCode: 308
-      }
-    },
     '/support': {
       redirect: {
         to:`https://discord.gg/qsHxVUnXqr`,

@@ -13,7 +13,7 @@
             </ul>
 
             <ul class="right ">
-                <li :class="hideLogin()"><a href="/login">Login</a></li>
+                <li :class="hideLogin()"><a :href="oauthUrl">Login</a></li>
                 <li
                     class="dropdown-trigger"
                     ref="dropdown"
@@ -48,7 +48,8 @@ export default {
             username: "",
             avatarURL: "",
             isLoggedIn: false,
-            userID: ""
+            userID: "",
+            oauthUrl: this.genOauthUrl(this.$route.fullPath),
         }
     },
     async mounted() {
@@ -76,6 +77,18 @@ export default {
             const { remove } = await useSession()
             await remove()
             await navigateTo("/", {"external": true})
+        },
+        genOauthUrl(path){
+            const config = useRuntimeConfig()
+
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${config.public.botID}&response_type=code&scope=identify+applications.builds.read&prompt=none&state=${encodeURIComponent(path)}&redirect_uri=${encodeURIComponent(config.public.domain + "/api/oauth/callback")}`
+            this.oauthUrl = url
+            return url
+        }
+    },
+    watch: {
+        $route(route){
+            this.genOauthUrl(route.fullPath)
         }
     }
 }

@@ -1,7 +1,7 @@
 import { defineEventHandler, sendRedirect, getQuery, createError} from "h3"
 
 export default defineEventHandler(async event => {
-    const { code } = getQuery(event);
+    const { code, state } = getQuery(event);
     if (!code) throw createError({
         statusCode: 400
     })
@@ -30,7 +30,7 @@ export default defineEventHandler(async event => {
     
     event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.username}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.username}, avatar = ${userInfo.avatar}`.catch(() => {})
 
-    return sendRedirect(event, redirect, 302)
+    return sendRedirect(event, `${redirect}${state}`, 302)
 })
 
 export const schema = {
