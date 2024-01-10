@@ -1,66 +1,117 @@
-<template>  
-    <div class="container">
-        <h4>Add your bot</h4>
+<template>
+  <div class="container">
+    <h4>Add your bot</h4>
+    <form>
+      <div class="section">
+        <h6>Basic bot info</h6>
+        <div class="row">
+          <div class="col s12 m6">
+            <label for="botid">Enter the Bot ID</label>
+            <input @input="botIdUpdated" type="text" ref="botid" placeholder="961433265879801936" pattern="[0-9]{17,21}" required>
+          </div>
 
-        <div class="section">
-            <div class="row">
-                <div class="col s12 m6">
-                    <label for="botid">Enter the Bot ID</label>
-                    <input type="text" ref="botid" pattern="[0-9]{17,21}" placeholder="685166801394335819">
-                </div>
-    
-                <div class="col s12 m6">
-                    <label for="AdditionalBotOwnerIDs">Additional Bot Owner IDs</label>
-                    <input type="text" ref="AdditionalBotOwnerIDs" class="disabled" disabled pattern="[0-9]{17,21}" placeholder="685166801394335819">
-                </div>
-            </div>
-        </div>
-        
-        <div class="divider"></div>
-
-
-        <div class="section">
-            <div class="row">
-                <div class="col s12 m6">
-                    <label for="Prefix">Prefix</label>
-                    <input type="text" ref="Prefix" pattern="[0-9]{17,21}" disabled placeholder="/">
-                </div>
-    
-                <div class="col s12 m6">
-                    <label for="AdditionalBotOwnerIDs">Invite</label>
-                    <input type="text" ref="AdditionalBotOwnerIDs" class="disabled" pattern="[0-9]{17,21}" placeholder="">
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="row">
-                <div class="col s12 m12">
-                    <label for="Prefix">short desc</label>
-                    <input type="text" ref="Prefix" pattern="[0-9]{17,21}" placeholder="/">
-                </div>
-    
-                <div class="col s12 m12">
-                    <label for="AdditionalBotOwnerIDs">long desc</label>
-                    <input type="text" ref="AdditionalBotOwnerIDs" class="disabled" pattern="[0-9]{17,21}" placeholder="">
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-      <div class="modal-footer">
-        <div>
-          <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-          <div class="modal-close waves-effect waves-light btn right" @click="submitBot">Add bot</div>
+          <div class="col s12 m6">
+            <label for="invite">Invite</label>
+            <input required type="url" ref="invite" placeholder="">
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <h6>Access control</h6>
+        <div class="row">
+          <div class="col s12 m12">
+            <label for="public">
+              <input type="checkbox" checked placeholder="true" ref="public">
+              <span>Public</span>
+            </label>
+          </div>
+
+          <div class="col s12 m12">
+            <label for="nsfw">
+              <input type="checkbox" ref="nsfw">
+              <span>NSFW</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m11">
+            <label for="customurl">Custom URL</label>
+            <input disabled type="url" :placeholder="host+'/bots/'+botid" ref="customurl">
+          </div>
+          <div class="col s12 m1">
+            <div class="waves-effect waves-light btn-large right disabled">Check</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <h6>Bot Description</h6>
+        <div class="row">
+          <div class="col s12 m12">
+            <label for="shortDesc">Short description</label>
+            <input required type="text" ref="shortDesc" placeholder="">
+          </div>
+
+          <div class="col s12 m12">
+            <label for="longDesc">Long description</label>
+            <textarea required ref="longDesc" placeholder=""></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m12">
+            <label for="longrenderer">Choose a renderer for the Long description:</label>
+            <select ref="longrenderer" class="browser-default">
+              <option selected value="markdown">MarkDown</option>
+              <option value="html">HTML</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <h6>Add additional links (optional)</h6>
+        <div class="row">
+          <div class="col s12 m6">
+            <label for="github">GitHub</label>
+            <input disabled type="url" ref="github">
+          </div>
+          <div class="col s12 m6">
+            <label for="website">Website</label>
+            <input disabled type="url" ref="website">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m6">
+            <label for="supportserver">Support server</label>
+            <input disabled type="url" ref="supportserver">
+          </div>
+          <div class="col s12 m6">
+            <label for="donations">Donation link</label>
+            <input disabled type="url" ref="donations">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section">
+        <input type="submit" class="waves-effect waves-light btn right" @click.prevent="submitBot" value="Add bot">
+      </div>
+    </form>
+  </div>
 </template>
 
-  <script setup>
+<script setup>
   useSeoMeta({
     title: 'DisStat - My bots',
     description: "Track your Discord bot's statistics using DisStat.",
@@ -73,7 +124,7 @@
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
-  
+
   useHead({
     htmlAttrs: {
       lang: 'en'
@@ -86,29 +137,51 @@
       }
     ]
   })
-  </script>
-  <script>  
+</script>
+<script>
   export default {
     name: 'addbot',
     data() {
+      const config = useRuntimeConfig()
       return {
+        host: config.public.domain,
+        botid: "961433265879801936"
       };
     },
     methods: {
       async submitBot() {
-        const {error} = await useFetch(() => `/api/bots/add`, {
-          method: 'post',
-          body: JSON.stringify({id:this.$refs.botid.value}),
-          headers: {'Content-Type': 'application/json'}
+        const refsKeys = Object.keys(this.$refs)
+        const requiredKeys = refsKeys.filter(ref=>this.$refs[ref].required)
+
+        requiredKeys.forEach(ref=>{
+          if (this.$refs[ref].value==="") {
+            this.$refs[ref].classList.add("red")
+            this.$refs[ref].classList.add("accent-1")
+          } else {
+            this.$refs[ref].classList.remove("red")
+            this.$refs[ref].classList.remove("accent-1")
+          }
         })
-        if (!error.value) await navigateTo(`/bots/${this.$refs.botid.value}`);
-        else this.$M.toast({text: "error adding bot"})
+
+        const hasErrors = requiredKeys.every(ref=>this.$refs[ref].value==="")
+        if (hasErrors) return; 
+
+        const values = Object.assign({}, ...(refsKeys.map(ref => { return { [ref]: this.$refs[ref].type === "checkbox" ? this.$refs[ref].checked : this.$refs[ref].value } })));
+
+        const { error } = await useFetch(() => `/api/bots/add`, {
+          method: 'post',
+          body: values
+        })
+        if (error.value) this.$M.toast({text: "error adding bot"})
+        else await navigateTo(`/bots/${this.$refs.botid.value}`);
+      },
+      botIdUpdated(){
+        if (this.$refs.botid.value==="") return this.botid = "685166801394335819"
+        this.botid = this.$refs.botid.value
       }
     },
     async mounted() {
-      if (!this.$auth.isLoggedIn()) await navigateTo("/login", {
-        "external":true
-      });
+      if (!this.$auth.isLoggedIn()) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
     }
   }
-  </script>
+</script>
