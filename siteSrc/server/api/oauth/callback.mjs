@@ -28,7 +28,7 @@ export default defineEventHandler(async event => {
     event.context.session.accessToken = tokens.accessToken,
     event.context.session.userInfo = userInfo
     
-    event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.username}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.username}, avatar = ${userInfo.avatar}`.catch(() => {})
+    event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.global_name}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.global_name}, avatar = ${userInfo.avatar}`.catch(() => {})
 
     return sendRedirect(event, `${redirect}${state}`, 302)
 })

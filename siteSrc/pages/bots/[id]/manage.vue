@@ -201,7 +201,7 @@ export default {
                 body: {id: this.botid}
             })
             if (!error.value) {
-                await navigateTo("/users/me")
+                await navigateTo(`/users/${this.$auth.getUser().id}`)
             }
         },
         async save(a){

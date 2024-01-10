@@ -11,14 +11,14 @@
                 <div class="row">
                     <div class="col s6 m12">
                         <object
-                            :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=256'"
+                            :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'"
                             type="image/png"
                             aria-label="aaa"
                             loading="lazy"
                             class="circle"
                             :alt="username+`'s profile picture`"
                         >
-                            <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=256'" alt="Defualt Bot icon" class="circle guildimg" />
+                            <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=128'" alt="Defualt Bot icon" class="circle guildimg" />
                         </object>
                     </div>
                     <div class="col s6 m12">

@@ -21,7 +21,7 @@ CREATE TABLE public.owners (
     ownerid character varying NOT NULL,
     username character varying NOT NULL,
     aboutme character varying NOT NULL,
-    website character varying NOT NULL,
+    website character varying,
     public boolean NOT NULL DEFAULT true,
 );
 
@@ -39,7 +39,11 @@ CREATE TABLE public.bots (
     ownerid character varying NOT NULL,
     maxcustomcharts integer DEFAULT 2,
     addedon timestamp without time zone,
-    nsfw boolean NOT NULL DEFAULT false
+    nsfw boolean NOT NULL DEFAULT false,
+    shortdesc character varying NOT NULL,
+    longdesc character varying NOT NULL,
+    longrenderer character varying NOT NULL,
+    invite character varying NOT NULL
 );
 ALTER TABLE public.bots OWNER TO disstat;
 ALTER TABLE ONLY public.bots

@@ -10,7 +10,7 @@
         <span>About Me</span>
       </label>
       <label>
-        <input type="url" placeholder="https://yourDomain.tld" @change="updateSettingsValue" name="website" ref="settings:website">
+        <input type="url" :placeholder="profileInfo.website" @change="updateSettingsValue" name="website" ref="settings:website">
         <span>Website</span>
       </label>
     </div>
@@ -48,7 +48,8 @@ export default {
         method: 'delete',
       })
       if (!error.value) {
-        await navigateTo("/")
+        await remove()
+        await navigateTo("/", {"external": true})
       }
     },
     updateSettingsValue(a){
@@ -69,9 +70,9 @@ export default {
     }
   },
   async mounted() {
-    // if (!this.$auth.isLoggedIn()) await navigateTo("/login");
-    // if (this.$auth.getUser()?.id === this.$route.params.userID) await navigateTo("/login");
-    // if (!this.$auth.isLoggedIn()) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
+    const oauthUrl = this.$genOauthUrl(this.$route.fullPath)
+    if (!this.$auth.isLoggedIn()) await navigateTo(oauthUrl, {external: true});
+    if (this.$auth.getUser().id !== this.$route.params.userID) await navigateTo(oauthUrl, {external: true});
 
     const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
     this.profileInfo = user.value

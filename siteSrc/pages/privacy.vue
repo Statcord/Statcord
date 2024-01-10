@@ -9,7 +9,7 @@
       <p>
         We only store data you (the user) provide to us, for example by logging in, adding your bot(s) or posting data from your bots.
         <br>
-        You are free to delete this data at any time by visiting <router-link to="/me/settings">your user settings</router-link> and clicking "Delete all data".
+        You are free to delete this data at any time by visiting your user settings and clicking "Delete all data".
         <br>
         We do not track you or sell or otherwise use your data, the data is only stored for the purpose it's intended for and deleted after that.
         You can have a look at our <a href="https://github.com/DisStat/DisStat">GitHub repository</a> to check for yourself.

@@ -30,9 +30,9 @@
 
         <div class="col s12 m10">
             <div v-if="stats.length>0" class="row">
-                <div v-for="card in cards" class="col s12 l4">
-                    <h5>{{ card.name }}</h5>
-                    <span>{{ card.value.toLocaleString() }}</span>
+                <div v-for="card in cards" :class="'col s'+12/cards.length+' l4'">
+                    <h5 class="center-align">{{ card.name }}</h5>
+                    <h6 class="center-align">{{ card.value.toLocaleString() }}</h6>
                 </div>
             </div>
 

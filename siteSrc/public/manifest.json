@@ -35,11 +35,7 @@
 		}
 	],
 	"shortcuts": [
-		{
-			"name": "Your account",
-			"url": "/me",
-			"description": "View and update your account and bots"
-		},{
+		 {
 			"name": "Homepage",
 			"url": "/",
 			"description": "Check out some of our currently tracked bots"
