@@ -5,14 +5,12 @@
     <p>
       This site allows tracking of Discord bot statistics, like guild, user and shard count, and used commands. It's a fully
       <a href="https://github.com/DisStat/DisStat" target="_blank" rel="noopener">open source</a> alternative to
-      <a href="https://statcord.com" target="_blank" rel="noopener">Statcord</a> which went offline recently and didn't
-      receive any public updates in a long time.
-      <br>
-      <router-link to="/bots/685166801394335819">View a demo</router-link>
+      <a href="https://statcord.com" target="_blank" rel="noopener">Statcord</a> which has been mostly unusable since December 2022 and hasn't received any public updates in a long time.
     </p>
-    <!-- <router-link to="/user/me">Add your bot now!</router-link> -->
-    <h2>All currently tracked, public bots</h2>
 
+    <router-link to="/bots/add">Add your bot now</router-link> or <router-link to="/bots/685166801394335819">View a demo</router-link>!
+   
+    <h2>All currently tracked, public bots</h2>
     <botlist botListRoute="/api/bots"></botlist>
   </div>
 </template>

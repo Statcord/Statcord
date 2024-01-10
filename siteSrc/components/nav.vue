@@ -14,7 +14,7 @@
 
             <ul class="right ">
                 <li :class="hideLogin()"><a href="/login">Login</a></li>
-                <div
+                <li
                     class="dropdown-trigger"
                     ref="dropdown"
                     :class="hideUserDrop()"
@@ -22,7 +22,7 @@
                     id="userDropdown">
                     <img v-if="username" :src="avatarURL" :alt="username" class="circle left-align" />
                     <i class="material-icons right-align">arrow_drop_down</i>
-                </div>
+                </li>
             </ul>
         </div>
     </nav>
@@ -36,7 +36,7 @@
     <ul id="dropdown1" class="dropdown-content valign-wrapper black">
         <router-link :to="'/users/'+userID" class="white-text">User</router-link>
         <li class="divider"></li>
-        <a href="/logout" class="red-text darken-3">Logout</a>
+        <li><span @click="logout" class="red-text darken-3">Logout</span></li>
     </ul>
 </template>
 
@@ -71,6 +71,11 @@ export default {
         },
         hideUserDrop() {
             return this.isLoggedIn ? "right valign-wrapper" : "hide"
+        },
+        async logout(){
+            const { remove } = await useSession()
+            await remove()
+            await navigateTo("/", {"external": true})
         }
     }
 }

@@ -3,30 +3,22 @@
   <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+this.$route.params.userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
 
   <div>
-    <h1>{{profileInfo.username}}</h1>
+    <div class="row">
+      <img :src="userAvatar" alt="" class="circle">
+      <h1>{{profileInfo.username}}</h1>
+
+    </div>
     <h4>{{ profileInfo.aboutme }}</h4>
 
     <div v-if="profileInfo.website">
-      <a :href="profileInfo.website" target="_blank" rel="noopener noreferrer"><i class="material-icons">link</i></a>
+      <safeLinkPopUp icon="link" name="Website" :url="profileInfo.website"></safeLinkPopUp>
+      <!-- <span class=""><i class="material-icons">link</i>Website</span>
+      <a :href="profileInfo.website" target="_blank" rel="noopener noreferrer"><i class="material-icons">link</i>Website</a> -->
     </div>
   </div>
 
   <h1>Bots</h1>
   <botlist :botListRoute="'/api/user/'+this.$route.params.userID+'/bots/'"></botlist>
-
-  <div id="modal1" ref="modal" class="modal hide">
-    <div class="modal-content">
-      <h4>Add your bot</h4>
-      <label for="botid">Enter the Bot ID</label>
-      <input type="text" ref="botid" pattern="[0-9]{17,21}" placeholder="685166801394335819">
-    </div>
-    <div class="modal-footer">
-      <div>
-        <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-        <div class="modal-close waves-effect waves-light btn right" @click="submitBot">Add bot</div>
-      </div>
-    </div>
-  </div>
 </template>
 <script setup>
 useSeoMeta({
@@ -57,28 +49,20 @@ useHead({
 </script>
 <script>
 import botlist from '../../../components/botlist.vue'
+import safeLinkPopUp from '../../../components/openLink.vue'
 
 export default {
   name: 'me',
   components: {
-    botlist
+    botlist,
+    safeLinkPopUp
   },
   data() {
     return {
       isProfileOwner: false,
-      profileInfo: {}
+      profileInfo: {},
+      userAvatar:""
     };
-  },
-  methods: {
-    async submitBot() {
-      const {error} = await useFetch(() => `/api/bots/add`, {
-        method: 'post',
-        body: JSON.stringify({id:this.$refs.botid.value}),
-        headers: {'Content-Type': 'application/json'}
-      })
-      if (!error.value) await navigateTo(`/bots/${this.$refs.botid.value}`);
-      else this.$M.toast({text: "error adding bot"})
-    }
   },
   async mounted() {
     this.isProfileOwner = this.$auth.getUser()?.id === this.$route.params.userID
@@ -86,10 +70,7 @@ export default {
     const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
     // if (!user.value.public) await navigateTo("/login");
     this.profileInfo = user.value
-    
-    this.$M.Modal.init(this.$refs.modal, {
-      onOpenStart: ()=> this.$refs.modal.classList.remove("hide")
-    })
+    this.userAvatar = `https://cdn.discordapp.com/avatars/${user.value.avatar ? `${this.$route.params.userID}/${user.value.avatar}.webp`: `${(this.$route.params.userID >>> 22) % 5}.png`}`
   }
 }
 </script>

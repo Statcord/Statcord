@@ -36,15 +36,8 @@ services:
   app:
     restart: unless-stopped
     build: 
-      dockerfile: ./siteSrc/Dockerfile
-      args:
-      - 'influxToken=yh3dMn8sXX09umUdz!ykW3m&d2PN9s'
-      - 'discordBotToken=OTtVrH8'
-      - 'discordBotID=961433265879801936'
-      - 'discordBotClientSecret=wmnGSrm'
-      - 'cookieSecret=sdafjksa,dsakd.fbnksladfjnslakdfjsalkdfjasl;fds'
-      - 'domain=http://127.0.0.1'
-      - 'postgresPassword=AQwrMb4WzngykR9v'
+      context: ./siteSrc
+      dockerfile: Dockerfile
     container_name: app
     ports:
       - '80:3000'
@@ -52,14 +45,6 @@ services:
       - postgres
       - cache
       - influxdb
-    environment:
-      - 'influxToken=yh3dMn8sXX09umUdz!ykW3m&d2PN9s'
-      - 'discordBotToken=OTtVrH8'
-      - 'discordBotID=961433265879801936'
-      - 'discordBotClientSecret=wmnGSrm'
-      - 'cookieSecret=sdafjksa,dsakd.fbnksladfjnslakdfjsalkdfjasl;fds'
-      - 'domain=http://127.0.0.1'
-      - 'postgresPassword=AQwrMb4WzngykR9v'
 
   influxdb:
     image: influxdb:2.7.1-alpine

@@ -1,7 +1,6 @@
 import { defineEventHandler, getQuery } from "h3"
 
 export default defineEventHandler(async event => {
-    console.log(event.context.session)
     return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE public = true LIMIT 30 OFFSET 30*${Number(getQuery(event).page ?? 0)}`.catch(() => {})
 })
 

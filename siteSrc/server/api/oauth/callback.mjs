@@ -6,20 +6,11 @@ export default defineEventHandler(async event => {
         statusCode: 400
     })
 
-    // const config = useRuntimeConfig(event)
+    const {tokens, redirect} = await event.context.oauth.exchangeCode({
+        code
+    })
 
-    // console.log(config)
-
-    const tokens = await event.context.oauth.rest.oauth.exchangeCode({
-        code,
-        clientSecret: "wmz0HnGSrm",
-        clientID: "961433265879801936",
-        redirectURI: "http://localhost:3000" + "/api/oauth/callback"
-    }).catch(e=> console.log(e));
-
-    // console.log(tokens)
-
-    if (!tokens.accessToken) throw createError({
+    if (!tokens?.accessToken) throw createError({
         statusCode: 400
     })
 
@@ -39,7 +30,7 @@ export default defineEventHandler(async event => {
     
     event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.username}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.username}, avatar = ${userInfo.avatar}`.catch(() => {})
 
-    return sendRedirect(event, "http://localhost:3000", 302)
+    return sendRedirect(event, redirect, 302)
 })
 
 export const schema = {

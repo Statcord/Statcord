@@ -1,37 +1,39 @@
 <template>
-    <div v-if="botNSFW">
-        <h3 class="center-align">this bot has been marked NSFW
-            <br>
-            <div class="btn" @click="dismissNSFW">I understand</div>
-        </h3>
-    </div>
-    <div class="row" :class="botNSFW ? 'blur':''">
-        <div class="col s12 m2">
-            <div class="row">
-                <div class="col s6 m12">
-                    <img v-if="bot.avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'" :alt="bot.username+'\'s icon'">
-                </div>
-                <div class="col s6 m12">
-                    <h3>{{ bot.username }}</h3>
-                    <h5>Made by: <router-link :to="'/users/'+ ownerID">{{ bot.ownername }}</router-link></h5>
-                </div>
-            </div>
-            
-            <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
+    <div class="px-6">
+        <div v-if="botNSFW">
+            <h3 class="center-align">this bot has been marked NSFW
+                <br>
+                <div class="btn" @click="dismissNSFW">I understand</div>
+            </h3>
         </div>
-    </div>
-
-    <div>
-        <div class="row">
-            <div class="col s12">
-                <ul class="tabs" ref="tabs">
-                    <li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
-                    <li class="tab col s3"><a href="#stats">stats</a></li>
-                </ul>
+        <div class="row" :class="botNSFW ? 'blur':''">
+            <div class="col s12 m2">
+                <div class="row">
+                    <div class="col s6 m12">
+                        <img v-if="bot.avatar !== ''" class="circle" :src="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'" :alt="bot.username+'\'s icon'">
+                    </div>
+                    <div class="col s6 m12">
+                        <h3>{{ bot.username }}</h3>
+                        <h5>Made by: <router-link :to="'/users/'+ ownerID">{{ bot.ownername }}</router-link></h5>
+                    </div>
+                </div>
+                
+                <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
             </div>
-            <div id="overview" class="col s12">Overview</div>
-            <div id="stats" class="col s12">
-                <botStats></botStats>
+        </div>
+    
+        <div :class="botNSFW ? 'blur':''">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs" ref="tabs">
+                        <li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
+                        <li class="tab col s3"><a href="#stats">stats</a></li>
+                    </ul>
+                </div>
+                <div id="overview" class="col s12">Overview</div>
+                <div id="stats" class="col s12">
+                    <botStats></botStats>
+                </div>
             </div>
         </div>
     </div>

@@ -25,8 +25,6 @@ export default defineEventHandler((event) => {
 
     const config = useRuntimeConfig(event)
 
-    console.log(config)
-
     event.context.openapiJSON = {
         openapi: "3.0.0",
         info: {

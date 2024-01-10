@@ -1,5 +1,8 @@
 <template>
+  <div class="container">
     <botlist botListRoute="/api/bots"></botlist>  
+
+  </div>
 </template>
   <script setup>
   useSeoMeta({

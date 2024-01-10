@@ -3,10 +3,10 @@ import postgres from 'postgres'
 export default defineEventHandler((event) => {
     if (event.context.pgPool) return event.context.pgPool;
 
-    const config = useRuntimeConfig(event)
+    const {configFile} = useRuntimeConfig(event)
 
     event.context.pgPool = postgres({
-        ...config.configFile.postgresConfig,
+        ...configFile.postgres,
         types: {
             // bigint: postgres.BigInt,
             rect: {

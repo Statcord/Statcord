@@ -89,11 +89,9 @@
   </script>
   <script>  
   export default {
-    name: 'me',
+    name: 'addbot',
     data() {
       return {
-        isProfileOwner: false,
-        profileInfo: {}
       };
     },
     methods: {
@@ -108,15 +106,9 @@
       }
     },
     async mounted() {
-    //   this.isProfileOwner = this.$auth.getUser()?.id === this.$route.params.userID
-  
-    //   const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
-    //   // if (!user.value.public) await navigateTo("/login");
-    //   this.profileInfo = user.value
-      
-    //   this.$M.Modal.init(this.$refs.modal, {
-    //     onOpenStart: ()=> this.$refs.modal.classList.remove("hide")
-    //   })
+      if (!this.$auth.isLoggedIn()) await navigateTo("/login", {
+        "external":true
+      });
     }
   }
   </script>

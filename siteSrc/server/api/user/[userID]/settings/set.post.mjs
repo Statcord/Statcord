@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
     })
 
     console.log("1")
-    if (event.context.session.id !== path.userID) throw createError({
+    if (event.context.session.userInfo.id !== path.userID) throw createError({
         statusCode: 401
     })
 

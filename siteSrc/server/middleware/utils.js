@@ -1,5 +1,5 @@
 export default defineEventHandler((event) => {
-    if (!event.node.req.url || event.node.req.url !== "api/bots/genKey" || event.node.req.url === "/api/bots/add") return;
+    if (!event.node.req.url || event.node.req.url !== "/api/bots/genKey" || event.node.req.url === "/api/bots/add") return;
 
     event.context.utils = {
         genKey: () => {
