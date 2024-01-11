@@ -17,10 +17,9 @@ readdir("./server/api", { recursive: true, "withFileTypes": true })
     })
 })
 
-
 export default defineEventHandler((event) => {
     if (!event.node.req.url || event.node.req.url !== "/api/docs/json") return;
-    // if (event.context.openapiJSON) return
+    if (process.env.NODE_ENV === "production" && event.context.openapiJSON) return event.context.openapiJSON
 
     const config = useRuntimeConfig(event)
 
@@ -39,17 +38,14 @@ export default defineEventHandler((event) => {
 function getPaths() {
     const paths = {};
 
-    for (const h of handlersMeta) {
-        if (h.route.startsWith("/_")) break;
+    const filteredHandlersMeta = handlersMeta.filter(h => !h.route.startsWith("/_")).filter(h => h.route !== "/api/session")
 
+    for (const h of filteredHandlersMeta) {
         const { route, parameters } = normalizeRoute(h.route);
         const method = (h.method || "get").toLowerCase();
 
-        const rawPathSchema = files.get(h.route)
-
-        if (
-            // process.env.NODE_ENV === "production" &&
-            rawPathSchema.hidden) continue;
+        const rawPathSchema = files.get(h.route)    
+        if (process.env.NODE_ENV === "development" && rawPathSchema.hidden) continue;
 
         const item = {
             [method]: {
