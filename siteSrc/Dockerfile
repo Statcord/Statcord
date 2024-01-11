@@ -13,14 +13,10 @@ COPY . /preApp
 RUN apk update && \
     apk add --update git && \
     apk add --update openssh 
-    # && \
-#     apk add --update curl
 
 # install npm pacages
 RUN npm install
-
-# generate docs
-# RUN ./genDocs.sh
+RUN npm i @materializecss/materialize@2.0.2-alpha
 
 # build site
 RUN npm run build

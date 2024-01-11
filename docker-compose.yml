@@ -27,7 +27,7 @@ services:
         - POSTGRES_PASSWORD=AQwrMb4WzngykR9v
         - POSTGRES_DB=disstat
       ports:
-        - 5436:5432
+        - 5432:5432
       volumes:
         - ./schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
         - dbData:/var/lib/postgresql/data
