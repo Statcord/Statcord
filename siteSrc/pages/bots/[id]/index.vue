@@ -16,7 +16,7 @@
                             aria-label="aaa"
                             loading="lazy"
                             class="circle"
-                            :alt="username+`'s profile picture`"
+                            :alt="bot.username+`'s profile picture`"
                         >
                             <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=128'" alt="Defualt Bot icon" class="circle guildimg" />
                         </object>
@@ -39,7 +39,9 @@
                         <li class="tab col s3"><a href="#stats">stats</a></li>
                     </ul>
                 </div>
-                <div id="overview" class="col s12">Overview</div>
+                <div id="overview" class="col s12">
+                    <botLongListing></botLongListing>
+                </div>
                 <div id="stats" class="col s12">
                     <botStats></botStats>
                 </div>
@@ -80,11 +82,13 @@
 
 <script>
 import botStats from '~/components/botStats.vue';
+import botLongListing from '~/components/botLongListing.vue';
 
 export default {
     name: 'bot',
     components: {
-        botStats
+        botStats,
+        botLongListing
     },
     data() {
         return {
@@ -99,9 +103,9 @@ export default {
         this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
         this.$M.FormSelect.init(this.$refs.groupBySelector)
         this.$M.Tabs.init(this.$refs.tabs, {
-            onShow: (a)=>{
-                console.log(a)
-            }
+            // onShow: (a)=>{
+            //     // console.log(a)
+            // }
         });
 
 

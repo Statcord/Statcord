@@ -6,7 +6,9 @@ export default defineEventHandler(async event => {
 	if (!path.botID) throw createError({
 		statusCode: 404
 	})
-	const bot = await event.context.pgPool`SELECT addedon, bots.username, bots.avatar, nsfw, bots.public, bots.ownerid AS ownerid, owners.username AS ownername FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${path.botID}`.catch(() => {})
+	
+	const bot = await event.context.pgPool`SELECT addedon, bots.username, bots.avatar, nsfw, bots.public, bots.ownerid AS ownerid, owners.username AS ownername, shortdesc, longdesc, invite FROM bots JOIN owners ON bots.ownerid = owners.ownerid WHERE botid = ${path.botID}`.catch(() => {})
+
 	if (!bot[0]) throw createError({
 		statusCode: 404
 	})
