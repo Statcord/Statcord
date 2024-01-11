@@ -1,31 +1,22 @@
-import { defineEventHandler, createError, getRouterParams, readBody } from "h3"
+import { defineEventHandler, createError, getRouterParams, readBody, sendError } from "h3"
 
 export default defineEventHandler(async event => {
     const body = await readBody(event)
 
     const path = getRouterParams(event)
 
-    if (!path.botID) throw createError({
-        statusCode: 404
-    })
-    if (!event.context.session.accessToken) throw createError({
-        statusCode: 401
-    })
+    if (!path.botID) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+    if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${path.botID}`.catch(() => {})
-    if (!botExisits[0]) throw createError({
-        statusCode: 404
-    })
-    if (botExisits[0].ownerid !== event.context.session.userInfo.id) throw createError({
-        statusCode: 401
-    })
+    if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+
+    if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const bodyKeys = Object.keys(body)
     bodyKeys.includes()
 
-    if (!bodyKeys.includes("public") || !bodyKeys.includes("nsfw")) throw createError({
-        statusCode: 400
-    })     
+    if (!bodyKeys.includes("public") || !bodyKeys.includes("nsfw")) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))   
 
     event.context.pgPool`UPDATE bots SET public = ${body.public}, nsfw = ${body.nsfw} WHERE botid = ${path.botID}`.catch(() => {})
 

@@ -1,9 +1,7 @@
-import { defineEventHandler, sendNoContent, createError } from "h3"
+import { defineEventHandler, sendNoContent, createError, sendError } from "h3"
 
 export default defineEventHandler(async event => {
-    if (!event.context.session.accessToken) throw createError({
-        statusCode: 401
-    })
+    if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const myBots = await event.context.pgPool`SELECT botid FROM bots WHERE ownerid = ${event.context.session.userInfo.id}`.catch(() => {})
     myBots.map(bot => {

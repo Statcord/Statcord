@@ -1,22 +1,17 @@
-import { defineEventHandler, createError, getRouterParams } from "h3"
+import { defineEventHandler, createError, getRouterParams, sendError } from "h3"
 
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
 
-	if (!path.botID) throw createError({
-		statusCode: 404
-	})
+	if (!path.botID) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${path.botID}`.catch(() => {})
-	if (!bot[0]) throw createError({
-		statusCode: 404
-	})
+	if (!bot[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+
 
 	const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
 	const isPublic = bot[0].public
 
-	if ((!isPublic && !isOwner)) throw createError({
-		statusCode: 401
-	})
+	if ((!isPublic && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	return event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID}`.catch(() => {})
 })

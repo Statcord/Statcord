@@ -2,17 +2,13 @@ import { defineEventHandler, sendRedirect, getQuery, createError} from "h3"
 
 export default defineEventHandler(async event => {
     const { code, state } = getQuery(event);
-    if (!code) throw createError({
-        statusCode: 400
-    })
+    if (!code) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
     const {tokens, redirect} = await event.context.oauth.exchangeCode({
         code
     })
 
-    if (!tokens?.accessToken) throw createError({
-        statusCode: 400
-    })
+    if (!tokens?.accessToken) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
     const OAuthHelper = event.context.oauth.rest.oauth.getHelper(`Bearer ${tokens.accessToken}`)
     const userInfo = (await OAuthHelper.getCurrentAuthorizationInformation()).user;

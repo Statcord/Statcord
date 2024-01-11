@@ -1,27 +1,17 @@
-import { defineEventHandler, readBody, createError } from "h3"
+import { defineEventHandler, readBody, createError, sendError } from "h3"
 
 export default defineEventHandler(async event => {
 	const botID = await readBody(event)
-	if (!botID.id) throw createError({
-		statusCode: 400
-	})
+	if (!botID.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
-	if (!event.context.session.accessToken) throw createError({
-		statusCode: 401
-	})
+	if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
-	if (!botExisits[0]) throw createError({
-		statusCode: 404
-	})
-	if (botExisits[0].ownerid !== event.context.session.userInfo.id) throw createError({
-		statusCode: 401
-	})
+	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+	if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const bot = await event.context.oauth.rest.users.get(botID.id)
-	if (!bot) throw createError({
-		statusCode: 404
-	})
+	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
 	event.context.pgPool`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${botID.id}`.catch(() => {})
 

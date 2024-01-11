@@ -1,22 +1,14 @@
-import { defineEventHandler, createError, readBody } from "h3"
+import { defineEventHandler, createError, readBody, sendError } from "h3"
 
 export default defineEventHandler(async event => {
-	if (!event.context.session.accessToken) throw createError({
-		statusCode: 401
-	})
+	if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const botID = await readBody(event)
-	if (!botID.id) throw createError({
-		statusCode: 400
-	})
+	if (!botID.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
 	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
-	if (!botExisits[0]) throw createError({
-		statusCode: 404
-	})
-	if (botExisits[0].ownerid !== event.context.session.userInfo.id) throw createError({
-		statusCode: 401
-	})
+	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+	if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const key = event.context.utils.genKey()
 

@@ -1,21 +1,16 @@
-import { defineEventHandler, createError, getRouterParams } from 'h3'
+import { defineEventHandler, createError, getRouterParams, sendError } from 'h3'
 import { flux, fluxDuration } from '@influxdata/influxdb-client'
 
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
 
-	if (!path.id) throw createError({
-		statusCode: 404
-	})
+	if (!path.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${path.id}`.catch(() => {})
-	if (!bot[0]) throw createError({
-		statusCode: 404
-	})
+	if (!bot[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+
 	
 	const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
-	if (!isOwner) throw createError({
-		statusCode: 401
-	})
+	if (!isOwner) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	// console.time("first")
 	const mainStats = await fetchFromInflux({
