@@ -10,12 +10,12 @@ export default defineEventHandler((event) => {
         types: {
             // bigint: postgres.BigInt,
             rect: {
-                to        : 1700,
-                from      : [1700],
-                serialize : x => '' + x,
-                parse     : parseFloat
+                to: 1700,
+                from: [1700],
+                serialize: x => '' + x,
+                parse: parseFloat
             }
-        },
+        }
         // debug: function(connection, query, params, types){
         //     console.log(query)
         //     console.log(params)

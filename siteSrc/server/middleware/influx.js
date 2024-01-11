@@ -6,7 +6,7 @@ const {configFile} = useRuntimeConfig()
 const influx = new InfluxDB(configFile.influx)
 const deleteAPI = new DeleteAPI(influx)
 
-export default defineEventHandler((event) => {    
+export default defineEventHandler((event) => {
     event.context.influx = {
         influxClient: influx,
         influxDelete: deleteAPI

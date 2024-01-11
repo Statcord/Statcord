@@ -15,8 +15,8 @@ export default defineEventHandler((event) => {
                 clientSecret: configFile.discord.clientSecret,
                 clientID: configFile.discord.botID,
                 redirectURI: configFile.domain + "/api/oauth/callback"
-            }).catch(e=> console.log(e));
-            
+            }).catch(e => console.log(e));
+
             return {
                 redirect: configFile.domain,
                 tokens

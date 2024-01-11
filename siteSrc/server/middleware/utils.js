@@ -44,6 +44,6 @@ export default defineEventHandler((event) => {
                 type: "line",
                 label: "This Week"
             }
-        }        
+        }
     }
 })

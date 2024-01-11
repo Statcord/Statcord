@@ -2,8 +2,8 @@ import { readdir } from 'fs/promises'
 import { handlersMeta } from "#internal/nitro/virtual/server-handlers";
 
 const files = new Map()
-readdir("./server/api", { recursive: true, "withFileTypes":true, })
-.then(async foundFiles => {    
+readdir("./server/api", { recursive: true, "withFileTypes": true })
+.then(async foundFiles => {
     foundFiles.forEach(async file => {
         if (!file.isFile()) return;
 
@@ -11,12 +11,11 @@ readdir("./server/api", { recursive: true, "withFileTypes":true, })
 
         let routeString = `${file.path}/${file.name}`.replace(".mjs", "").split("server").pop().replace(".post", "").replace(".delete", "").replace('[', ":").replace(']', "")
         if (routeString.endsWith("/index")) routeString = routeString.split("/index").shift()
-        if (routeString === "") routeString = '/'        
+        if (routeString === "") routeString = '/'
 
         files.set(routeString, schema)
     })
 })
-
 
 
 export default defineEventHandler((event) => {
@@ -29,10 +28,10 @@ export default defineEventHandler((event) => {
         openapi: "3.0.0",
         info: {
             title: "DisStat API Routes",
-            version: config.public.version,
+            version: config.public.version
         },
         schemes: ["https"],
-        paths: getPaths(),
+        paths: getPaths()
     };
 })
 
@@ -49,17 +48,17 @@ function getPaths() {
         const rawPathSchema = files.get(h.route)
 
         if (
-            // process.env.NODE_ENV === "production" && 
+            // process.env.NODE_ENV === "production" &&
             rawPathSchema.hidden) continue;
-        
+
         const item = {
             [method]: {
-                parameters: rawPathSchema.parameters ?  [...parameters, ...rawPathSchema.parameters] : parameters,
+                parameters: rawPathSchema.parameters ? [...parameters, ...rawPathSchema.parameters] : parameters,
                 ...rawPathSchema
-            },
-        };
+            }
+        }
 
-        if (paths[route] === undefined) {
+        if (typeof paths[route] === "undefined") {
             paths[route] = item;
         } else {
             Object.assign(paths[route], item);
@@ -91,6 +90,6 @@ function normalizeRoute(_route) {
 
     return {
         route,
-        parameters,
+        parameters
     };
 }
