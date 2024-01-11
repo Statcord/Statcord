@@ -42,7 +42,6 @@ CREATE TABLE public.bots (
     nsfw boolean NOT NULL DEFAULT false,
     shortdesc character varying NOT NULL,
     longdesc character varying NOT NULL,
-    longrenderer character varying NOT NULL,
     invite character varying NOT NULL
 );
 ALTER TABLE public.bots OWNER TO disstat;

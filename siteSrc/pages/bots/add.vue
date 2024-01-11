@@ -59,18 +59,8 @@
           </div>
 
           <div class="col s12 m12">
-            <label for="longDesc">Long description</label>
+            <label for="longDesc">Long description (Markdown ONLY)</label>
             <textarea required ref="longDesc" placeholder=""></textarea>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col s12 m12">
-            <label for="longrenderer">Choose a renderer for the Long description:</label>
-            <select ref="longrenderer" class="browser-default">
-              <option selected value="markdown">MarkDown</option>
-              <option value="html">HTML</option>
-            </select>
           </div>
         </div>
       </div>

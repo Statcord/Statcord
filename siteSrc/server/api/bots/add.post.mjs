@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
 	const bot = await event.context.oauth.rest.users.get(body.botid).catch(e=>{})
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, longrenderer, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.utils.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.longrenderer}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.utils.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
 
 	Object.keys(event.context.utils.defaultChartSettings).forEach(chartID => {
 		const chart = event.context.utils.defaultChartSettings[chartID]
@@ -48,9 +48,6 @@ export const schema = {
 							"type": "string"
 						},
 						"longDesc": {
-							"type": "string"
-						},
-						"longrenderer": {
 							"type": "string"
 						},
 						"github": {
