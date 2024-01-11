@@ -1,12 +1,10 @@
 FROM node:20.5.0-alpine3.17 as build-stage
 
-# env args
-ENV NODE_ENV production
-
 # setup working dir
 WORKDIR /preApp
 COPY . /preApp
 
+# install git and open ssh for git deps
 RUN apk update && \
     apk add --update git && \
     apk add --update openssh 
@@ -15,7 +13,8 @@ RUN apk update && \
 RUN npm install
 RUN npm i @materializecss/materialize@2.0.2-alpha
 
-
+# env args
+ENV NODE_ENV production
 
 # build site
 RUN npm run build
