@@ -62,82 +62,146 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	// path: {
-	// 	id: { type: "string" }
-	// },
-	// querystring: {
-	// 	start: { type: "number", default: 0 },
-	// 	end: { type: "number", default: 0 },
-	// 	groupBy: { type: "string" },
-	// },
-	// parameters:[
-    //     {
-    //         name: "start",
-    //         in: "query",
-    //         required: false,
-    //         content: {
-    //             media: "application/json"
-    //         },
-    //         "description": "The page number of bots to show"
-    //     },
-	// 	{
-    //         name: "end",
-    //         in: "query",
-    //         required: false,
-    //         content: {
-    //             media: "application/json"
-    //         },
-    //         "description": "The page number of bots to show"
-    //     },
-	// 	{
-    //         name: "groupBy",
-    //         in: "query",
-    //         required: false,
-    //         content: {
-    //             media: "application/json"
-    //         },
-    //         "description": "The page number of bots to show"
-    //     }
-    // ],
+	parameters: [
+		{
+			name: "start",
+			in: "query",
+			required: false,
+			
+			"schema": {
+				"type": "string",
+				"format": "date",
+				default: "0",
+				example: "1685577600000"
+			},
+			"description": "The start date to filter the data by"
+		},
+		{
+			name: "end",
+			in: "query",
+			required: false,
+			"schema": {
+				"type": "string",
+				"format": "date",
+				default: "Whatever today is",
+				example: "1685577600000"
+			},
+			"description": "The end date to filter the data by"
+		},
+		{
+			name: "groupBy",
+			in: "query",
+			required: false,
+			"schema": {
+				"type": "string",
+				example: "1d",
+				default: "1d"
+			},
+			"description": "The timespan to group by. (day, month year)"
+		}
+	],
 	tags: [
 		"Bot Stats"
 	],
 	responses: {
-		404: {
-			description: "Bot not found"
-		},
 		401: {
-			description: "You do not have permission to access this bot"
+			"description": "You do not have permission to access this bot.",
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"statusCode": {
+								"type": "number"
+							},
+							"statusMessage": {
+								"type": "string"
+							}
+						}
+					},
+					"examples": [
+						{
+							"statusCode": 401,
+							"statusMessage": "Unauthorized"
+						}
+					]
+				}
+			}
+		},
+		400: {
+			"description": "Bad request. One or more Key-value pairs are either missing or have unsupported data",
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"statusCode": {
+								"type": "number"
+							},
+							"statusMessage": {
+								"type": "string"
+							}
+						}
+					},
+					"examples": [
+						{
+							"statusCode": 400,
+							"statusMessage": "Bad Request"
+						}
+					]
+				}
+			}
+		},
+		404: {
+			"description": "Bot not found",
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"statusCode": {
+								"type": "number"
+							},
+							"statusMessage": {
+								"type": "string"
+							}
+						}
+					},
+					"examples": [
+						{
+							"statusCode": 409,
+							"statusMessage": "Bot does not exist"
+						}
+					]
+				}
+			}
 		},
 		200: {
-			// type: "object",
-			// properties: {
-			// 	mainStats: {
-			// 		type: "array",
-			// 		items: {
-			// 			type: "object",
-			// 			properties: {
-			// 				time: { type: "string" },
-			// 				type: { type: "number" },
-			// 				cpuUsage: { type: "number" },
-			// 				guildCount: { type: "number" },
-			// 				members: { type: "number" },
-			// 				ramUsage: { type: "number" },
-			// 				shardCount: { type: "number" },
-			// 				totalRam: { type: "number" },
-			// 				userCount: { type: "number" },
-			// 			}
-			// 		}
-			// 	},
-			// 	commands: {
-			// 		type: "array",
-			// 		contains: { type: "object" }
-			// 	},
-			// 	custom: {
-			// 		type: "array",
-			// 		contains: { type: "object" }
-			// 	}
-			// }
+			"content": {
+				"application/json": {
+					"schema": {
+						type: "object",
+						properties: {
+							mainStats: {
+								type: "array",
+								contains: { type: "object" }
+							},
+							commands: {
+								type: "array",
+								contains: { type: "object" }
+							},
+							custom: {
+								type: "array",
+								contains: { type: "object" }
+							},
+							types:{
+								type: "array",
+								contains: { type: "object" }
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
