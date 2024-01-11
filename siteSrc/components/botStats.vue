@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import lineChart from '../../../components/lineChart.vue'
+import lineChart from './lineChart.vue'
 // import { set } from '@vueuse/shared'
 
 export default {
@@ -250,11 +250,10 @@ export default {
             return customData
         },
         async getData() {
-            const {data: rawDefaultStatsFetch} = await useFetch(() => `/api/bots/${this.botid}/stats/default?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
+            const {data: rawDefaultStatsFetch} = await useFetch(() => `/api/bots/${this.botid}/stats?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
             const defaultStatsJson = rawDefaultStatsFetch.value
 
-            const {data: rawChartSettings} = await useFetch(() => `/api/bots/${this.botid}/stats/types`)
-            const chartSettings = rawChartSettings.value
+            const chartSettings = defaultStatsJson.types
 
             this.stats = this.createLineChart(defaultStatsJson.mainStats, chartSettings)
 

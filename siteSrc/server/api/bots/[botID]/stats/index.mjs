@@ -10,9 +10,8 @@ export default defineEventHandler(async event => {
 
 
 	const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
-	const isPublic = bot[0].public
 
-	if ((!isPublic && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	if ((!bot[0].public && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const query = getQuery(event)
 
@@ -52,10 +51,13 @@ export default defineEventHandler(async event => {
 	})
 	// console.timeEnd("thrid")
 
+	const types = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID}`.catch(() => {})
+
 	return {
 		mainStats,
 		commands,
-		custom
+		custom,
+		types
 	}
 })
 

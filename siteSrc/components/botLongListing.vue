@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import openLink from '../../../components/openLink.vue'
+import openLink from './openLink.vue'
 
 export default {
     name: 'bot',
