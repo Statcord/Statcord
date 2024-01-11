@@ -72,48 +72,213 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	schema: {
-		// body: {
-		// 	type: "object",
-		// 	properties: {
-		// 		id: {
-		// 			type: "string",
-		// 			// required: true
-		// 		},
-		// 		guildCount: { type: "number", default: 0 },
-		// 		shardCount: { type: "number", default: 0 },
-		// 		userCount: { type: "number", default: 0 },
-		// 		commandsRun: { type: "number", default: 0 },
-		// 		ramUsage: { type: "number", default: 0.0 },
-		// 		totalRam: { type: "number", default: 0.0 },
-		// 		cpuUsage: { type: "number", default: 0.0 },
-		// 		members: { type: "number", default: 0 },
-		// 		topCommands: {
-		// 			type: "array",
-		// 			items: {
-		// 				type: "object",
-		// 				properties: {
-		// 					name: { type: "string" },
-		// 					count: { type: "number" }
-		// 				}
-		// 			}
-		// 		},
-		// 		customCharts: {
-		// 			type: "array",
-		// 			items: {
-		// 				type: "object",
-		// 				properties: {
-		// 					id: { type: "string" },
-		// 					data: { type: "object" }
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// },
-		responses: {
-			401: {},
-			404: {},
-			200: {}
+	tags: [
+		"Bot Stats"
+	],
+	"requestBody": {
+		"description": "Post a bots stats. At least one optional field is required.",
+		"content": {
+			"application/json": {
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id":  {
+							type: "string",
+							example: "961433265879801936",
+							"description": "The bot's ID",
+							required: true
+						},
+						"guildCount": {
+							type: "integer",
+							"format": "int32",
+							example: 22000,
+							"description": "The bot's guild count",
+							required: false
+						},
+						"shardCount": {
+							type: "integer",
+							"format": "int32",
+							example: 14,
+							"description": "The bot's shard count",
+							required: false
+						},
+						"userCount": {
+							type: "integer",
+							"format": "int32",
+							example: 366051,
+							"description": "The activate user count",
+							required: false
+						},
+						"members": {
+							type: "integer",
+							"format": "int32",
+							example: 7687071,
+							"description": "The total member count",
+							required: false
+						},
+						"ramUsage": {
+							type: "integer",
+							"format": "float",
+							example: 50.6,
+							required: false,
+							"description": "The amount of RAM the bot's process is using currently in bytes"
+						},
+						"totalRam": {
+							type: "integer",
+							"format": "float",
+							"description": "The total amount of RAM available to the bot in bytes",
+							required: false
+						},
+						"cpuUsage": {
+							type: "integer",
+							"format": "float",
+							"description": "The CPU usage of the bot or host",
+							example: 10.1,
+							required: false
+						},
+						"customCharts": {
+							required: false,
+							type: "array",
+							"description": "An array of custom chart data",
+							example: [
+								{
+									id: "customChartOne",
+									data: {
+										"itemOne": 213,
+										"itemTwo": 2.13
+									}
+								}
+							],
+							"items": {
+								type: "object",
+								"properties": {
+									id: {
+										type: "string",
+										example: "customChartOne",
+										"description": "The ID of the custom chart",
+										required: true
+									},
+									data: {
+										type: "object",
+										example: {
+											"itemOne": 213,
+											"itemTwo": 2.13
+										},
+										"description": "The data for the custom chart",
+										required: true
+									}
+								}
+							}
+						},
+						"topCommands": {
+							required: false,
+							type: "array",
+							"description": "An array of the commands run since the last post",
+							example: [
+								{
+									name: "help",
+									count: 10
+								}
+							],
+							"items": {
+								type: "object",
+								"properties": {
+									name: {
+										type: "string",
+										example: "help",
+										"description": "The name of the command",
+										required: true
+									},
+									count: {
+										type: "integer",
+										"format": "int32",
+										example: 10,
+										"description": "The amount the command has been run",
+										required: true
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"responses": {
+		401: {
+			"description": "You do not have permission to access this bot.",
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"statusCode": {
+								"type": "number"
+							},
+							"statusMessage": {
+								"type": "string"
+							}
+						}
+					},
+					"examples": [
+						{
+							"statusCode": 401,
+							"statusMessage": "Unauthorized"
+						}
+					]
+				}
+			}
+		},
+		400: {
+			"description": "Bad request. One or more Key-value pairs are either missing or have unsupported data",
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"statusCode": {
+								"type": "number"
+							},
+							"statusMessage": {
+								"type": "string"
+							}
+						}
+					},
+					"examples": [
+						{
+							"statusCode": 400,
+							"statusMessage": "Bad Request"
+						}
+					]
+				}
+			}
+        },
+		404:{
+			"description": "Bot not found",
+			"content": {
+				"application/json": {
+					"schema": {
+						"type": "object",
+						"properties": {
+							"statusCode": {
+								"type": "number"
+							},
+							"statusMessage": {
+								"type": "string"
+							}
+						}
+					},
+					"examples": [
+						{
+							"statusCode": 409,
+							"statusMessage": "Bot does not exist"
+						}
+					]
+				}
+			}
+		},
+		200: {
+			"description": "Bot added successfully",
 		}
 	}
 }

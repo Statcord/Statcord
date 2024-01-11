@@ -14,6 +14,10 @@ export const schema = {
 	// querystring: {
 	// 	page: { type: "number", default: 0 }
 	// },
+	"hidden": true,
+	"tags": [
+		"Internal"
+	],
 	responses: {
 		401: {
 			description: "You do not have permission to access this user"

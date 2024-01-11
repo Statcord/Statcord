@@ -55,8 +55,9 @@ export default defineEventHandler(async event => {
 export const schema = {
 	// querystring: {
 	// },
-	tags: [
-		"Bot Stats"
+	"hidden": true,
+	"tags": [
+		"Internal"
 	],
 	responses: {
 		404: {

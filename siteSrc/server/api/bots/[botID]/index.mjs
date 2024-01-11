@@ -18,6 +18,10 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
+	"hidden": true,
+	"tags": [
+		"Internal"
+	],
 	responses: {
 		404: {
 			description: "Bot not found"

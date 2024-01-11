@@ -41,12 +41,16 @@ function getPaths() {
     const paths = {};
 
     for (const h of handlersMeta) {
-        if (h.route .startsWith("/_"))  break;
+        if (h.route.startsWith("/_")) break;
 
         const { route, parameters } = normalizeRoute(h.route);
         const method = (h.method || "get").toLowerCase();
 
         const rawPathSchema = files.get(h.route)
+
+        if (
+            // process.env.NODE_ENV === "production" && 
+            rawPathSchema.hidden) continue;
         
         const item = {
             [method]: {

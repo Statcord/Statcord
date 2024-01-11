@@ -22,6 +22,10 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
+	"hidden": true,
+	"tags": [
+		"Internal"
+	],
 	"requestBody": {
 		"description": "Add a bot to DisStat",
 		"content": {
