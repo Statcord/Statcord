@@ -20,6 +20,7 @@
     "@sidebase/nuxt-session": "^0.2.8",
     "@types/node": "^20.10.7",
     "@vueuse/shared": "^10.7.1",
+    "markdown-it": "^14.0.0",
     "oceanic.js": "github:counting-bot/Oceanic#build",
     "postgres": "^3.4.3",
     "swagger-ui-dist": "^5.11.0"

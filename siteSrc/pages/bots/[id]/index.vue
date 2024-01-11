@@ -7,7 +7,7 @@
             </h3>
         </div>
         <div class="row" :class="botNSFW ? 'blur':''">
-            <div class="col s12 m2">
+            <div class="col s12 m2 container">
                 <div class="row">
                     <div class="col s6 m12">
                         <object
@@ -36,10 +36,10 @@
                 <div class="col s12">
                     <ul class="tabs" ref="tabs">
                         <li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
-                        <li class="tab col s3"><a href="#stats">stats</a></li>
+                        <li class="tab col s3"><a href="#stats">Stats</a></li>
                     </ul>
                 </div>
-                <div id="overview" class="col s12">
+                <div id="overview" class="col s12 container">
                     <botLongListing></botLongListing>
                 </div>
                 <div id="stats" class="col s12">

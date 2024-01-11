@@ -7,7 +7,8 @@
 
    <div>
         <h5>longdesc</h5>
-        <h6>{{ botJson.longdesc }}</h6>
+        <div v-if="longdescRendered !== ''" v-html="longdescRendered"></div>
+        <!-- <h6>{{ botJson.longdesc }}</h6> -->
    </div>
 
    <div>
@@ -27,7 +28,8 @@ export default {
     data() {
         return {
             botid: "",
-            botJson:{}
+            botJson:{},
+            longdescRendered: ""
         }
     },
     async mounted() {
@@ -35,6 +37,8 @@ export default {
 
         const {data: botJson} = await useFetch(`/api/bots/${this.botid}`)
         this.botJson=botJson.value
+        
+        if (botJson.value.longdesc) this.longdescRendered = this.$md.render(botJson.value.longdesc)
     },
 }
 </script>
