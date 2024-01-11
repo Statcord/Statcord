@@ -40,7 +40,7 @@ export default defineNuxtConfig({
         driver: 'redis',
         options: {
           base: "sessions",
-          url: 'redis://192.168.0.23:6379',
+          url: settings.redisURL,
           ttl: 604800
         }
       }
