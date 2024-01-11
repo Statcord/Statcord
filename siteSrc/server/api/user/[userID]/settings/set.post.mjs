@@ -8,17 +8,17 @@ export default defineEventHandler(async event => {
         statusCode: 401
     })
 
-    console.log("1")
+    // console.log("1")
     if (event.context.session.userInfo.id !== path.userID) throw createError({
         statusCode: 401
     })
 
-    console.log("2")
+    // console.log("2")
 
 
     if (Object.keys(body).length === 0) return;
 
-    console.log("3")
+    // console.log("3")
 
     const botExisits = await event.context.pgPool`SELECT ownerid from owners WHERE ownerid = ${path.userID}`.catch(() => {})
     if (!botExisits[0]) throw createError({

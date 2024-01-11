@@ -5,7 +5,7 @@ export default defineEventHandler(async event => {
 
 	const userFromDB = await event.context.pgPool`SELECT avatar, aboutme, username, website, public FROM owners WHERE ownerid = ${path.userID}`.catch(() => {})
 
-	if (!userFromDB[0].public && path.userID !== event.context.session.id) throw createError({
+	if (!userFromDB[0].public && path.userID !== event.context.session.userInfo.id) throw createError({
 		statusCode: 401
 	})
 	

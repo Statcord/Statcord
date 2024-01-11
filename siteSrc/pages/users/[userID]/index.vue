@@ -67,8 +67,9 @@ export default {
   async mounted() {
     this.isProfileOwner = this.$auth.getUser()?.id === this.$route.params.userID
 
-    const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
-    // if (!user.value.public) await navigateTo("/login");
+    const {data: user, error} = await useFetch(`/api/user/${this.$route.params.userID}`)
+    if (!this.isProfileOwner && error.value) return await navigateTo("/");
+
     this.profileInfo = user.value
     this.userAvatar = `https://cdn.discordapp.com/avatars/${user.value.avatar ? `${this.$route.params.userID}/${user.value.avatar}.webp`: `${(this.$route.params.userID >>> 22) % 5}.png`}`
   }
