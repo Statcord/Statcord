@@ -20,9 +20,10 @@ SET default_table_access_method = heap;
 CREATE TABLE public.owners (
     ownerid character varying NOT NULL,
     username character varying NOT NULL,
-    aboutme character varying NOT NULL,
+    aboutme character varying,
+    avatar character varying NOT NULL,
     website character varying,
-    public boolean NOT NULL DEFAULT true,
+    public boolean NOT NULL DEFAULT 'true'
 );
 
 ALTER TABLE public.owners OWNER TO disstat;
@@ -51,6 +52,7 @@ ALTER TABLE ONLY public.bots
 
 CREATE TABLE public.chartsettings (
     botid character varying,
+    type character varying,
     chartid character varying,
     enabled boolean DEFAULT true,
     name character varying,

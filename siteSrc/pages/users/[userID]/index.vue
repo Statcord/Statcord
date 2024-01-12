@@ -1,6 +1,6 @@
 <template>
   <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><i class="material-icons left">add</i>Add your bot</router-link>
-  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+this.$route.params.userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
+  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+$route.params.userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
 
   <div>
     <div class="row">
@@ -18,7 +18,7 @@
   </div>
 
   <h1>Bots</h1>
-  <botlist :botListRoute="'/api/user/'+this.$route.params.userID+'/bots/'"></botlist>
+  <botlist :botListRoute="'/api/user/'+$route.params.userID+'/bots/'"></botlist>
 </template>
 <script setup>
 useSeoMeta({
