@@ -28,6 +28,14 @@ export const schema = {
 	tags: [
 		"Internal"
 	],
+    parameters: [
+        {
+          name: 'userID',
+          in: 'path',
+          required: true,
+          content: { media: 'application/json' }
+        }
+    ],      
     responses: {
         400: {
             description: "Bad request"

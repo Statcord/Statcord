@@ -13,6 +13,8 @@ RUN apk update && \
 RUN npm install
 RUN npm i @materializecss/materialize@2.0.2-alpha
 
+RUN node genDocs.mjs 
+
 # env args
 ENV NODE_ENV production
 

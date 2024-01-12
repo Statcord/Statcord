@@ -14,6 +14,14 @@ export const schema = {
 	// querystring: {
 	// 	page: { type: "number", default: 0 }
 	// },
+	parameters: [
+		{
+		  name: 'userID',
+		  in: 'path',
+		  required: true,
+		  content: { media: 'application/json' }
+		}
+	],
 	"hidden": true,
 	"tags": [
 		"Internal"

@@ -8,7 +8,7 @@ export default defineNuxtConfig({
 
   runtimeConfig:{
     public: {
-      version: "1.0.0",
+      version: settings.version,
       botID: settings.discord.botID,
       domain: settings.domain
     },

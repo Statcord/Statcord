@@ -58,6 +58,14 @@ export const schema = {
 	tags: [
 		"Internal"
 	],
+    parameters: [
+		{
+			name: 'botID',
+			in: 'path',
+			required: true,
+			content: { media: 'application/json' }
+		}
+    ],
     responses: {
         401: {
 			description: "You do not have permission to access this bot"

@@ -1,7 +1,10 @@
 import { defineEventHandler } from "h3"
+if (import.meta.env) {
+    var {default: swaggerRoutes} = await import("~/swaggerRoutes.mjs")
+}
 
 export default defineEventHandler(async event => {
-	return event.context.openapiJSON
+	return swaggerRoutes
 })
 
 export const schema = {

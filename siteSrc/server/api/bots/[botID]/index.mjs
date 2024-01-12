@@ -22,6 +22,14 @@ export const schema = {
 	"tags": [
 		"Internal"
 	],
+	parameters: [
+		{
+		  name: 'botID',
+		  in: 'path',
+		  required: true,
+		  content: { media: 'application/json' }
+		}
+	],
 	responses: {
 		404: {
 			description: "Bot not found"

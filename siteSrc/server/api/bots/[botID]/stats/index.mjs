@@ -64,6 +64,12 @@ export default defineEventHandler(async event => {
 export const schema = {
 	parameters: [
 		{
+			name: 'botID',
+			in: 'path',
+			required: true,
+			content: { media: 'application/json' }
+		},
+		{
 			name: "start",
 			in: "query",
 			required: false,

@@ -11,6 +11,14 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
+	parameters: [
+		{
+		  name: 'userID',
+		  in: 'path',
+		  required: true,
+		  content: { media: 'application/json' }
+		}
+	],
 	// querystring: {
 	// 	page: { type: "number", default: 0 }
 	// },
