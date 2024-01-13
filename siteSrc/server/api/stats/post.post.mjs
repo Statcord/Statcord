@@ -72,9 +72,20 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	tags: [
+	"tags": [
 		"Bot Stats"
 	],
+    parameters: [
+		{
+			name: 'Authorisation',
+			in: 'header',
+			required: true,
+			content: { media: 'application/json' }
+		}
+    ],
+	"security": {
+		"Authorisation": [{}]
+	},
 	"requestBody": {
 		"description": "Post a bots stats. At least one optional field is required.",
 		"content": {

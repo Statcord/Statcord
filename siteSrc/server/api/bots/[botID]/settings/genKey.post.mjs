@@ -25,6 +25,14 @@ export const schema = {
 	// 		id: { type: "string" }
 	// 	}
 	// },
+	parameters: [
+		{
+			name: 'botID',
+			in: 'path',
+			required: true,
+			content: { media: 'application/json' }
+		}
+    ],
 	hidden: true,
 	tags: [
 		"Internal"
