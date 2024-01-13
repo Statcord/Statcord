@@ -40,6 +40,7 @@
 		</main>
 		<script>
 			async function load() {
+				document.getElementById("publicBots").innerHTML = ""
 				const bots = await getBots()
 				bots.forEach(bot => {
 					const botElement = document.createElement("bot-card")
