@@ -1,7 +1,79 @@
 <template>
     <div class="container">
         <form action="#">
-            <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
+            <div class="section" v-if="!currentSettingsPending">
+                <h6>Access control</h6>
+                <div class="row">
+                  <div class="col s12 m12">
+                    <label for="public">
+                      <input type="checkbox" ref="setting:public" name="public" :checked="currentSettings.mainSettings.public" :placeholder="currentSettings.mainSettings.public">
+                      <span>Public</span>
+                    </label>
+                  </div>
+
+                  <div class="col s12 m12">
+                    <label for="nsfw">
+                      <input type="checkbox" ref="setting:nsfw" name="nsfw" :checked="currentSettings.mainSettings.nsfw" :placeholder="currentSettings.mainSettings.nsfw">
+                      <span>NSFW</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col s12 m11">
+                    <label for="customurl">Custom URL</label>
+                    <input disabled type="url" :placeholder="host + '/bots/' + botid" ref="setting:customurl">
+                  </div>
+                  <div class="col s12 m1">
+                    <div class="waves-effect waves-light btn-large right disabled">Check</div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="section" v-if="!currentSettingsPending">
+                <h6>Bot Description</h6>
+                <div class="row">
+                    <div class="col s12 m12">
+                        <label for="shortDesc">Short description</label>
+                        <input type="text" ref="setting:shortDesc" :placeholder="currentSettings.mainSettings.shortdesc">
+                    </div>
+
+                    <div class="col s12 m12">
+                        <label for="longDesc">Long description (Markdown ONLY)</label>
+                        <textarea ref="setting:longDesc" :placeholder="currentSettings.mainSettings.longdesc"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="section" v-if="!currentSettingsPending">
+                <h6>Add additional links (optional)</h6>
+                <div class="row">
+                    <div class="col s12 m6">
+                        <label for="github">GitHub</label>
+                        <input disabled type="url" ref="github">
+                    </div>
+                    <div class="col s12 m6">
+                        <label for="website">Website</label>
+                        <input disabled type="url" ref="website">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12 m6">
+                        <label for="supportserver">Support server</label>
+                        <input disabled type="url" ref="supportserver">
+                    </div>
+                    <div class="col s12 m6">
+                        <label for="donations">Donation link</label>
+                        <input disabled type="url" ref="donations">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
                 <div class="section"></div>
                 <h5>{{catagory[0]}}</h5>
                 
@@ -11,10 +83,23 @@
                         <span>{{ setting[0] }}</span>
                     </label>
                 </div>
-            </div>
-           
+            </div> -->
+
+            <!-- <div>
+                <div class="section"></div>
+                <h5>Access</h5>
+                
+                <div v-for="(setting, settingIndex) in Object.entries(catagory[1])" :key="settingIndex">
+                    <label>
+                        <input :type="setting[1].type" :disabled="!setting[1].enabled" :checked="setting[1].state" :placeholder="setting[1].state" :ref="'setting:'+setting[1].id" :name="'name:'+setting[1].id"/>
+                        <span>{{ setting[0] }}</span>
+                    </label>
+                </div>
+            </div> -->
+
+            <div class="divider"></div>
             <div class="section">
-                <div class="waves-effect waves-light btn modal-trigger disabled" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
+                <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
                 <div class="waves-effect waves-light btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
                 <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
                 <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
@@ -28,8 +113,8 @@
         <div class="modal-content">
             <h4>Import/export</h4>
             <select ref="importExportSelector" @change="importExportChanged">
-                <option value="import">Import</option>
                 <option value="export">Export</option>
+                <option value="import" disabled>Import</option>
             </select>
             <label>Would you like to import or export</label>
            
@@ -44,7 +129,7 @@
                 <div v-else class="btn">Go</div>
             </div>
             <div v-else>
-                <div class="btn"><span>Download zip</span></div>
+                <div class="btn" @click="downloadData"><span>Download</span></div>
             </div>
         </div>
         <div class="modal-footer">
@@ -121,18 +206,22 @@ useHead({
 const inputTypeToValue = (input)=> {
     return {
         "checkbox": input.checked,
-        "text": input.value
+        "text": input.value,
+        "textarea": input.value
     }
 }
 
 export default {
     name: 'server',
     data() {
+        const config = useRuntimeConfig()
         return {
+            host: config.public.domain,
             botid: "",
             apiKey: undefined,
-            settings:{},
-            importExport: "import",
+            currentSettingsPending:true,
+            currentSettings:{},
+            importExport: "export",
             importExportMode:""
         }
     },
@@ -140,6 +229,11 @@ export default {
         if (!await this.$auth.canSeeBot(this.$route.params.id, true)) return await navigateTo(this.$route.fullPath.substring(0, this.$route.fullPath.lastIndexOf('/')))
 
         this.botid = this.$route.params.id
+
+        const {data: botSettingsJson, pending} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`)
+
+        this.currentSettingsPending = pending.value
+        this.currentSettings = botSettingsJson.value
 
         this.$M.FormSelect.init(this.$refs.importExportSelector)
         this.$M.FormSelect.init(this.$refs.importSourceSelector)
@@ -153,19 +247,6 @@ export default {
         this.$M.Modal.init(this.$refs.importModal1, {
             onOpenStart: ()=> this.$refs.importModal1.classList.remove("hide")
         })
-
-
-        const {data: botSettingsJson} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`)
-
-        
-        botSettingsJson.value.forEach(chart => {
-            if (this.settings[chart.catagory]) {
-                this.settings[chart.catagory][chart.name] = chart
-            } else {
-                this.settings[chart.catagory]={}
-                this.settings[chart.catagory][chart.name] = chart
-            }
-        })
     },
     methods: {
         importExportChanged(event){
@@ -174,10 +255,18 @@ export default {
         importSourceChange(event){
             this.importExportMode = event.target.value
         },
+        async downloadData(){
+            const {data} = await useFetch(`/api/bots/${this.$route.params.id}/stats/export`)
+
+            const a = document.createElement("a");
+            a.href = `data:text/plain;base64,${data.value}`;
+            a.download = `DisStat_data_export_bot_${this.$route.params.id}.json`;
+            a.click();
+            a.remove();
+        },
         async reGenKey() {
-            const {data} = await useFetch(() => `/api/bots/genKey`, {
-                method: 'post',
-                body: {id: this.botid}
+            const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey`, {
+                method: 'post'
             })
             if (data.value?.key) {
                 this.apiKey = data.value.key
@@ -188,9 +277,8 @@ export default {
         },
         async sync() {
             this.$M.toast({text: 'bot is syncing'})
-            const ajaxdata = await $fetch(`/api/bots/sync`, {
+            const ajaxdata = await $fetch(`/api/bots/${this.$route.params.id}/settings/sync`, {
                 method: 'post',
-                body: {id: this.botid}
             }).catch(console.error);
             if (ajaxdata) this.$M.toast({text: 'bot has synced'})
             else this.$M.toast({text: 'An error has occurred'})
@@ -205,9 +293,10 @@ export default {
             }
         },
         async save(a){
+            this.$M.toast({text: 'Saving'})
             const settings = {}
             Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).forEach(a=>{
-                settings[a.replace("setting:", "")] = inputTypeToValue(this.$refs[a][0])[this.$refs[a][0].type]
+                settings[a.replace("setting:", "")] = inputTypeToValue(this.$refs[a])[this.$refs[a].type]
             })
 
             const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {

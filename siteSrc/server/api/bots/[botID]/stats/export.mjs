@@ -4,53 +4,56 @@ import { flux, fluxDuration } from '@influxdata/influxdb-client'
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
 
-	if (!path.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${path.id}`.catch(() => {})
+	if (!path.botID) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	const bot = await event.context.pgPool`SELECT * FROM bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!bot[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	
 	const isOwner = !!event.context.session.accessToken && bot[0].ownerid === event.context.session.userInfo.id
-	if (!isOwner) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	if ((!bot[0].public && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	// console.time("first")
+	const start = 0
+	const stop = new Date().toISOString()
+
 	const mainStats = await fetchFromInflux({
 		measurement: "botStats",
 		start,
 		stop,
-		groupBy: query.groupBy,
-		botID: path.id
+		influxClient: event.context.influx.influxClient,
+		botID: path.botID
 	})
-	// console.timeEnd("first")
 
-	// console.time("second")
 	const commands = await fetchFromInflux({
 		measurement: "customCharts",
 		start,
 		stop,
-		groupBy: query.groupBy,
-		botID: path.id
+		influxClient: event.context.influx.influxClient,
+		botID: path.botID
 	})
-	// console.timeEnd("second")
 
-	// console.time("thrid")
 	const custom = await fetchFromInflux({
 		measurement: "topCommands",
 		start,
 		stop,
-		groupBy: query.groupBy,
-		botID: path.id
+		influxClient: event.context.influx.influxClient,
+		botID: path.botID
 	})
-	// console.timeEnd("thrid")
 
-	return {
-		botInfo,
-		botSettings,
+	const ownerInfo = await event.context.pgPool`SELECT * FROM owners WHERE ownerid = ${bot[0].ownerid}`.catch(() => {})
+	const chartSettings = await event.context.pgPool`SELECT * FROM chartsettings WHERE botid = ${path.botID}`.catch(() => {})
+
+	const outOBj = {
+		botInfo: bot[0],
+		ownerInfo: ownerInfo[0],
+		chartSettings: chartSettings,
+		// botSettings,
 		botStats:{
 			mainStats,
 			commands,
 			custom
 		}
 	}
+
+	return Buffer.from(JSON.stringify(outOBj)).toString('base64')
 })
 export const schema = {
 	// querystring: {
@@ -100,14 +103,14 @@ export const schema = {
 }
 
 const fetchFromInflux = async (options) => {
-	const queryApi = event.context.influx.influxClient.getQueryApi("disstat")
+	const queryApi = options.influxClient.getQueryApi("disstat")
 
 	const fluxQuery = flux`import "math"
-	from(bucket:"defaultBucket") 
-	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop})) 
+	from(bucket:"defaultBucket")
+	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop}))
 	|> filter(fn: (r) => r._measurement == ${options.measurement})
 	|> filter(fn: (r) => r["botid"] == ${options.botID})
-	|> aggregateWindow(every: ${fluxDuration(options.groupBy ?? "1d")}, fn: mean, createEmpty: false)
+	|> aggregateWindow(every: ${fluxDuration("1m")}, fn: mean, createEmpty: false)
     |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
 	|> yield(name: "mean")`
 	// this slows down requests by 9.92%

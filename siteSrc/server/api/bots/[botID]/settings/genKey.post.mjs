@@ -1,18 +1,19 @@
-import { defineEventHandler, createError, readBody, sendError } from "h3"
+import { defineEventHandler, createError, getRouterParams, sendError } from "h3"
 
 export default defineEventHandler(async event => {
 	if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	const botID = await readBody(event)
-	if (!botID.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+    const path = getRouterParams(event)
 
-	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${botID.id}`.catch(() => {})
+	if (!path.botID) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+
+	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const key = event.context.utils.genKey()
 
-	event.context.pgPool`UPDATE bots SET token = ${key} WHERE botid = ${botID.id}`.catch(() => {})
+	event.context.pgPool`UPDATE bots SET token = ${key} WHERE botid = ${path.botID}`.catch(() => {})
 
 	return {key}
 })

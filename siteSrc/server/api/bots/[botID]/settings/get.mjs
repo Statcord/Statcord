@@ -7,38 +7,47 @@ export default defineEventHandler(async event => {
 
     if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-    const botExisits = await event.context.pgPool`SELECT ownerid, public, nsfw from bots WHERE botid = ${path.botID}`.catch(() => {})
+    const botExisits = await event.context.pgPool`SELECT * from bots WHERE botid = ${path.botID}`.catch(() => {})
     if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
     if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.botID}`.catch(() => {})
 
-    const settings = [
-        {
-            state: botExisits[0].public,
-            type: "checkbox",
-            enabled: true,
-            catagory: "Access",
-            name: "Public",
-            id: "public"
-        },
-        {
-            state: botExisits[0].nsfw,
-            type: "checkbox",
-            enabled: true,
-            catagory: "Access",
-            name: "NSFW",
-            id: "nsfw"
-        },
-        {
-            state: `/bots/${path.botID}`,
-            type: "text",
-            enabled: false,
-            catagory: "Access",
-            name: "URL",
-            id: "customurl"
-        },
-    ]
+    // console.log(botExisits)
+
+    const mainSettings = {
+        "public": botExisits[0].public,
+        "nsfw": botExisits[0].nsfw,
+        "shortdesc": botExisits[0].shortdesc,
+        "longdesc": botExisits[0].longdesc
+    }
+
+    // const settings = [
+    //     {
+    //         state: botExisits[0].public,
+    //         type: "checkbox",
+    //         enabled: true,
+    //         catagory: "Access",
+    //         name: "Public",
+    //         id: "public"
+    //     },
+    //     {
+    //         state: botExisits[0].nsfw,
+    //         type: "checkbox",
+    //         enabled: true,
+    //         catagory: "Access",
+    //         name: "NSFW",
+    //         id: "nsfw"
+    //     },
+    //     {
+    //         state: `/bots/${path.botID}`,
+    //         type: "text",
+    //         enabled: false,
+    //         catagory: "Access",
+    //         name: "URL",
+    //         id: "customurl"
+    //     },
+    // ]
 
     // chartSettings.forEach(chart => {
     //     settings.push({
@@ -50,7 +59,7 @@ export default defineEventHandler(async event => {
     //     })
     // })
 
-    return settings
+    return {mainSettings}
 })
 
 export const schema = {

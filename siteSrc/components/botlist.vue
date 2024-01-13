@@ -4,19 +4,20 @@
             <div class="card">
                 <div class="card-image no-overflow">
                     <object
-                        :data="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.webp?size=256'"
+                        :data="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.png?size=512'"
                         type="image/png"
                         aria-label="aaa"
                         loading="lazy"
                         :class="bot.nsfw? 'blur':''"
                         :alt="bot.username+`'s profile picture`"
+                        style="max-width: 100%; border-radius: 12px 12px 0 0 ;"
                         >
-                        <img :src="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=256'" alt="Defualt Bot icon" class="circle guildimg" />
+                        <img :src="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" alt="Defualt Bot icon" style="border-radius: 12px 12px 0 0 " />
                     </object>
                 </div>
                 <div class="card-stacked">
                     <div class="card-content">
-                        <p>{{ bot.username }}</p>
+                        <p class="flow-text blue-text text-darken-2">{{ bot.username }}</p>
                     </div>
                 </div>
             </div>

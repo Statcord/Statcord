@@ -70,10 +70,12 @@ export default {
     components: {
         lineChart
     },
+    props: {
+        botJson: Object
+    },
     data() {
         return {
             botid: "",
-            addedOn: 0,
             datePickerMin: new Date(0).toISOString().substring(0, 10),
             datePickerMax: new Date().toISOString().substring(0, 10),
             stats: [],
@@ -91,10 +93,8 @@ export default {
 
         this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
         this.$M.FormSelect.init(this.$refs.groupBySelector)
-        const {data: botJson} = await useFetch(`/api/bots/${this.botid}`)
 
-        this.addedOn = botJson.value.addedon
-        this.datePickerMin = new Date(botJson.value.addedon).toISOString().substring(0, 10)
+        this.datePickerMin = new Date(this.$props.botJson.addedon).toISOString().substring(0, 10)
 
         this.getData()
     },

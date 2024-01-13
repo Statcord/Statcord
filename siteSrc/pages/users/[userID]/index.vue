@@ -1,6 +1,6 @@
 <template>
   <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><i class="material-icons left">add</i>Add your bot</router-link>
-  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+$route.params.userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
+  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
 
   <div>
     <div class="row">
@@ -12,13 +12,11 @@
 
     <div v-if="profileInfo.website">
       <safeLinkPopUp icon="link" name="Website" :url="profileInfo.website"></safeLinkPopUp>
-      <!-- <span class=""><i class="material-icons">link</i>Website</span>
-      <a :href="profileInfo.website" target="_blank" rel="noopener noreferrer"><i class="material-icons">link</i>Website</a> -->
     </div>
   </div>
 
   <h1>Bots</h1>
-  <botlist :botListRoute="'/api/user/'+$route.params.userID+'/bots/'"></botlist>
+  <botlist :botListRoute="'/api/user/'+userID+'/bots/'"></botlist>
 </template>
 <script setup>
 useSeoMeta({
@@ -61,7 +59,8 @@ export default {
     return {
       isProfileOwner: false,
       profileInfo: {},
-      userAvatar:""
+      userAvatar:"",
+      userID: this.$route.params.userID
     };
   },
   async mounted() {

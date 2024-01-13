@@ -18,12 +18,12 @@
                             class="circle"
                             :alt="bot.username+`'s profile picture`"
                         >
-                            <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=128'" alt="Defualt Bot icon" class="circle guildimg" />
+                            <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=128'" alt="Defualt Bot icon" class="circle" />
                         </object>
                     </div>
                     <div class="col s6 m12">
                         <h3>{{ bot.username }}</h3>
-                        <h5>Made by: <router-link :to="'/users/'+ ownerID">{{ bot.ownername }}</router-link></h5>
+                        <h5>Made by: <router-link :to="'/users/'+ ownerID" class="blue-text text-darken-2">{{ bot.ownername }}</router-link></h5>
                     </div>
                 </div>
                 
@@ -40,10 +40,10 @@
                     </ul>
                 </div>
                 <div id="overview" class="col s12 container">
-                    <botLongListing></botLongListing>
+                    <botLongListing v-if="Object.keys(botJson)[1]" :botJson="botJson"></botLongListing>
                 </div>
                 <div id="stats" class="col s12">
-                    <botStats></botStats>
+                    <botStats v-if="Object.keys(botJson)[1]" :botJson="botJson"></botStats>
                 </div>
             </div>
         </div>
@@ -97,6 +97,7 @@ export default {
             isOwner: false,
             botNSFW: true,
             ownerID: "",
+            botJson: {}
         }
     },
     async mounted() {
@@ -110,11 +111,11 @@ export default {
 
 
         const {data: botJson} = await useFetch(`/api/bots/${this.botid}`)
+        this.botJson = botJson.value
 
         this.botNSFW = botJson.value.nsfw
         this.public = botJson.value.public
         this.isOwner = botJson.value.isOwner
-        // this.addedOn = botJson.value.addedon
         this.ownerID = botJson.value.ownerid
     },
     methods:{

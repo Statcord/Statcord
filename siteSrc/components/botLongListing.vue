@@ -1,13 +1,13 @@
 <template>
    <div>
         <h5>shortDesc</h5>
-        <h6>{{ botJson.shortdesc }}</h6>
+        <h6 class="flow-text">{{ botJson.shortdesc }}</h6>
    </div>
 
 
    <div>
         <h5>longdesc</h5>
-        <div v-if="longdescRendered !== ''" v-html="longdescRendered"></div>
+        <div v-if="longdescRendered !== ''" v-html="longdescRendered" class="flow-text" ></div>
         <!-- <h6>{{ botJson.longdesc }}</h6> -->
    </div>
 
@@ -25,20 +25,19 @@ export default {
     components: {
         openLink
     },
+    props: {
+        botJson: Object
+    },
     data() {
         return {
             botid: "",
-            botJson:{},
             longdescRendered: ""
         }
     },
     async mounted() {
         this.botid = this.$route.params.id
-
-        const {data: botJson} = await useFetch(`/api/bots/${this.botid}`)
-        this.botJson=botJson.value
         
-        if (botJson.value.longdesc) this.longdescRendered = this.$md.render(botJson.value.longdesc)
+        if (this.$props.botJson.longdesc) this.longdescRendered = this.$md.render(this.$props.botJson.longdesc)
     },
 }
 </script>

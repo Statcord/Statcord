@@ -44,6 +44,8 @@ export default {
   },
   methods: {
     async confirmedDelete() {
+      const { remove } = await useSession()
+
       const { error } = await useFetch(() => `/api/oauth/user/delete`, {
         method: 'delete',
       })
@@ -71,8 +73,10 @@ export default {
   },
   async mounted() {
     const oauthUrl = this.$genOauthUrl(this.$route.fullPath)
-    if (!this.$auth.isLoggedIn()) await navigateTo(oauthUrl, {external: true});
-    if (this.$auth.getUser().id !== this.$route.params.userID) await navigateTo(oauthUrl, {external: true});
+    const oauthUser = this.$auth.getUser()
+
+    if (!oauthUser) return await navigateTo(oauthUrl, {external: true});
+    if (oauthUser.id !== this.$route.params.userID) return await navigateTo(oauthUrl, {external: true});
 
     const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
     this.profileInfo = user.value
