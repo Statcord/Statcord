@@ -36,7 +36,8 @@ export default {
     data() {
         return {
             bots: [],
-            page: 0
+            page: 0,
+            lastPageWithData: false
         }
     },
     props: {
@@ -45,15 +46,20 @@ export default {
     mounted() {
         this.load()
     },
+    unmounted(){
+        window.onscroll = null
+    },
     methods: {
         async load() {
             const fetchData = await useFetch(() => `${this.$props.botListRoute}?page=${this.page}`)
+            if (fetchData.data._rawValue.length === 0) return this.lastPageWithData = true
             this.bots = this.bots.concat(fetchData.data._rawValue)
             if (this.page === 0) this.loadNext()
         },
         loadNext() {
             window.onscroll = () => {
-                if (document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight) {
+                // if (!this.lastPageWithData)
+                if (!this.lastPageWithData && document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight) {
                     this.page++
                     this.load()
                 }

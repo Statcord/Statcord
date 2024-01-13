@@ -1,51 +1,57 @@
 <template>
     <div class="px-6">
-        <div v-if="botNSFW">
-            <h3 class="center-align">this bot has been marked NSFW
-                <br>
-                <div class="btn" @click="dismissNSFW">I understand</div>
-            </h3>
-        </div>
-        <div class="row" :class="botNSFW ? 'blur':''">
-            <div class="col s12 m2 container">
-                <div class="row">
-                    <div class="col s6 m12">
-                        <object
-                            :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'"
-                            type="image/png"
-                            aria-label="aaa"
-                            loading="lazy"
-                            class="circle"
-                            :alt="bot.username+`'s profile picture`"
-                        >
-                            <img :src="'https://cdn.discordapp.com/embed/avatars/'+(botid >>> 22) % 5+'.png?size=128'" alt="Defualt Bot icon" class="circle" />
-                        </object>
+        <div v-if="botJsonLoaded">
+            <div v-if="botNSFW">
+                <h3 class="center-align">this bot has been marked NSFW
+                    <br>
+                    <div class="btn" @click="dismissNSFW">I understand</div>
+                </h3>
+            </div>
+            <div class="row" :class="botNSFW ? 'blur' : ''">
+                <div class="col s12 m2 container">
+                    <div class="row">
+                        <div class="col s6 m12">
+                            <object
+                                :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'"
+                                type="image/png"
+                                aria-label="aaa"
+                                loading="lazy"
+                                class="circle"
+                                :alt="bot.username + `'s profile picture`"
+                            >
+                                <img :src="'https://cdn.discordapp.com/embed/avatars/' + (botid >>> 22) % 5 + '.png?size=128'" alt="Defualt Bot icon" class="circle" />
+                            </object>
+                        </div>
+                        <div class="col s6 m12">
+                            <h3>{{ bot.username }}</h3>
+                            <h5>Made by: <router-link :to="'/users/' + ownerID" class="blue-text text-darken-2">{{ bot.ownername }}</router-link></h5>
+                        </div>
                     </div>
-                    <div class="col s6 m12">
-                        <h3>{{ bot.username }}</h3>
-                        <h5>Made by: <router-link :to="'/users/'+ ownerID" class="blue-text text-darken-2">{{ bot.ownername }}</router-link></h5>
-                    </div>
-                </div>
                 
-                <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
+                    <router-link v-if="isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn">Manage bot <i class="material-icons left">build</i></router-link>
+                </div>
+            </div>
+    
+            <div :class="botNSFW ? 'blur' : ''">
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs" ref="tabs">
+                            <li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
+                            <li class="tab col s3"><a href="#stats">Stats</a></li>
+                        </ul>
+                    </div>
+                    <div id="overview" class="col s12 container">
+                        <botLongListing v-if="Object.keys(botJson)[1]" :botJson="botJson"></botLongListing>
+                    </div>
+                    <div id="stats" class="col s12">
+                        <botStats v-if="Object.keys(botJson)[1]" :botJson="botJson"></botStats>
+                    </div>
+                </div>
             </div>
         </div>
-    
-        <div :class="botNSFW ? 'blur':''">
-            <div class="row">
-                <div class="col s12">
-                    <ul class="tabs" ref="tabs">
-                        <li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
-                        <li class="tab col s3"><a href="#stats">Stats</a></li>
-                    </ul>
-                </div>
-                <div id="overview" class="col s12 container">
-                    <botLongListing v-if="Object.keys(botJson)[1]" :botJson="botJson"></botLongListing>
-                </div>
-                <div id="stats" class="col s12">
-                    <botStats v-if="Object.keys(botJson)[1]" :botJson="botJson"></botStats>
-                </div>
-            </div>
+
+        <div v-else>
+            <spinner></spinner>
         </div>
     </div>
 </template>
@@ -83,12 +89,14 @@
 <script>
 import botStats from '~/components/botStats.vue';
 import botLongListing from '~/components/botLongListing.vue';
+import spinner from '~/components/spinner.vue';
 
 export default {
     name: 'bot',
     components: {
         botStats,
-        botLongListing
+        botLongListing,
+        spinner
     },
     data() {
         return {
@@ -97,30 +105,34 @@ export default {
             isOwner: false,
             botNSFW: true,
             ownerID: "",
-            botJson: {}
+            botJson: {},
+            botJsonLoaded: false
         }
     },
     async mounted() {
-        this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
-        this.$M.FormSelect.init(this.$refs.groupBySelector)
-        this.$M.Tabs.init(this.$refs.tabs, {
-            // onShow: (a)=>{
-            //     // console.log(a)
-            // }
-        });
-
-
         const {data: botJson} = await useFetch(`/api/bots/${this.botid}`)
+        this.botJsonLoaded = true
         this.botJson = botJson.value
 
         this.botNSFW = botJson.value.nsfw
         this.public = botJson.value.public
         this.isOwner = botJson.value.isOwner
         this.ownerID = botJson.value.ownerid
+
+        await this.sleep(100);
+
+        this.$M.Tabs.init(this.$refs.tabs, {
+            onShow: (a)=>{
+                // console.log(a)
+            }
+        });
     },
     methods:{
         dismissNSFW(){
             this.botNSFW = false
+        },
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
         }
     }
 }
