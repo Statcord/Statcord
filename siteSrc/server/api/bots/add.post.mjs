@@ -18,6 +18,31 @@ export default defineEventHandler(async event => {
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.botid}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
 	})
 
+	const botLinks = [
+		{
+			name: "github",
+			url: body.github,
+			icon: "link"
+		},
+		{
+			name: "website",
+			url: body.website,
+			icon: "link"
+		},
+		{
+			name: "supportserver",
+			url: body.supportserver,
+			icon: "link"
+		},
+		{
+			name: "donations",
+			url: body.donations,
+			icon: "link"
+		}
+	].map(async link => {
+		event.context.pgPool`INSERT INTO botlinks(botid, name, url, icon) VALUES (${body.botid}, ${link.name}, ${link.url}, ${link.icon})`.catch(() => {})
+	})
+
 	sendNoContent(event, 200)
 })
 

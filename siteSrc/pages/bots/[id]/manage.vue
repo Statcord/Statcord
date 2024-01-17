@@ -52,22 +52,22 @@
                 <div class="row">
                     <div class="col s12 m6">
                         <label for="github">GitHub</label>
-                        <input disabled type="url" ref="github">
+                        <input type="url" :placeholder="currentSettings.links.github" ref="setting:github">
                     </div>
                     <div class="col s12 m6">
                         <label for="website">Website</label>
-                        <input disabled type="url" ref="website">
+                        <input type="url" :placeholder="currentSettings.links.website" ref="setting:website">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col s12 m6">
                         <label for="supportserver">Support server</label>
-                        <input disabled type="url" ref="supportserver">
+                        <input type="url" :placeholder="currentSettings.links.supportserver" ref="setting:supportserver">
                     </div>
                     <div class="col s12 m6">
                         <label for="donations">Donation link</label>
-                        <input disabled type="url" ref="donations">
+                        <input type="url" :placeholder="currentSettings.links.donations" ref="setting:donations">
                     </div>
                 </div>
             </div>
@@ -207,7 +207,8 @@ const inputTypeToValue = (input)=> {
     return {
         "checkbox": input.checked,
         "text": input.value,
-        "textarea": input.value
+        "textarea": input.value,
+        "url": input.value
     }
 }
 
@@ -292,12 +293,11 @@ export default {
                 await navigateTo(`/users/${this.$auth.getUser().id}`)
             }
         },
-        async save(a){
+        async save(){
             this.$M.toast({text: 'Saving'})
-            const settings = {}
-            Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).forEach(a=>{
-                settings[a.replace("setting:", "")] = inputTypeToValue(this.$refs[a])[this.$refs[a].type]
-            })
+            const settings = Object.assign({}, ...Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).map(a=>{
+                return {[a.replace("setting:", "")]: inputTypeToValue(this.$refs[a])[this.$refs[a].type]}
+            }))
 
             const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {
                 method: 'post',

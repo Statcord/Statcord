@@ -72,22 +72,22 @@
         <div class="row">
           <div class="col s12 m6">
             <label for="github">GitHub</label>
-            <input disabled type="url" ref="github">
+            <input type="url" ref="github">
           </div>
           <div class="col s12 m6">
             <label for="website">Website</label>
-            <input disabled type="url" ref="website">
+            <input type="url" ref="website">
           </div>
         </div>
 
         <div class="row">
           <div class="col s12 m6">
             <label for="supportserver">Support server</label>
-            <input disabled type="url" ref="supportserver">
+            <input type="url" ref="supportserver">
           </div>
           <div class="col s12 m6">
             <label for="donations">Donation link</label>
-            <input disabled type="url" ref="donations">
+            <input type="url" ref="donations">
           </div>
         </div>
       </div>

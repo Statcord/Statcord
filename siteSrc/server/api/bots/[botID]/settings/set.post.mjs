@@ -4,7 +4,12 @@ const requiredBodyKeys = [
     "public",
     "nsfw",
     "longDesc",
-    "shortDesc"
+    "shortDesc",
+    "customurl",
+    "github",
+    "website",
+    "supportserver",
+    "donations"
 ]
 
 export default defineEventHandler(async event => {
@@ -27,8 +32,37 @@ export default defineEventHandler(async event => {
         longdesc: body.longDesc === "" ? botExisits[0].longdesc : body.longDesc,
         shortdesc: body.shortDesc === "" ? botExisits[0].shortdesc : body.shortDesc
     }
-
     event.context.pgPool`UPDATE bots SET public = ${saveObject.public}, nsfw = ${saveObject.nsfw}, longdesc = ${saveObject.longdesc}, shortdesc = ${saveObject.shortdesc} WHERE botid = ${path.botID}`.catch(() => {})
+
+    const botDBLinks = await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})
+    const botLinks = [
+		{
+			name: "github",
+			url: body.github === "" ? botDBLinks.find(link=>link.name==="github").url: body.github,
+			icon: "link"
+		},
+		{
+			name: "website",
+			url: body.website === "" ? botDBLinks.find(link=>link.name==="website").url : body.website,
+			icon: "link"
+		},
+		{
+			name: "supportserver",
+			url: body.supportserver === "" ? botDBLinks.find(link=>link.name==="supportserver").url : body.supportserver,
+			icon: "link"
+		},
+		{
+			name: "donations",
+			url: body.donations === "" ? botDBLinks.find(link=>link.name==="donations").url : body.donations,
+			icon: "link"
+		}
+	]
+    // console.log(botLinks)
+    .map(async link => {
+		event.context.pgPool`UPDATE botlinks SET url = ${link.url}, icon = ${link.icon} WHERE botid = ${path.botID} AND name = ${link.name}`.catch((e) => {
+            console.log(e)
+        })
+	})
 })
 
 export const schema = {

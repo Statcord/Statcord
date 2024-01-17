@@ -62,3 +62,13 @@ CREATE TABLE public.chartsettings (
 
 ALTER TABLE IF EXISTS public.chartsettings
     OWNER to disstat;
+
+CREATE TABLE public.botlinks (
+    botid character varying,
+    name character varying,
+    url character varying,
+    icon character varying
+);
+
+ALTER TABLE IF EXISTS public.botlinks
+    OWNER to disstat;

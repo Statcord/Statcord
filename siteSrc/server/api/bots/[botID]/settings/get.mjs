@@ -11,10 +11,6 @@ export default defineEventHandler(async event => {
     if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
     if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-    const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.botID}`.catch(() => {})
-
-    // console.log(botExisits)
-
     const mainSettings = {
         "public": botExisits[0].public,
         "nsfw": botExisits[0].nsfw,
@@ -22,33 +18,9 @@ export default defineEventHandler(async event => {
         "longdesc": botExisits[0].longdesc
     }
 
-    // const settings = [
-    //     {
-    //         state: botExisits[0].public,
-    //         type: "checkbox",
-    //         enabled: true,
-    //         catagory: "Access",
-    //         name: "Public",
-    //         id: "public"
-    //     },
-    //     {
-    //         state: botExisits[0].nsfw,
-    //         type: "checkbox",
-    //         enabled: true,
-    //         catagory: "Access",
-    //         name: "NSFW",
-    //         id: "nsfw"
-    //     },
-    //     {
-    //         state: `/bots/${path.botID}`,
-    //         type: "text",
-    //         enabled: false,
-    //         catagory: "Access",
-    //         name: "URL",
-    //         id: "customurl"
-    //     },
-    // ]
+    const links = Object.assign({}, ...(await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})).map(l=>{return {[l.name]: l.url}}))
 
+    // const chartSettings = await event.context.pgPool`SELECT * from chartsettings WHERE botid = ${path.botID}`.catch(() => {})
     // chartSettings.forEach(chart => {
     //     settings.push({
     //         state: chart.enabled,
@@ -59,7 +31,7 @@ export default defineEventHandler(async event => {
     //     })
     // })
 
-    return {mainSettings}
+    return {mainSettings, links}
 })
 
 export const schema = {
