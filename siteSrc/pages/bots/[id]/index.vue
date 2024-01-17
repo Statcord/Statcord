@@ -38,9 +38,11 @@
                         <ul class="tabs" ref="tabs">
                             <li class="tab col s3"><a class="active" href="#overview">Overview</a></li>
                             <li class="tab col s3"><a href="#stats">Stats</a></li>
+                            <li class="tab col s3 disabled"><a href="#reviews">Reviews</a></li>
+                            <li class="tab col s3 disabled"><a href="#updates">Updates</a></li>
                         </ul>
                     </div>
-                    <div id="overview" class="col s12 container">
+                    <div id="overview" class="col s12">
                         <botLongListing v-if="Object.keys(botJson)[1]" :botJson="botJson"></botLongListing>
                     </div>
                     <div id="stats" class="col s12">

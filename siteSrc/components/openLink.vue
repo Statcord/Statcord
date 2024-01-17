@@ -1,7 +1,6 @@
 <template>
     <div v-if="url">
         <span class="flow-text modal-trigger blue-text text-darken-2 myLink" data-target="linkModal1"><i class="material-icons">{{icon}}</i> {{name}}</span>
-
         <div id="linkModal1" ref="linkModal1" class="modal hide">
             <div class="modal-content">
                 <h4>Leaving DisStat</h4>

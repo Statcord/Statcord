@@ -3,7 +3,11 @@ import settings from "./config/settings.mjs"
 
 export default defineNuxtConfig({
   devtools: {
-    enabled: true
+    enabled: true,
+
+    timeline: {
+      enabled: true
+    }
   },
 
   runtimeConfig:{

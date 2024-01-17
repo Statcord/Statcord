@@ -14,7 +14,9 @@ export default defineEventHandler(async event => {
 
 	if ((!isPublic && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	return {...bot[0], isOwner}
+	const links = await event.context.pgPool`SELECT icon, name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})
+
+	return {...bot[0], isOwner, links}
 })
 
 export const schema = {

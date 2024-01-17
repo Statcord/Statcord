@@ -72,6 +72,22 @@
                 </div>
             </div>
 
+            <div class="divider"></div>
+            <div class="section" v-if="!currentSettingsPending">
+                <h6>Defualt charts</h6>
+                <div class="row">
+                    <div v-for="chart in currentSettings.defaultChartSettings" class="col s4 m3">
+                        <div>
+                            <h6>{{ chart.name }}</h6>
+                        </div>
+                        <label :for="chart.chartid+':enabled'">
+                            <input type="checkbox" :ref="'--setting:'+chart.chartid+':enabled'" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" disabled>
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
                 <div class="section"></div>

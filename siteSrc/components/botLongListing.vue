@@ -1,20 +1,19 @@
 <template>
-   <div>
-        <h5>shortDesc</h5>
+    <div class="container">
         <h6 class="flow-text">{{ botJson.shortdesc }}</h6>
-   </div>
+        <div class="divider"></div>
 
-
-   <div>
-        <h5>longdesc</h5>
-        <div v-if="longdescRendered !== ''" v-html="longdescRendered" class="flow-text" ></div>
-        <!-- <h6>{{ botJson.longdesc }}</h6> -->
-   </div>
-
-   <div>
-        <h5>links</h5>
-        <openLink icon="add" name="Invite" :url="botJson.invite" ></openLink>
-   </div>
+        <div>
+            <div v-if="longdescRendered !== ''" v-html="longdescRendered" class="flow-text" ></div>
+        </div>
+        
+        <div class="divider"></div>
+        <div>
+            <h5>links</h5>
+            <openLink icon="add" name="Invite" :url="botJson.invite" ></openLink>
+            <openLink v-for="link in botJson.links" :icon="link.icon" :name="link.name" :url="link.url"></openLink>
+        </div>
+    </div>
 </template>
 
 <script>
