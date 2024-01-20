@@ -23,14 +23,14 @@
         <h6>Access control</h6>
         <div class="row">
           <div class="col s12 m12">
-            <label for="public">
+            <label>
               <input type="checkbox" checked placeholder="true" ref="public">
               <span>Public</span>
             </label>
           </div>
 
           <div class="col s12 m12">
-            <label for="nsfw">
+            <label>
               <input type="checkbox" ref="nsfw">
               <span>NSFW</span>
             </label>

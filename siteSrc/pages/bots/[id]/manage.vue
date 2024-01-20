@@ -5,14 +5,14 @@
                 <h6>Access control</h6>
                 <div class="row">
                   <div class="col s12 m12">
-                    <label for="public">
+                    <label>
                       <input type="checkbox" ref="setting:public" name="public" :checked="currentSettings.mainSettings.public" :placeholder="currentSettings.mainSettings.public">
                       <span>Public</span>
                     </label>
                   </div>
 
                   <div class="col s12 m12">
-                    <label for="nsfw">
+                    <label>
                       <input type="checkbox" ref="setting:nsfw" name="nsfw" :checked="currentSettings.mainSettings.nsfw" :placeholder="currentSettings.mainSettings.nsfw">
                       <span>NSFW</span>
                     </label>
@@ -80,7 +80,7 @@
                         <div>
                             <h6>{{ chart.name }}</h6>
                         </div>
-                        <label :for="chart.chartid+':enabled'">
+                        <label>
                             <input type="checkbox" :ref="'setting:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
                             <span>Enabled</span>
                         </label>
