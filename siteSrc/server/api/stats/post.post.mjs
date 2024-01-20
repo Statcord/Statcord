@@ -23,6 +23,7 @@ export default defineEventHandler(async event => {
     const statsPostBodyKeys = Object.keys(body)
     const hasMainStats = mainStatsKeys.some(key=>statsPostBodyKeys.includes(key))
     if (!hasMainStats && !body.customCharts && !body.topCommands) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	if (statsPostBodyKeys.filter(k=>k.toLowerCase().includes("ram")).length === 1) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
 	const writeClient = event.context.influx.influxClient.getWriteApi("disstat", "defaultBucket")
 
@@ -97,7 +98,7 @@ export const schema = {
 		"Authorisation": [{}]
 	},
 	"requestBody": {
-		"description": "Post a bots stats. At least one optional field is required.",
+		"description": "Post a bots stats. At least one optional field is required. Both totalRam and ramUsage are REQUIRED if posting your ram usage.",
 		"content": {
 			"application/json": {
 				"schema": {
