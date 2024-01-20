@@ -9,7 +9,14 @@ const requiredBodyKeys = [
     "github",
     "website",
     "supportserver",
-    "donations"
+    "donations",
+    "totalRam",
+    "cpuUsage",
+    "ramUsage",
+    "guildCount",
+    "shardCount",
+    "userCount",
+    "members"
 ]
 
 export default defineEventHandler(async event => {
@@ -56,13 +63,16 @@ export default defineEventHandler(async event => {
 			url: body.donations === "" ? botDBLinks.find(link=>link.name==="donations").url : body.donations,
 			icon: "link"
 		}
-	]
-    // console.log(botLinks)
-    .map(async link => {
-		event.context.pgPool`UPDATE botlinks SET url = ${link.url}, icon = ${link.icon} WHERE botid = ${path.botID} AND name = ${link.name}`.catch((e) => {
-            console.log(e)
-        })
+	].map(async link => {
+		event.context.pgPool`UPDATE botlinks SET url = ${link.url}, icon = ${link.icon} WHERE botid = ${path.botID} AND name = ${link.name}`.catch(() => {})
 	})
+
+    const owner = await event.context.pgPool`SELECT plevel FROM owners WHERE ownerid = ${botExisits[0].ownerid}`.catch(() => {})
+    if (owner[0].plevel > 0){
+        ["totalRam", "cpuUsage", "ramUsage", "guildCount", "shardCount", "userCount", "members"].forEach(item=>{
+            event.context.pgPool`UPDATE chartsettings SET enabled = ${body[item]} WHERE botid = ${path.botID} AND chartid = ${item}`.catch(() => {})
+        })
+    }
 })
 
 export const schema = {

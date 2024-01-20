@@ -23,7 +23,8 @@ CREATE TABLE public.owners (
     aboutme character varying,
     avatar character varying NOT NULL,
     website character varying,
-    public boolean NOT NULL DEFAULT 'true'
+    public boolean NOT NULL DEFAULT 'true',
+    plevel numeric NOT NULL DEFAULT 0
 );
 ALTER TABLE public.owners OWNER TO disstat;
 ALTER TABLE ONLY public.owners

@@ -81,7 +81,7 @@
                             <h6>{{ chart.name }}</h6>
                         </div>
                         <label :for="chart.chartid+':enabled'">
-                            <input type="checkbox" :ref="'--setting:'+chart.chartid+':enabled'" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" disabled>
+                            <input type="checkbox" :ref="'setting:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
                             <span>Enabled</span>
                         </label>
                     </div>
@@ -239,11 +239,16 @@ export default {
             currentSettingsPending:true,
             currentSettings:{},
             importExport: "export",
-            importExportMode:""
+            importExportMode:"",
+            plevel: 0
         }
     },
     async mounted() {
         if (!await this.$auth.canSeeBot(this.$route.params.id, true)) return await navigateTo(this.$route.fullPath.substring(0, this.$route.fullPath.lastIndexOf('/')))
+        const { data: plevel } = await useFetch(`/api/user/${this.$auth.getUser().id}`, {
+            pick: ['plevel']
+        })
+        this.plevel=plevel.value
 
         this.botid = this.$route.params.id
 
@@ -312,7 +317,8 @@ export default {
         async save(){
             this.$M.toast({text: 'Saving'})
             const settings = Object.assign({}, ...Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).map(a=>{
-                return {[a.replace("setting:", "")]: inputTypeToValue(this.$refs[a])[this.$refs[a].type]}
+                const thisRef = Array.isArray(this.$refs[a]) ? this.$refs[a][0] : this.$refs[a]
+                return {[a.replace("setting:", "")]: inputTypeToValue(thisRef)[thisRef.type]}
             }))
 
             const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {
