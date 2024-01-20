@@ -14,9 +14,11 @@ const mainStatsKeys = Object.keys(mainStats)
 
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
-	if (!body.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	const path = getRouterParams(event)
 
-	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
+	if (!path.botID) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+
+	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (getHeader(event, "authorization") !== botExisits[0].token) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
@@ -33,17 +35,17 @@ export default defineEventHandler(async event => {
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 		}
 		
-		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${body.id} AND custom = true`.catch(() => {})
+		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND custom = true`.catch(() => {})
 		if ([...existingCustomCharts, ...body.customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) {
 			writeClient.flush()
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 		}
 		
 		body.customCharts.map(customChart => {
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 
 			const customChartsPoint = new Point("customCharts")
-				.tag("botid",  body.id)
+				.tag("botid",  path.botID)
 				.tag("customChartID",  customChart.id)
 
 			Object.keys(customChart.data).forEach(key => {
@@ -58,7 +60,7 @@ export default defineEventHandler(async event => {
 
     if (hasMainStats){
         const mainStatsPoint = new Point("botStats")
-        .tag("botid",  body.id)
+        .tag("botid",  path.botID)
 
         mainStatsKeys.forEach(key=>{
             if (statsPostBodyKeys.includes(key)) mainStatsPoint[mainStats[key]](key, body[key])
@@ -68,7 +70,7 @@ export default defineEventHandler(async event => {
 
 	if (body.topCommands) {
 		const topCommandsPoint = new Point("topCommands")
-			.tag("botid",  body.id)
+			.tag("botid",  path.botID)
 
 		body.topCommands.map(item => {
 			topCommandsPoint.intField(item.name, item.count)
@@ -83,7 +85,6 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	deprecated: true,
 	"tags": [
 		"Bot Stats"
 	],
@@ -99,18 +100,12 @@ export const schema = {
 		"Authorisation": [{}]
 	},
 	"requestBody": {
-		"description": "Post a bots stats. At least one optional field is required. Both totalRam and ramUsage are REQUIRED if posting your ram usage.",
+		"description": "Post a bots stats. At least one field is required. Both totalRam and ramUsage are REQUIRED if posting your ram usage.",
 		"content": {
 			"application/json": {
 				"schema": {
 					"type": "object",
 					"properties": {
-						"id":  {
-							type: "string",
-							example: "961433265879801936",
-							"description": "The bot's ID",
-							required: true
-						},
 						"guildCount": {
 							type: "integer",
 							"format": "int32",

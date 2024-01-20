@@ -64,7 +64,7 @@ export default defineEventHandler(async event => {
 
 	// console.time("thrid")
 	const custom = await runInfluxQuery.runQuery("customCharts")
-	console.log(custom)
+	// console.log(custom)
 	// console.timeEnd("thrid")
 
 	// [
@@ -127,6 +127,7 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
+	hidden: true,
 	parameters: [
 		{
 			name: 'botID',
