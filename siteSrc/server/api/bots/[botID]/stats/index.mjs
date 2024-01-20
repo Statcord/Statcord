@@ -16,46 +16,113 @@ export default defineEventHandler(async event => {
 	const start = new Date(Number(query.start ?? 0)).toISOString()
 	const stop = query.end ? new Date(Number(query.end)).toISOString() : new Date().toISOString()
 
+	const types = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID} AND custom = false`.catch(() => {})
+
+	const runInfluxQuery = new influxRun(
+		{
+			event,
+			start,
+			stop,
+			groupBy: query.groupBy ?? "1d",
+			botID: path.botID
+		}
+	)
+
 	// console.time("first")
-	const mainStats = await fetchFromInflux({
-		event,
-		measurement: "botStats",
-		start,
-		stop,
-		groupBy: query.groupBy ?? "1d",
-		botID: path.botID
-	})
+	const mainStatsInflux = await runInfluxQuery.runQuery("botStats")
+	const labels = [...new Set(mainStatsInflux.map(({_time})=>_time))]
+	const mainStats = types.map(type => {
+		if (!type.enabled) return;
+
+		return {
+			name: type.name,
+			type: type.type,
+			data: {
+				datasets: [
+					{
+						label: type.label,
+						data:  mainStatsInflux.filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
+					}
+				]
+			}
+		}		
+	}).filter(a=>typeof a !== "undefined")
+
+
+	const memusage = mainStats.findIndex(a=>a.name==="Ram Usage")
+	const totalMEM = mainStats.findIndex(a=>a.name==="Total Ram")
+	mainStats[totalMEM].data.datasets[0].label="Total Ram"
+	mainStats[memusage].data.datasets.push(mainStats[totalMEM].data.datasets[0])
+	delete mainStats[totalMEM]
+	const filterdMainStats = mainStats.filter(a=>typeof a !== "undefined")
 	// console.timeEnd("first")
 
 	// console.time("second")
-	const commands = await fetchFromInflux({
-		event,
-		measurement: "customCharts",
-		start,
-		stop,
-		groupBy: query.groupBy ?? "1d",
-		botID: path.botID
-	})
+	// const commands = await runInfluxQuery.runQuery("topCommands")
+	// console.log(commands)
 	// console.timeEnd("second")
 
 	// console.time("thrid")
-	const custom = await fetchFromInflux({
-		event,
-		measurement: "topCommands",
-		start,
-		stop,
-		groupBy: query.groupBy ?? "1d",
-		botID: path.botID
-	})
+	const custom = await runInfluxQuery.runQuery("customCharts")
+	console.log(custom)
 	// console.timeEnd("thrid")
 
-	const types = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID}`.catch(() => {})
+	// [
+	// 	{
+	// 		id: timeStamp,
+	// 		name: "Command usage over time",
+	// 		type: "line",
+	// 		data: {
+	// 			labels: chartData.flatMap(i => this.formatDate(i.time)),
+	// 			datasets: [
+	// 				{
+	// 					label: "This week",
+	// 					data: chartData.flatMap(i => {
+	// 						delete i.time;
+	// 						return Object.values(i).reduce((a,b) => a + b, 0)
+	// 					})
+	// 				}
+	// 			]
+	// 		}
+	// 	},
+	// 	{
+	// 		id: timeStamp,
+	// 		name: "Top commands",
+	// 		type: "pie",
+	// 		data: {
+	// 			labels: Object.keys(holder),
+	// 			datasets: [
+	// 				{
+	// 					data: Object.values(holder)
+	// 				}
+	// 			]
+	// 		}
+	// 	}
+	// ]
+
+	const cards = [
+		{
+			name: "Guilds",
+			value: getLastStat(mainStatsInflux, "guildCount")
+		},
+		{
+			name: "Members",
+			value: getLastStat(mainStatsInflux, "members")
+		},
+		{
+			name: "Users",
+			value: getLastStat(mainStatsInflux, "userCount")
+		}
+	]
 
 	return {
-		mainStats,
-		commands,
-		custom,
-		types
+		mainStats: {
+			stats: filterdMainStats,
+			labels
+		},
+		cards
+		// commands,
+		// custom,
 	}
 })
 
@@ -210,31 +277,38 @@ export const schema = {
 	}
 }
 
-const fetchFromInflux = async (options) => {
-	const queryApi = options.event.context.influx.influxClient.getQueryApi("disstat")
-
-	const fluxQuery = flux`import "math"
-	from(bucket:"defaultBucket")
-	|> range(start: time(v: ${options.start}), stop: time(v: ${options.stop}))
-	|> filter(fn: (r) => r._measurement == ${options.measurement})
-	|> filter(fn: (r) => r["botid"] == ${options.botID})
-	|> aggregateWindow(every: ${fluxDuration(options.groupBy ?? "1d")}, fn: mean, createEmpty: false)
-    |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
-	|> yield(name: "mean")`
-	// this slows down requests by 9.92%
-	// |> group(columns: ["_time", "_field"])
-
-	let outData = [];
-	for await (const { values, tableMeta } of queryApi.iterateRows(fluxQuery)) {
-		const tableObject = tableMeta.toObject(values)
-
-		const timeIndex = outData.findIndex(element => element.time === tableObject._time)
-		if (timeIndex === -1) outData.push({
-			time: tableObject._time,
-			[tableObject._field]: tableObject._value
-		})
-		else outData[timeIndex][tableObject._field] = tableObject._value
+const influxRun = class{
+	#queryApi
+	#botID
+	#start
+	#end
+	#groupBy
+	constructor(options){
+		this.#queryApi = options.event.context.influx.influxClient.getQueryApi("disstat")
+		this.#botID = options.botID
+		this.#start = options.start
+		this.#end = options.stop
+		this.#groupBy = options.groupBy
 	}
+	async runQuery(measurement){
+		const fluxQuery = flux`from(bucket:"defaultBucket")
+		|> range(start: time(v: ${this.#start}), stop: time(v: ${this.#end}))
+		|> filter(fn: (r) => r._measurement == ${measurement})
+		|> filter(fn: (r) => r["botid"] == ${this.#botID})
+		|> aggregateWindow(every: ${fluxDuration(this.#groupBy ?? "1d")}, fn: mean, createEmpty: false)
+		|> yield(name: "mean")`
+		// |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
+	
+		let tableObjects = []
+		for await (const { values, tableMeta } of this.#queryApi.iterateRows(fluxQuery)) {
+			tableObjects.push(tableMeta.toObject(values))
+		}
+		
+		return tableObjects
+	}
+}
 
-	return outData;
+const getLastStat = (mainStats, stat) => {
+	const relatedStats = mainStats.filter(stats=>stats._field===stat)
+	return relatedStats[relatedStats.length-1]._value
 }
