@@ -10,6 +10,7 @@
                 <li><a href="/support">Support</a></li>
                 <li><router-link to="/privacy">Privacy</router-link></li>
                 <li><router-link to="/guide">Setup guide</router-link></li>
+                <li><router-link to="/pricing">Pricing</router-link></li>
             </ul>
 
             <ul class="right ">
@@ -32,6 +33,7 @@
         <li><a href="/support" class="white-text">Support</a></li>
         <li><router-link to="/privacy" class="white-text">Privacy</router-link></li>
         <li><router-link to="/guide" class="white-text">Setup guide</router-link></li>
+        <li><router-link to="/pricing">Pricing</router-link></li>
     </ul>
     <ul id="dropdown1" class="dropdown-content valign-wrapper black">
         <router-link :to="'/users/'+userID" class="white-text">User</router-link>
