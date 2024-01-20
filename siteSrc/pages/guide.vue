@@ -22,6 +22,8 @@
         <h3>API wrappers</h3>
         <ul class="flow-text">
           <li><b>Node.js</b>: <a href="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2">disstat</a> by TomatoCake</li>
+          <li><b>Python</b>: <a href="https://pypi.org/project/disstat/">disstat</a> by The Untraceable</li>
+          <li><b>Python</b>: <a href="https://pypi.org/project/disstat.py/">disstat.py</a> by The DT</li>
         </ul>
       </div>
 
