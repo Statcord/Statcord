@@ -25,7 +25,6 @@ CREATE TABLE public.owners (
     website character varying,
     public boolean NOT NULL DEFAULT 'true'
 );
-
 ALTER TABLE public.owners OWNER TO disstat;
 ALTER TABLE ONLY public.owners
     ADD CONSTRAINT owners_pkey PRIMARY KEY (ownerid);
@@ -57,9 +56,9 @@ CREATE TABLE public.chartsettings (
     enabled boolean DEFAULT true,
     name character varying,
     label character varying,
+    custom boolean NOT NULL DEFAULT 'false',
     PRIMARY KEY (chartid, botid)
 );
-
 ALTER TABLE IF EXISTS public.chartsettings
     OWNER to disstat;
 
@@ -69,6 +68,5 @@ CREATE TABLE public.botlinks (
     url character varying,
     icon character varying
 );
-
 ALTER TABLE IF EXISTS public.botlinks
     OWNER to disstat;

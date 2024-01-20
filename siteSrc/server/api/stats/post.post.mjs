@@ -19,7 +19,6 @@ export default defineEventHandler(async event => {
 	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (getHeader(event, "authorization") !== botExisits[0].token) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
-	if (body.customCharts?.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
     const statsPostBodyKeys = Object.keys(body)
     const hasMainStats = mainStatsKeys.some(key=>statsPostBodyKeys.includes(key))
@@ -27,19 +26,20 @@ export default defineEventHandler(async event => {
 
 	const writeClient = event.context.influx.influxClient.getWriteApi("disstat", "defaultBucket")
 
-    if (hasMainStats){
-        const mainStatsPoint = new Point("botStats")
-        .tag("botid",  body.id)
-
-        mainStatsKeys.forEach(key=>{
-            if (statsPostBodyKeys.includes(key)) mainStatsPoint[mainStats[key]](key, body[key])
-        })
-        writeClient.writePoint(mainStatsPoint)
-    }
-
-	if (body.customCharts) {
+	if (body.customCharts){
+		if (body.customCharts.length > botExisits[0].maxcustomcharts) {
+			writeClient.flush()
+			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+		}
+		
+		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${body.id} AND custom = true`.catch(() => {})
+		if ([...existingCustomCharts, ...body.customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) {
+			writeClient.flush()
+			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+		}
+		
 		body.customCharts.map(customChart => {
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, "line") ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 
 			const customChartsPoint = new Point("customCharts")
 				.tag("botid",  body.id)
@@ -54,6 +54,16 @@ export default defineEventHandler(async event => {
 			writeClient.writePoint(customChartsPoint)
 		})
 	}
+
+    if (hasMainStats){
+        const mainStatsPoint = new Point("botStats")
+        .tag("botid",  body.id)
+
+        mainStatsKeys.forEach(key=>{
+            if (statsPostBodyKeys.includes(key)) mainStatsPoint[mainStats[key]](key, body[key])
+        })
+        writeClient.writePoint(mainStatsPoint)
+    }
 
 	if (body.topCommands) {
 		const topCommandsPoint = new Point("topCommands")
