@@ -47,7 +47,7 @@
 					<br>
 					This cannot overwrite any data on DisStat as the last time Statcord successfully processed data was on 2023-04-29.
 					<br>
-					Be aware that this may cause a jump in the charts.
+					Be aware that this will cause a jump in the charts.
 				</p>
 
 				<br>
@@ -90,7 +90,7 @@
 
 				const k = 1024
 				const dm = decimals < 0 ? 0 : decimals
-				const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"]
+				const sizes = ["bytes", "KiB", "MiB", "GiB", "TiB", "PiB"]
 
 				const i = Math.floor(Math.log(bytes) / Math.log(k))
 				return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
@@ -148,7 +148,7 @@
 								scales: {
 									y: {
 										ticks: {
-											callback: value => chart.format == "byte" ? formatBytes(value) : (chart.format == "%" ? value + "%" : value)
+											callback: value => chart.format == "byte" ? formatBytes(value) : (chart.format == "%" ? value + "%" : value.toLocaleString())
 										},
 										beginAtZero: chart.format == "%"
 									}
@@ -173,7 +173,7 @@
 												if (context.parsed.y !== null) {
 													if (chart.format == "byte") label += formatBytes(context.parsed.y)
 													else if (chart.format == "%") label += context.parsed.y + "%"
-													else label += context.parsed.y
+													else label += context.parsed.y.toLocaleString()
 												}
 												return label
 											}
@@ -195,6 +195,17 @@
 						"<p>" + (bot.actualPosts / bot.expectedPosts * 100).toFixed(2) + "%</p>" +
 					"</div>"
 				]
+
+				if (bot.customData && bot.customData.perType) {
+					Object.keys(bot.customData.perType).forEach(type => {
+						cards.push(
+							"<div>" +
+								"<span>Custom graph posts for <u>" + type + "</u></span>" +
+								"<p>" + bot.customData.perType[type] + "</p>" +
+							"</div>"
+						)
+					})
+				}
 
 				document.getElementById("cards-container").innerHTML = cards.join("")
 			}

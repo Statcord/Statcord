@@ -14,7 +14,7 @@ jobs:
       - name: "🔧 setup node"
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 21
           cache: "npm"
 
       - name: "🛸 install eslint html plugins"
