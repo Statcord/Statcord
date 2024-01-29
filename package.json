@@ -10,7 +10,7 @@
     "dev": "nodemon --delay 10ms -e js,html,css,png,webp"
   },
   "devDependencies": {
-    "@html-eslint/eslint-plugin": "^0.23.0",
+    "@html-eslint/eslint-plugin": "^0.23.1",
     "@html-eslint/parser": "^0.23.0",
     "eslint": "^8.56.0",
     "eslint-plugin-html": "^7.1.0",
