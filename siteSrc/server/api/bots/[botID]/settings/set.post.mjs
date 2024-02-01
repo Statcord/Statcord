@@ -16,7 +16,8 @@ const requiredBodyKeys = [
     "guildCount",
     "shardCount",
     "userCount",
-    "members"
+    "members",
+    "customchart"
 ]
 
 export default defineEventHandler(async event => {
@@ -71,6 +72,13 @@ export default defineEventHandler(async event => {
     if (owner[0].plevel > 0){
         ["totalRam", "cpuUsage", "ramUsage", "guildCount", "shardCount", "userCount", "members"].forEach(item=>{
             event.context.pgPool`UPDATE chartsettings SET enabled = ${body[item]} WHERE botid = ${path.botID} AND chartid = ${item}`.catch(() => {})
+        })
+    }
+
+    if (body.customchart){
+        Object.keys(body.customchart).forEach(async name => {
+            const currentChartSettings = await event.context.pgPool`SELECT label, name FROM chartsettings WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
+            event.context.pgPool`UPDATE chartsettings SET enabled = ${body.customchart[name].enabled}, type = ${body.customchart[name].type}, name = ${body.customchart[name].name === '' ? currentChartSettings[0].name : body.customchart[name].name}, label = ${body.customchart[name].label === '' ? currentChartSettings[0].label : body.customchart[name].label} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
         })
     }
 })

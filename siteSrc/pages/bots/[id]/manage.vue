@@ -49,7 +49,7 @@
             <div class="divider"></div>
             <div class="section" v-if="!currentSettingsPending">
                 <h6>Add additional links (optional)</h6>
-                <div class="row">
+                <div class="row" style="gap: 10px;">
                     <div class="col s12 m6">
                         <label for="github">GitHub</label>
                         <input type="url" :placeholder="currentSettings.links.github" ref="setting:github">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" style="gap: 10px;">
                     <div class="col s12 m6">
                         <label for="supportserver">Support server</label>
                         <input type="url" :placeholder="currentSettings.links.supportserver" ref="setting:supportserver">
@@ -89,37 +89,79 @@
             </div>
 
 
-            <!-- <div v-for="(catagory, catagoryIndex) in Object.entries(settings)" :key="catagoryIndex">
-                <div class="section"></div>
-                <h5>{{catagory[0]}}</h5>
-                
-                <div v-for="(setting, settingIndex) in Object.entries(catagory[1])" :key="settingIndex">
-                    <label>
-                        <input :type="setting[1].type" :disabled="!setting[1].enabled" :checked="setting[1].state" :placeholder="setting[1].state" :ref="'setting:'+setting[1].id" :name="'name:'+setting[1].id"/>
-                        <span>{{ setting[0] }}</span>
-                    </label>
-                </div>
-            </div> -->
+            <div class="divider"></div>
+            <div class="section" v-if="!currentSettingsPending">
+                <h6>Custom charts</h6>
+                <div>
+                    <div v-for="chart in currentSettings.customChartSettings" class="row">
+                        <div class="col s12 m12">
+                            <div class="row">
+                                <h6>{{ chart.name }}</h6>
+                            </div>
+    
+                            <div class="row" style="gap: 10px;">
+                                <div class="col s12 m1">
+                                    <label>
+                                        <input type="checkbox" :ref="'setting:customchart:'+chart.chartid+':enabled'" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
+                                        <span>Enabled</span>
+                                    </label>
+                                </div>
+                                <div class="col s12 m1">
+                                    <label for="website">Type</label>
+                                    <select class="browser-default" :ref="'setting:customchart:'+chart.chartid+':type'">
+                                        <option value="pie" :selected="chart.type==='pie'">Pie</option>
+                                        <option value="line" :selected="chart.type==='line'">Line</option>
+                                    </select>
+                                </div>                                
+                                <div class="col s12 m3">
+                                    <label for="website">Label</label>
+                                    <input type="url" :placeholder="chart.label" :ref="'setting:customchart:'+chart.chartid+':label'">
+                                </div>
+                                <div class="col s12 m6">
+                                    <label for="website">Name</label>
+                                    <input type="url" :placeholder="chart.name" :ref="'setting:customchart:'+chart.chartid+':name'">
+                                </div>
 
-            <!-- <div>
-                <div class="section"></div>
-                <h5>Access</h5>
-                
-                <div v-for="(setting, settingIndex) in Object.entries(catagory[1])" :key="settingIndex">
-                    <label>
-                        <input :type="setting[1].type" :disabled="!setting[1].enabled" :checked="setting[1].state" :placeholder="setting[1].state" :ref="'setting:'+setting[1].id" :name="'name:'+setting[1].id"/>
-                        <span>{{ setting[0] }}</span>
-                    </label>
+                                <div class="col s12 m6">
+                                    <div class="waves-effect waves-light btn red modal-trigger" :data-target="'delCustomModal-'+chart.chartid"><i class="material-icons left">delete_forever</i>Delete chart</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div :id="'delCustomModal-'+chart.chartid" :ref="'delCustomModal-'+chart.chartid" class="modal hide">
+                            <div class="modal-content">
+                                <h4>Confirm deletion of {{ chart.name }}</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <div>
+                                    <div class="modal-close waves-effect waves-light btn left">Cancel</div>
+                                    <div class="modal-close waves-effect waves-light btn red accent-3 right" :chartid="chart.chartid" @click="confirmedCustomDelete">Delete forever (really!)<i class="material-icons left">delete_forever</i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div> -->
+            </div>
 
             <div class="divider"></div>
             <div class="section">
-                <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
-                <div class="waves-effect waves-light btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
-                <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
-                <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
-                <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
+                <div class="row" style="gap: 10px;">
+                    <div class="col s6 m2">
+                        <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
+                    </div>
+                    <div class="col s6 m2">
+                        <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
+                    </div>
+                    <div class="col s3 m2">
+                        <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
+                    </div>
+                    <div class="col s3 m2">
+                        <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
+                    </div>
+                    <div class="col s6 m2">
+                        <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -219,15 +261,6 @@ useHead({
 </script>
 
 <script>
-const inputTypeToValue = (input)=> {
-    return {
-        "checkbox": input.checked,
-        "text": input.value,
-        "textarea": input.value,
-        "url": input.value
-    }
-}
-
 export default {
     name: 'server',
     data() {
@@ -260,17 +293,18 @@ export default {
         this.$M.FormSelect.init(this.$refs.importExportSelector)
         this.$M.FormSelect.init(this.$refs.importSourceSelector)
 
-        this.$M.Modal.init(this.$refs.keyModal1, {
-            onOpenStart: ()=> this.$refs.keyModal1.classList.remove("hide")
-        })
-        this.$M.Modal.init(this.$refs.delModal1, {
-            onOpenStart: ()=> this.$refs.delModal1.classList.remove("hide")
-        })
-        this.$M.Modal.init(this.$refs.importModal1, {
-            onOpenStart: ()=> this.$refs.importModal1.classList.remove("hide")
+        await this.sleep(10)
+        Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
+            const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
+            this.$M.Modal.init(mRef, {
+                onOpenStart: () => mRef.classList.remove("hide")
+            })
         })
     },
     methods: {
+        async sleep(delay){
+            return new Promise(resolve => setTimeout(resolve, delay));
+        },
         importExportChanged(event){
             this.importExport = event.target.value
         },
@@ -314,12 +348,39 @@ export default {
                 await navigateTo(`/users/${this.$auth.getUser().id}`)
             }
         },
+        async confirmedCustomDelete(a){
+            this.$M.toast({text: 'Deleting'})
+            const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/deleteCustomChart`, {
+                method: 'delete',
+                body: {
+                    chartid: a.target.getAttribute("chartid")
+                }
+            });
+            this.$M.toast({text: error.value? 'Error deleting' : 'Deleted'})
+        },
         async save(){
             this.$M.toast({text: 'Saving'})
-            const settings = Object.assign({}, ...Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).map(a=>{
+
+            const settings = {}
+            Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).forEach(a=>{
                 const thisRef = Array.isArray(this.$refs[a]) ? this.$refs[a][0] : this.$refs[a]
-                return {[a.replace("setting:", "")]: inputTypeToValue(thisRef)[thisRef.type]}
-            }))
+
+                const settingName = a.replace("setting:", "")
+                const settingNameParts = settingName.split(":")
+
+                switch(settingNameParts.length-1){
+                    case 0: {
+                        settings[settingName] = this.inputTypeToValue(thisRef, thisRef.type)
+                    }
+                    break;
+                    case 2: {
+                        if (!settings[settingNameParts[0]]) settings[settingNameParts[0]] = {}
+                        if (!settings[settingNameParts[0]][settingNameParts[1]]) settings[settingNameParts[0]][settingNameParts[1]] = {}
+                        settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]] = this.inputTypeToValue(thisRef, thisRef.type)
+                    }
+                    break;
+                }            
+            })
 
             const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {
                 method: 'post',
@@ -327,6 +388,17 @@ export default {
             })
 
             this.$M.toast({text: error.value? 'Error saving' : 'Saved'})
+        },
+        inputTypeToValue(input, type){
+            switch (type) {
+                case "checkbox": {
+                    return input.checked
+                }
+                break;
+                default: {
+                    return input.value
+                }
+            }
         }
     }
 }

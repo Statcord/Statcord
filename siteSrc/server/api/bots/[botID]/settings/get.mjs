@@ -21,8 +21,10 @@ export default defineEventHandler(async event => {
     const links = Object.assign({}, ...(await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})).map(l=>{return {[l.name]: l.url}}))
 
     const defaultChartSettings = await event.context.pgPool`SELECT chartid, enabled, name, label, type from chartsettings WHERE botid = ${path.botID} AND custom = false`.catch(() => {})
+    const customChartSettings = await event.context.pgPool`SELECT chartid, enabled, name, label, type from chartsettings WHERE botid = ${path.botID} AND custom = true`.catch(() => {})
 
-    return {mainSettings, links, defaultChartSettings}
+
+    return {mainSettings, links, defaultChartSettings, customChartSettings}
 })
 
 export const schema = {
