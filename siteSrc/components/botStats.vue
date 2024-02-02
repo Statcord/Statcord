@@ -47,10 +47,10 @@
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
                 </div>
 
-                <div v-for="stat in customStats" :key="stat.id" class="col s12 l4">
+                <!-- <div v-for="stat in customStats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
                     <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
-                </div>
+                </div> -->
             </div>
             <div v-else>
                 <div class="container">
@@ -131,6 +131,7 @@ export default {
                 return t
             })
 
+            this.commandStats = defaultStatsJson.commands
             // const chartSettings = defaultStatsJson.types 
             // if (defaultStatsJson.commands.length > 0) this.commandStats = this.createPieChart(defaultStatsJson.commands, chartSettings)
             // this.customStats = this.createCustomChart(defaultStatsJson.custom, chartSettings)

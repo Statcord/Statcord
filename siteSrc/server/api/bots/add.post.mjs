@@ -42,6 +42,18 @@ const defaultChartSettings = [
 		name: "Total Ram",
 		type: "line",
 		label: "This Week"
+	},	
+	{
+		id: "topCmds",
+		name: "Popular Commands",
+		type: 'pie',
+		label: 'Fully Rounded',
+	},
+	{
+		id: "cmdTotalUse",
+		name: "Command usage over time",
+		type: "line",
+		label: "This week",
 	}
 ]
 

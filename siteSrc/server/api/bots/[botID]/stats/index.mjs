@@ -16,7 +16,7 @@ export default defineEventHandler(async event => {
 	const start = new Date(Number(query.start ?? 0)).toISOString()
 	const stop = query.end ? new Date(Number(query.end)).toISOString() : new Date().toISOString()
 
-	const types = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID} AND custom = false`.catch(() => {})
+	const types = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID} AND enabled = true AND custom = false`.catch(() => {})
 
 	const runInfluxQuery = new influxRun(
 		{
@@ -28,12 +28,12 @@ export default defineEventHandler(async event => {
 		}
 	)
 
+	const outObj = {}
+
 	// console.time("first")
 	const mainStatsInflux = await runInfluxQuery.runQuery("botStats")
-	const labels = [...new Set(mainStatsInflux.map(({_time})=>_time))]
+	const mainStatsLabels = [...new Set(mainStatsInflux.map(({_time})=>_time))]
 	const mainStats = types.map(type => {
-		if (!type.enabled) return;
-
 		return {
 			name: type.name,
 			type: type.type,
@@ -46,61 +46,69 @@ export default defineEventHandler(async event => {
 				]
 			}
 		}		
-	}).filter(a=>typeof a !== "undefined")
+	})
 
-
-	const memusage = mainStats.findIndex(a=>a.name==="Ram Usage")
-	const totalMEM = mainStats.findIndex(a=>a.name==="Total Ram")
-	mainStats[totalMEM].data.datasets[0].label="Total Ram"
-	mainStats[memusage].data.datasets.push(mainStats[totalMEM].data.datasets[0])
-	delete mainStats[totalMEM]
-	const filterdMainStats = mainStats.filter(a=>typeof a !== "undefined")
+	if (types.filter(t=>t.name.toLowerCase().includes("ram")).length === 2){
+		const memusage = mainStats.findIndex(a=>a.name==="Ram Usage")
+		const totalMEM = mainStats.findIndex(a=>a.name==="Total Ram")
+		mainStats[totalMEM].data.datasets[0].label="Total Ram"
+		mainStats[memusage].data.datasets.push(mainStats[totalMEM].data.datasets[0])
+		delete mainStats[totalMEM]
+	}
+	outObj.mainStats = {
+		stats: mainStats.filter(a=>typeof a !== "undefined"),
+		labels: mainStatsLabels
+	}
 	// console.timeEnd("first")
 
+
 	// console.time("second")
-	// const commands = await runInfluxQuery.runQuery("topCommands")
-	// console.log(commands)
+	const commandsInflux = await runInfluxQuery.runQuery("topCommands")
+	const commandUsageCounts = commandsInflux.reduce((acc, curr) => {
+		return acc[curr._field] ? ++acc[curr._field] : acc[curr._field] = 1, acc
+	}, {});
+	outObj.commands = [
+		{
+			name: "Popular Commands",
+			type: 'pie',
+			data: {
+				labels: Object.keys(commandUsageCounts),
+				datasets: [
+					{
+						label: 'Fully Rounded',
+						data: Object.values(commandUsageCounts),
+					}
+				]
+			}
+		},
+		{
+			name: "Command usage over time",
+			type: "line",
+			data: {
+				labels: commandsInflux.map(i => i._time),
+				datasets: [
+					{
+						label: "This week",
+						data: commandsInflux.reduce((acc, cur, i) => {
+							const item = i > 0 && acc.find(({_time}) => _time === cur._time)
+							if (item) item._value += cur._value;
+							else acc.push({ _time: cur._time, _value: cur._value }); // don't push cur here
+							return acc;
+						}, []).map(a=>a._value)
+					}
+				]
+			}
+		}
+	]
 	// console.timeEnd("second")
 
 	// console.time("thrid")
-	const custom = await runInfluxQuery.runQuery("customCharts")
+	// const custom = await runInfluxQuery.runQuery("customCharts")
 	// console.log(custom)
 	// console.timeEnd("thrid")
 
-	// [
-	// 	{
-	// 		id: timeStamp,
-	// 		name: "Command usage over time",
-	// 		type: "line",
-	// 		data: {
-	// 			labels: chartData.flatMap(i => this.formatDate(i.time)),
-	// 			datasets: [
-	// 				{
-	// 					label: "This week",
-	// 					data: chartData.flatMap(i => {
-	// 						delete i.time;
-	// 						return Object.values(i).reduce((a,b) => a + b, 0)
-	// 					})
-	// 				}
-	// 			]
-	// 		}
-	// 	},
-	// 	{
-	// 		id: timeStamp,
-	// 		name: "Top commands",
-	// 		type: "pie",
-	// 		data: {
-	// 			labels: Object.keys(holder),
-	// 			datasets: [
-	// 				{
-	// 					data: Object.values(holder)
-	// 				}
-	// 			]
-	// 		}
-	// 	}
-	// ]
 
-	const cards = [
+	outObj.cards = [
 		{
 			name: "Guilds",
 			value: getLastStat(mainStatsInflux, "guildCount")
@@ -115,15 +123,7 @@ export default defineEventHandler(async event => {
 		}
 	]
 
-	return {
-		mainStats: {
-			stats: filterdMainStats,
-			labels
-		},
-		cards
-		// commands,
-		// custom,
-	}
+	return outObj
 })
 
 export const schema = {
@@ -296,7 +296,7 @@ const influxRun = class{
 		|> range(start: time(v: ${this.#start}), stop: time(v: ${this.#end}))
 		|> filter(fn: (r) => r._measurement == ${measurement})
 		|> filter(fn: (r) => r["botid"] == ${this.#botID})
-		|> aggregateWindow(every: ${fluxDuration(this.#groupBy ?? "1d")}, fn: mean, createEmpty: false)
+		|> aggregateWindow(every: ${fluxDuration(this.#groupBy)}, fn: mean, createEmpty: false)
 		|> yield(name: "mean")`
 		// |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
 	
