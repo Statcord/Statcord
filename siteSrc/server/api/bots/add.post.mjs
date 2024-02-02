@@ -1,5 +1,50 @@
 import { defineEventHandler, readBody, sendNoContent, sendError, createError } from "h3"
 
+const defaultChartSettings = [
+	{
+		id: "guildCount",
+		name: "Guild Growth",
+		type: "line",
+		label: "This Week"
+	},
+	{
+		id: "shardCount",
+		name: "Shards",
+		type: "line",
+		label: "This Week"
+	},
+	{
+		id: "members",
+		name: "Members",
+		type: "line",
+		label: "This Week"
+	},
+	{
+		id: "userCount",
+		name: "User Count",
+		type: "line",
+		label: "This Week"
+	},
+	{
+		id: "cpuUsage",
+		name: "CPU Usage",
+		type: "line",
+		label: "This Week"
+	},
+	{
+		id: "ramUsage",
+		name: "Ram Usage",
+		type: "line",
+		label: "This Week"
+	},
+	{
+		id: "totalRam",
+		name: "Total Ram",
+		type: "line",
+		label: "This Week"
+	}
+]
+
 export default defineEventHandler(async event => {
 	if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
@@ -13,9 +58,8 @@ export default defineEventHandler(async event => {
 
 	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.utils.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
 
-	Object.keys(event.context.utils.defaultChartSettings).forEach(chartID => {
-		const chart = event.context.utils.defaultChartSettings[chartID]
-		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.botid}, ${chartID}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
+	defaultChartSettings.forEach(chart => {
+		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.botid}, ${chart.id}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
 	})
 
 	const botLinks = [
