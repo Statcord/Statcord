@@ -18,10 +18,7 @@ export default defineEventHandler(async event => {
 		groupBy: "1d",
 		botID: path.botID
 	})
-
-	const mainStats = await runInfluxQuery.runQuery("botStats")
-	const commands = await runInfluxQuery.runQuery("topCommands")
-	const custom = await runInfluxQuery.runQuery("customCharts")
+	const returnedData = await runInfluxQuery.getData()
 
 	const ownerInfo = await event.context.pgPool`SELECT * FROM owners WHERE ownerid = ${bot[0].ownerid}`.catch(() => {})
 	const chartSettings = await event.context.pgPool`SELECT * FROM chartsettings WHERE botid = ${path.botID}`.catch(() => {})
@@ -29,11 +26,11 @@ export default defineEventHandler(async event => {
 	const outOBj = {
 		botInfo: bot[0],
 		ownerInfo: ownerInfo[0],
-		chartSettings: chartSettings,
+		chartSettings,
 		botStats:{
-			mainStats,
-			commands,
-			custom
+			custom: returnedData[0].value,
+			mainStats: returnedData[1].value,
+			commands: returnedData[2].value
 		}
 	}
 
@@ -115,5 +112,12 @@ const influxRun = class{
 		}
 		
 		return tableObjects
+	}
+	async getData (){
+		return Promise.allSettled([
+			this.runQuery("customCharts"),
+			this.runQuery("botStats"),
+			this.runQuery("topCommands")
+		])
 	}
 }
