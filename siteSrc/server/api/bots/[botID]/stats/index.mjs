@@ -45,7 +45,7 @@ export default defineEventHandler(async event => {
 					}
 				]
 			}
-		}		
+		}
 	})
 
 	if (types.filter(t=>t.name.toLowerCase().includes("ram")).length === 2){
@@ -103,8 +103,22 @@ export default defineEventHandler(async event => {
 	// console.timeEnd("second")
 
 	// console.time("thrid")
-	// const custom = await runInfluxQuery.runQuery("customCharts")
-	// console.log(custom)
+	const customData = await runInfluxQuery.runQuery("customCharts")
+	const customTypes = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID} AND enabled = true AND custom = true`.catch(() => {})
+	outObj.custom = customTypes.map(type => {
+		return {
+			name: type.name,
+			type: type.type,
+			data: {
+				datasets: [
+					{
+						label: type.label,
+						data:  customData.filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
+					}
+				]
+			}
+		}		
+	})
 	// console.timeEnd("thrid")
 
 
