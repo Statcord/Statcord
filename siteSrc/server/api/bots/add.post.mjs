@@ -5,55 +5,64 @@ const defaultChartSettings = [
 		id: "guildCount",
 		name: "Guild Growth",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},
 	{
 		id: "shardCount",
 		name: "Shards",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},
 	{
 		id: "members",
 		name: "Members",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},
 	{
 		id: "userCount",
 		name: "User Count",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},
 	{
 		id: "cpuUsage",
 		name: "CPU Usage",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},
 	{
 		id: "ramUsage",
 		name: "Ram Usage",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},
 	{
 		id: "totalRam",
 		name: "Total Ram",
 		type: "line",
-		label: "This Week"
+		label: "This Week",
+		category: "default"
 	},	
 	{
 		id: "topCmds",
 		name: "Popular Commands",
 		type: 'pie',
 		label: 'Fully Rounded',
+		category: "commands"
 	},
 	{
 		id: "cmdTotalUse",
 		name: "Command usage over time",
 		type: "line",
 		label: "This week",
+		category: "commands"
 	}
 ]
 

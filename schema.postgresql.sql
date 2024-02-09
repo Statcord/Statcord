@@ -58,6 +58,7 @@ CREATE TABLE public.chartsettings (
     name character varying,
     label character varying,
     custom boolean NOT NULL DEFAULT 'false',
+    category character varying NOT NULL
     PRIMARY KEY (chartid, botid)
 );
 ALTER TABLE IF EXISTS public.chartsettings

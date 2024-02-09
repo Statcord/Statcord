@@ -40,9 +40,9 @@ export default defineEventHandler(async event => {
 			writeClient.flush()
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 		}
-		
+
 		body.customCharts.map(customChart => {
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true, 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 
 			const customChartsPoint = new Point("customCharts")
 				.tag("botid",  path.botID)
