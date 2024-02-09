@@ -1,4 +1,4 @@
-import { defineEventHandler, sendNoContent, readBody, getHeader, createError, sendError } from "h3"
+import { defineEventHandler, sendNoContent, readBody, getHeader, createError, sendError, getRouterParams } from "h3"
 import { Point } from "@influxdata/influxdb-client"
 
 const mainStats = {
