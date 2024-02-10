@@ -29,35 +29,35 @@ export default defineEventHandler(async event => {
 
 	const writeClient = event.context.influx.influxClient.getWriteApi("disstat", "defaultBucket")
 
-	if (body.custom1 || body.custom2){
-		const customCharts = []
-		if (body.custom1) customCharts.push({id: "custom1", data: {"itemOne": body.custom1}})
-		if (body.custom2) customCharts.push({id: "custom2", data: {"itemOne": body.custom2}})
+	// if (body.custom1 || body.custom2){
+	// 	const customCharts = []
+	// 	if (body.custom1) customCharts.push({id: "custom1", data: {"itemOne": body.custom1}})
+	// 	if (body.custom2) customCharts.push({id: "custom2", data: {"itemOne": body.custom2}})
 
-		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${body.id} AND custom = true`.catch(() => {})
-		if ([...existingCustomCharts, ...customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) {
-			writeClient.flush()
-			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-		}
+	// 	const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${body.id} AND custom = true`.catch(() => {})
+	// 	if ([...existingCustomCharts, ...customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) {
+	// 		writeClient.flush()
+	// 		return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	// 	}
 		
-		body.customCharts.map(customChart => {
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+	// 	body.customCharts.map(customChart => {
+	// 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 
-			const customChartsPoint = new Point("customCharts")
-				.tag("botid",  body.id)
-				.tag("customChartID",  customChart.id)
+	// 		const customChartsPoint = new Point("customCharts")
+	// 			.tag("botid",  body.id)
+	// 			.tag("customChartID",  customChart.id)
 
-			Object.keys(customChart.data).forEach(key => {
-				const value = customChart.data[key]
-				if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
-				else customChartsPoint.intField(key, value)
-			})
+	// 		Object.keys(customChart.data).forEach(key => {
+	// 			const value = customChart.data[key]
+	// 			if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
+	// 			else customChartsPoint.intField(key, value)
+	// 		})
 
-			writeClient.writePoint(customChartsPoint)
-		})
-	}
+	// 		writeClient.writePoint(customChartsPoint)
+	// 	})
+	// }
 
-	const dataObject = {}
+	// const dataObject = {}
 
     // if (hasMainStats){
     //     const mainStatsPoint = new Point("botStats")

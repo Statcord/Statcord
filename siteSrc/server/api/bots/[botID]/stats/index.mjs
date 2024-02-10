@@ -16,128 +16,116 @@ export default defineEventHandler(async event => {
 	const start = new Date(Number(query.start ?? 0)).toISOString()
 	const stop = query.end ? new Date(Number(query.end)).toISOString() : new Date().toISOString()
 
-	const types = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID} AND enabled = true AND custom = false`.catch(() => {})
-
 	const runInfluxQuery = new influxRun(
 		{
 			event,
 			start,
 			stop,
+			// groupBy: "1m",
 			groupBy: query.groupBy ?? "1d",
 			botID: path.botID
 		}
 	)
 
-	const outObj = {}
+	const returnedData = await runInfluxQuery.getData()
+	const data = {
+		custom: returnedData[0].value,
+		default: returnedData[1].value,
+		commands: returnedData[2].value
+	}
+
 
 	// console.time("first")
-	const mainStatsInflux = await runInfluxQuery.runQuery("botStats")
-	const mainStatsLabels = [...new Set(mainStatsInflux.map(({_time})=>_time))]
-	const mainStats = types.map(type => {
-		return {
-			name: type.name,
-			type: type.type,
-			data: {
-				datasets: [
-					{
-						label: type.label,
-						data:  mainStatsInflux.filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
-					}
-				]
-			}
-		}
-	})
-
-	if (types.filter(t=>t.name.toLowerCase().includes("ram")).length === 2){
-		const memusage = mainStats.findIndex(a=>a.name==="Ram Usage")
-		const totalMEM = mainStats.findIndex(a=>a.name==="Total Ram")
-		mainStats[totalMEM].data.datasets[0].label="Total Ram"
-		mainStats[memusage].data.datasets.push(mainStats[totalMEM].data.datasets[0])
-		delete mainStats[totalMEM]
-	}
-	outObj.mainStats = {
-		stats: mainStats.filter(a=>typeof a !== "undefined"),
-		labels: mainStatsLabels
-	}
 	// console.timeEnd("first")
 
-
-	// console.time("second")
-	const commandsInflux = await runInfluxQuery.runQuery("topCommands")
-	const commandUsageCounts = commandsInflux.reduce((acc, curr) => {
+	const mainStatsLabels = [...new Set(data.default.map(({_time})=>_time))]
+	const commandUsageCounts = data.commands.reduce((acc, curr) => {
 		return acc[curr._field] ? ++acc[curr._field] : acc[curr._field] = 1, acc
 	}, {});
-	outObj.commands = [
-		{
-			name: "Popular Commands",
-			type: 'pie',
-			data: {
-				labels: Object.keys(commandUsageCounts),
-				datasets: [
-					{
-						label: 'Fully Rounded',
-						data: Object.values(commandUsageCounts),
+
+	const sdafsdf = await event.context.pgPool`SELECT chartid, enabled, name, label, type, category FROM chartsettings WHERE botid = ${path.botID} AND enabled = true`.catch(() => {})
+	
+	const tempOBJ = {}
+
+	for (const type of sdafsdf){
+		if (!tempOBJ[type.category]) tempOBJ[type.category] = []
+		switch (type.category){
+			case "custom":
+			case "default": {
+				tempOBJ[type.category].push({
+					name: type.name,
+					type: type.type,
+					data: {
+						datasets: [
+							{
+								label: type.label,
+								data:  data[type.category].filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
+							}
+						]
 					}
-				]
+				})
 			}
-		},
-		{
-			name: "Command usage over time",
-			type: "line",
-			data: {
-				labels: commandsInflux.map(i => i._time),
-				datasets: [
-					{
-						label: "This week",
-						data: commandsInflux.reduce((acc, cur, i) => {
-							const item = i > 0 && acc.find(({_time}) => _time === cur._time)
-							if (item) item._value += cur._value;
-							else acc.push({ _time: cur._time, _value: cur._value }); // don't push cur here
-							return acc;
-						}, []).map(a=>a._value)
+			break;
+			case "commands": {
+				const chartOBJ = {
+					name: type.name,
+					type: type.type,
+					data: {
+						datasets: [
+							{
+								label: type.label
+							}
+						]
 					}
-				]
+				}
+				if (type.chartid === "cmdTotalUse"){
+					chartOBJ.labels = data.commands.map(i => i._time)
+					chartOBJ.data.datasets[0].data = data.commands.reduce((acc, cur, i) => {
+						const item = i > 0 && acc.find(({_time}) => _time === cur._time)
+						if (item) item._value += cur._value;
+						else acc.push({ _time: cur._time, _value: cur._value });
+						return acc;
+					}, []).map(a=>a._value)
+				} else if (type.chartid === "topCmds"){
+					chartOBJ.labels = Object.keys(commandUsageCounts)
+					chartOBJ.data.datasets[0].data = Object.values(commandUsageCounts)
+				}
+				tempOBJ[type.category].push(chartOBJ)
 			}
+			break;
 		}
-	]
-	// console.timeEnd("second")
+	}
+	if (sdafsdf.filter(t=>t.name.toLowerCase().includes("ram")).length === 2){
+		const memusage = tempOBJ.default.findIndex(a=>a.name==="Ram Usage")
+		const totalMEM = tempOBJ.default.findIndex(a=>a.name==="Total Ram")
+		tempOBJ.default[totalMEM].data.datasets[0].label="Total Ram"
+		tempOBJ.default[memusage].data.datasets.push(tempOBJ.default[totalMEM].data.datasets[0])
+		delete tempOBJ.default[totalMEM]
+	}
 
-	// console.time("thrid")
-	const customData = await runInfluxQuery.runQuery("customCharts")
-	const customTypes = await event.context.pgPool`SELECT chartid, enabled, name, label, type FROM chartsettings WHERE botid = ${path.botID} AND enabled = true AND custom = true`.catch(() => {})
-	outObj.custom = customTypes.map(type => {
-		return {
-			name: type.name,
-			type: type.type,
-			data: {
-				datasets: [
-					{
-						label: type.label,
-						data:  customData.filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
-					}
-				]
+
+	return {
+		mainStats: {
+			stats: tempOBJ.default.filter(a=>typeof a !== "undefined"),
+			labels: mainStatsLabels
+		},
+		custom: tempOBJ.custom,
+		commands: tempOBJ.commands,
+		cards: [
+			{
+				name: "Guilds",
+				value: getLastStat(data.default, "guildCount")
+			},
+			{
+				name: "Members",
+				value: getLastStat(data.default, "members")
+			},
+			{
+				name: "Users",
+				value: getLastStat(data.default, "userCount")
 			}
-		}		
-	})
-	// console.timeEnd("thrid")
-
-
-	outObj.cards = [
-		{
-			name: "Guilds",
-			value: getLastStat(mainStatsInflux, "guildCount")
-		},
-		{
-			name: "Members",
-			value: getLastStat(mainStatsInflux, "members")
-		},
-		{
-			name: "Users",
-			value: getLastStat(mainStatsInflux, "userCount")
-		}
-	]
-
-	return outObj
+		]
+	}
 })
 
 export const schema = {
@@ -321,9 +309,16 @@ const influxRun = class{
 		
 		return tableObjects
 	}
+	async getData (){
+		return Promise.allSettled([
+			this.runQuery("customCharts"),
+			this.runQuery("botStats"),
+			this.runQuery("topCommands")
+		])
+	}
 }
 
 const getLastStat = (mainStats, stat) => {
 	const relatedStats = mainStats.filter(stats=>stats._field===stat)
-	return relatedStats[relatedStats.length-1]._value
+	return relatedStats[relatedStats.length-1]?._value
 }

@@ -76,24 +76,39 @@
             <div class="section" v-if="!currentSettingsPending">
                 <h6>Defualt charts</h6>
                 <div class="row">
-                    <div v-for="chart in currentSettings.defaultChartSettings" class="col s4 m3">
+                    <div v-for="chart in currentSettings.default" class="col s4 m3">
                         <div>
                             <h6>{{ chart.name }}</h6>
                         </div>
                         <label>
-                            <input type="checkbox" :ref="'setting:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
+                            <input type="checkbox" :ref="'setting:charts:defualt:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
                             <span>Enabled</span>
                         </label>
                     </div>
                 </div>
             </div>
 
+            <div class="divider"></div>
+            <div class="section" v-if="!currentSettingsPending">
+                <h6>Command charts</h6>
+                <div class="row">
+                    <div v-for="chart in currentSettings.commands" class="col s4 m3">
+                        <div>
+                            <h6>{{ chart.name }}</h6>
+                        </div>
+                        <label>
+                            <input type="checkbox" :ref="'setting:charts:commands:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
+                            <span>Enabled</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
 
             <div class="divider"></div>
             <div class="section" v-if="!currentSettingsPending">
                 <h6>Custom charts</h6>
                 <div>
-                    <div v-for="chart in currentSettings.customChartSettings" class="row">
+                    <div v-for="chart in currentSettings.custom" class="row">
                         <div class="col s12 m12">
                             <div class="row">
                                 <h6>{{ chart.name }}</h6>
@@ -102,24 +117,24 @@
                             <div class="row" style="gap: 10px;">
                                 <div class="col s12 m1">
                                     <label>
-                                        <input type="checkbox" :ref="'setting:customchart:'+chart.chartid+':enabled'" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
+                                        <input type="checkbox" :ref="'setting:charts:custom:'+chart.chartid+':enabled'" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
                                         <span>Enabled</span>
                                     </label>
                                 </div>
                                 <div class="col s12 m1">
                                     <label for="website">Type</label>
-                                    <select class="browser-default" :ref="'setting:customchart:'+chart.chartid+':type'">
+                                    <select class="browser-default" :ref="'setting:charts:custom:'+chart.chartid+':type'">
                                         <option value="pie" :selected="chart.type==='pie'">Pie</option>
                                         <option value="line" :selected="chart.type==='line'">Line</option>
                                     </select>
                                 </div>                                
                                 <div class="col s12 m3">
                                     <label for="website">Label</label>
-                                    <input type="url" :placeholder="chart.label" :ref="'setting:customchart:'+chart.chartid+':label'">
+                                    <input type="url" :placeholder="chart.label" :ref="'setting:charts:custom:'+chart.chartid+':label'">
                                 </div>
                                 <div class="col s12 m6">
                                     <label for="website">Name</label>
-                                    <input type="url" :placeholder="chart.name" :ref="'setting:customchart:'+chart.chartid+':name'">
+                                    <input type="url" :placeholder="chart.name" :ref="'setting:charts:custom:'+chart.chartid+':name'">
                                 </div>
 
                                 <div class="col s12 m6">
@@ -377,6 +392,13 @@ export default {
                         if (!settings[settingNameParts[0]]) settings[settingNameParts[0]] = {}
                         if (!settings[settingNameParts[0]][settingNameParts[1]]) settings[settingNameParts[0]][settingNameParts[1]] = {}
                         settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]] = this.inputTypeToValue(thisRef, thisRef.type)
+                    }
+                    break;
+                    case 3: {
+                        if (!settings[settingNameParts[0]]) settings[settingNameParts[0]] = {}
+                        if (!settings[settingNameParts[0]][settingNameParts[1]]) settings[settingNameParts[0]][settingNameParts[1]] = {}
+                        if (!settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]]) settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]] = {}
+                        settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]][settingNameParts[3]] = this.inputTypeToValue(thisRef, thisRef.type)
                     }
                     break;
                 }            

@@ -11,19 +11,23 @@ export default defineEventHandler(async event => {
     if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
     if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-    const mainSettings = {
-        "public": botExisits[0].public,
-        "nsfw": botExisits[0].nsfw,
-        "shortdesc": botExisits[0].shortdesc,
-        "longdesc": botExisits[0].longdesc
+    const settings = {
+        mainSettings: {
+            "public": botExisits[0].public,
+            "nsfw": botExisits[0].nsfw,
+            "shortdesc": botExisits[0].shortdesc,
+            "longdesc": botExisits[0].longdesc
+        },
+        links: Object.assign({}, ...(await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})).map(l=>{return {[l.name]: l.url}}))
     }
+    
+    const chartSettings = await event.context.pgPool`SELECT chartid, enabled, name, label, type, category from chartsettings WHERE botid = ${path.botID}`.catch(() => {})
+    chartSettings.forEach(setting => {
+        if (!settings[setting.category]) settings[setting.category] = []
+        settings[setting.category].push(setting)
+    });
 
-    const links = Object.assign({}, ...(await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})).map(l=>{return {[l.name]: l.url}}))
-
-    const defaultChartSettings = await event.context.pgPool`SELECT chartid, enabled, name, label, type from chartsettings WHERE botid = ${path.botID} AND category = 'default'`.catch(() => {})
-    const customChartSettings = await event.context.pgPool`SELECT chartid, enabled, name, label, type from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
-
-    return {mainSettings, links, defaultChartSettings, customChartSettings}
+    return settings
 })
 
 export const schema = {
