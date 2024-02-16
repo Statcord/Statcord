@@ -131,8 +131,11 @@ export default {
                 return t
             })
 
-            this.commandStats = defaultStatsJson.commands
-            this.customStats = defaultStatsJson.custom.map(t=>{
+            this.commandStats = defaultStatsJson.commands.map(t=>{
+                if (t.name==="Command usage over time") t.data.labels = t.labels.map(d=>this.formatDate(d))
+                return t
+            })
+            this.customStats = defaultStatsJson.custom?.map(t=>{
                 if (t.type === "line") t.data.labels = defaultStatsJson.mainStats.labels.map(d=>this.formatDate(d))
                 return t
             })
