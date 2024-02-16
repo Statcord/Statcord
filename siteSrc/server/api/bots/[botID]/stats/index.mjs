@@ -50,7 +50,6 @@ export default defineEventHandler(async event => {
 	for (const type of sdafsdf){
 		if (!tempOBJ[type.category]) tempOBJ[type.category] = []
 		switch (type.category){
-			case "custom":
 			case "default": {
 				tempOBJ[type.category].push({
 					name: type.name,
@@ -60,6 +59,21 @@ export default defineEventHandler(async event => {
 							{
 								label: type.label,
 								data:  data[type.category].filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
+							}
+						]
+					}
+				})
+			}
+			break;
+			case "custom":{
+				tempOBJ[type.category].push({
+					name: type.name,
+					type: type.type,
+					data: {
+						datasets: [
+							{
+								label: type.label,
+								data:  data[type.category].filter(stat=>stat.customChartID===type.chartid).map(({_value})=>_value.toFixed(2))
 							}
 						]
 					}
