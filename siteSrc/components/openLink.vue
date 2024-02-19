@@ -3,7 +3,7 @@
         <span class="flow-text modal-trigger blue-text text-darken-2 myLink" data-target="linkModal1"><i class="material-icons">{{icon}}</i> {{name}}</span>
         <div id="linkModal1" ref="linkModal1" class="modal hide">
             <div class="modal-content">
-                <h4>Leaving DisStat</h4>
+                <h4>Leaving Statcord</h4>
                 <h6 class="flow-text">This link will take you to the following website</h6>
                 
                 <div>

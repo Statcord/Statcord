@@ -4,7 +4,7 @@ import config from './config/settings.mjs'
 const openapiJSON = {
     openapi: "3.0.0",
     info: {
-        title: "DisStat API Routes",
+        title: "Statcord API Routes",
         version: config.version
     },
     schemes: ["https"],

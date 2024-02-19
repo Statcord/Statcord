@@ -2,10 +2,10 @@
 An in-progress project by TomatoCake and numselli, which aims to replace [Statcord](https://statcord.com) with a more stable and better updated alternative due to it being offline and/or really unstable recently.
 
 ## Main URL
-https://disstat.numselli.xyz
+https://statcord.com
 
 ## API/Using it
-You can find it's API docs [here](https://disstat.numselli.xyz/docs/).
+You can find it's API docs [here](https://statcord.com/docs/).
 npm package: [disstat](https://www.npmjs.com/package/disstat)
 
 ## Support

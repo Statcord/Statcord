@@ -117,7 +117,7 @@ export const schema = {
 		"Internal"
 	],
 	"requestBody": {
-		"description": "Add a bot to DisStat",
+		"description": "Add a bot to Statcord",
 		"content": {
 			"application/json": {
 				"schema": {

@@ -193,7 +193,7 @@
            
             <div v-if="importExport === 'import'">
                 <select ref="importSourceSelector" @change="importSourceChange">
-                    <option value="disStat">DisStat</option>
+                    <option value="disStat">Statcord</option>
                     <option value="statcord">Statcord</option>
                     <option value="json">JSON</option>
                 </select>
@@ -250,16 +250,17 @@
     const bot = await $fetch(`/api/bots/${route.params.id}`)
     // console.log(route)
     useSeoMeta({
-        title: () =>`DisStat - ${bot?.username}`,
-        ogTitle: () => `DisStat - ${bot?.username}`,
-        description:  () => `Manage ${bot?.username} on DisStat.`,
-        ogDescription:  () => `Manage ${bot?.username} on DisStat.`,
+        themeColor: "#0080F0",
+        title: () =>`Statcord - ${bot?.username}`,
+        ogTitle: () => `Statcord - ${bot?.username}`,
+        description:  () => `Manage ${bot?.username} on Statcord.`,
+        ogDescription:  () => `Manage ${bot?.username} on Statcord.`,
         ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         // twitterCard: 'summary_large_image',
-        ogUrl: () => `https://disstat.numselli.xyz/bots/${route.params.id}/manage`,
-        twitterTitle: () =>`DisStat - ${bot?.username}`,
-        twitterDescription:  () => `Manage ${bot?.username} on DisStat.`,
+        ogUrl: () => `https://statcord.com/${route.params.id}/manage`,
+        twitterTitle: () =>`Statcord - ${bot?.username}`,
+        twitterDescription:  () => `Manage ${bot?.username} on Statcord.`,
 })
 useHead({
   htmlAttrs: {
@@ -331,7 +332,7 @@ export default {
 
             const a = document.createElement("a");
             a.href = `data:text/plain;base64,${data.value}`;
-            a.download = `DisStat_data_export_bot_${this.$route.params.id}.json`;
+            a.download = `Statcord_data_export_bot_${this.$route.params.id}.json`;
             a.click();
             a.remove();
         },

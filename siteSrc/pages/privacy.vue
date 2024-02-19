@@ -39,14 +39,15 @@
 
 <script setup>
 useSeoMeta({
-  title: 'DisStat - Privacy',
-  description: "Read DisStat's privacy policy and terms of service.",
-  ogTitle: 'DisStat - Privacy',
-  ogDescription: "Read DisStat's privacy policy and terms of service.",
+  themeColor: "#0080F0",
+  title: 'Statcord - Privacy',
+  description: "Read Statcord's privacy policy and terms of service.",
+  ogTitle: 'Statcord - Privacy',
+  ogDescription: "Read Statcord's privacy policy and terms of service.",
   ogImage: '/img/icon.png',
-  ogUrl: 'https://disstat.numselli.xyz',
-  twitterTitle: 'DisStat - Privacy',
-  twitterDescription: "Read DisStat's privacy policy and terms of service.",
+  ogUrl: 'https://statcord.com',
+  twitterTitle: 'Statcord - Privacy',
+  twitterDescription: "Read Statcord's privacy policy and terms of service.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })

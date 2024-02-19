@@ -1,11 +1,10 @@
 <template>
   <div class="container">
-    <h1>DisStat - Track statistics of your Discord bot</h1>
+    <h1>Statcord - Track statistics of your Discord bot</h1>
 
     <p class="flow-text">
-      This site allows tracking of Discord bot statistics, like guild, user and shard count, and used commands. It's a fully
-      <a href="https://github.com/DisStat/DisStat" target="_blank" rel="noopener" class="blue-text text-darken-2">open source</a> alternative to
-      <a href="https://statcord.com" target="_blank" rel="noopener" class="blue-text text-darken-2">Statcord</a> which has been mostly unusable since December 2022 and hasn't received any public updates in a long time.
+      This site allows tracking of Discord bot statistics like: guild, user, member counts, and command usage. It's a fully
+      <a href="https://github.com/DisStat/DisStat" target="_blank" rel="noopener" class="blue-text text-darken-2">open source</a>.
     </p>
 
     <p class="flow-text">
@@ -19,14 +18,15 @@
 
 <script setup>
 useSeoMeta({
-  title: 'DisStat',
-  description: "Track your Discord bot's statistics using DisStat.",
-  ogTitle: 'DisStat',
-  ogDescription: "Track your Discord bot's statistics using DisStat.",
+  themeColor: "#0080F0",
+  title: 'Statcord',
+  description: "Track your Discord bot's statistics using Statcord.",
+  ogTitle: 'Statcord',
+  ogDescription: "Track your Discord bot's statistics using Statcord.",
   ogImage: '/img/icon.png',
-  ogUrl: 'https://disstat.numselli.xyz',
-  twitterTitle: 'DisStat',
-  twitterDescription: "Track your Discord bot's statistics using DisStat.",
+  ogUrl: 'https://statcord.com',
+  twitterTitle: 'Statcord',
+  twitterDescription: "Track your Discord bot's statistics using Statcord.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })

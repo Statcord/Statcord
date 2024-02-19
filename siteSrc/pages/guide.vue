@@ -40,14 +40,15 @@
 
 <script setup>
 useSeoMeta({
-  title: 'DisStat - Setup guide',
-  description: "Read DisStat's bot statistics tracking setup guide.",
-  ogTitle: 'DisStat - Setup guide',
-  ogDescription: "Read DisStat's bot statistics tracking setup guide.",
+  themeColor: "#0080F0",
+  title: 'Statcord - Setup guide',
+  description: "Read Statcord's bot statistics tracking setup guide.",
+  ogTitle: 'Statcord - Setup guide',
+  ogDescription: "Read Statcord's bot statistics tracking setup guide.",
   ogImage: '/img/icon.png',
-  ogUrl: 'https://disstat.numselli.xyz',
-  twitterTitle: 'DisStat - Setup guide',
-  twitterDescription: "Read DisStat's bot statistics tracking setup guide.",
+  ogUrl: 'https://statcord.com',
+  twitterTitle: 'Statcord - Setup guide',
+  twitterDescription: "Read Statcord's bot statistics tracking setup guide.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })

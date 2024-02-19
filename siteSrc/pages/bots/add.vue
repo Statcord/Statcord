@@ -103,14 +103,15 @@
 
 <script setup>
   useSeoMeta({
-    title: 'DisStat - My bots',
-    description: "Track your Discord bot's statistics using DisStat.",
-    ogTitle: 'DisStat - My bots',
-    ogDescription: "Track your Discord bot's statistics using DisStat.",
+    themeColor: "#0080F0",
+    title: 'Statcord - My bots',
+    description: "Track your Discord bot's statistics using Statcord.",
+    ogTitle: 'Statcord - My bots',
+    ogDescription: "Track your Discord bot's statistics using Statcord.",
     ogImage: '/img/icon.png',
-    ogUrl: 'https://disstat.numselli.xyz',
-    twitterTitle: 'DisStat - My bots',
-    twitterDescription: "Track your Discord bot's statistics using DisStat.",
+    ogUrl: 'https://statcord.com',
+    twitterTitle: 'Statcord - My bots',
+    twitterDescription: "Track your Discord bot's statistics using Statcord.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })

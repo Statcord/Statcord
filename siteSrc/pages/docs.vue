@@ -4,14 +4,15 @@
   
   <script setup>
   useSeoMeta({
-    title: 'DisStat - Docs',
-    description: "Read DisStat's API Docs.",
-    ogTitle: 'DisStat - Docs',
-    ogDescription: "Read DisStat's API Docs.",
+    themeColor: "#0080F0",
+    title: 'Statcord - Docs',
+    description: "Read Statcord's API Docs.",
+    ogTitle: 'Statcord - Docs',
+    ogDescription: "Read Statcord's API Docs.",
     ogImage: '/img/icon.png',
-    ogUrl: 'https://disstat.numselli.xyz',
-    twitterTitle: 'DisStat - Docs',
-    twitterDescription: "Read DisStat's API Docs.",
+    ogUrl: 'https://statcord.com',
+    twitterTitle: 'Statcord - Docs',
+    twitterDescription: "Read Statcord's API Docs.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })

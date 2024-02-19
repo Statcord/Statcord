@@ -63,16 +63,17 @@
     const route = useRoute()
     const bot = await $fetch(`/api/bots/${route.params.id}`)
     useSeoMeta({
-        title: () =>`DisStat - ${bot?.username}`,
-        ogTitle: () => `DisStat - ${bot?.username}`,
-        description:  () => `View ${bot?.username}'s stats on DisStat.`,
-        ogDescription:  () => `View ${bot?.username}'s stats on DisStat.`,
+        themeColor: "#0080F0",
+        title: () =>`Statcord - ${bot?.username}`,
+        ogTitle: () => `Statcord - ${bot?.username}`,
+        description:  () => `View ${bot?.username}'s stats on Statcord.`,
+        ogDescription:  () => `View ${bot?.username}'s stats on Statcord.`,
         ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         // twitterCard: 'summary_large_image',
-        ogUrl: () => `https://disstat.numselli.xyz/bots/${route.params.id}`,
-        twitterTitle: () =>`DisStat - ${bot?.username}`,
-        twitterDescription:  () => `View ${bot?.username}'s stats on DisStat.`,
+        ogUrl: () => `https://statcord.com/bots/${route.params.id}`,
+        twitterTitle: () =>`Statcord - ${bot?.username}`,
+        twitterDescription:  () => `View ${bot?.username}'s stats on Statcord.`,
     })
     useHead({
         htmlAttrs: {

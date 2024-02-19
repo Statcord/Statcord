@@ -79,14 +79,15 @@
   
   <script setup>
   useSeoMeta({
-    title: 'DisStat - Pricing',
-    // description: "Read DisStat's bot statistics tracking setup guide.",
-    ogTitle: 'DisStat - Pricing',
-    // ogDescription: "Read DisStat's bot statistics tracking setup guide.",
+    themeColor: "#0080F0",
+    title: 'Statcord - Pricing',
+    // description: "Read Statcord's bot statistics tracking setup guide.",
+    ogTitle: 'Statcord - Pricing',
+    // ogDescription: "Read Statcord's bot statistics tracking setup guide.",
     ogImage: '/img/icon.png',
-    ogUrl: 'https://disstat.numselli.xyz',
-    twitterTitle: 'DisStat - Pricing',
-    // twitterDescription: "Read DisStat's bot statistics tracking setup guide.",
+    ogUrl: 'https://statcord.com',
+    twitterTitle: 'Statcord - Pricing',
+    // twitterDescription: "Read Statcord's bot statistics tracking setup guide.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
