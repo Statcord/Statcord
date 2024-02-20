@@ -12,7 +12,7 @@
         You are free to delete this data at any time by visiting your user settings and clicking "Delete all data".
         <br>
         We do not track you or sell or otherwise use your data, the data is only stored for the purpose it's intended for and deleted after that.
-        You can have a look at our <a href="https://github.com/DisStat/DisStat">GitHub repository</a> to check for yourself.
+        You can have a look at our <a href="https://github.com/statcord/DisStat">GitHub repository</a> to check for yourself.
       </p>
     </div>
 

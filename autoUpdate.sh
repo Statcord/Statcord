@@ -39,7 +39,7 @@ cd docker/source/
 
 # remove old version and download new version
 rm -r ./DisStat
-git clone https://github.com/DisStat/DisStat
+git clone https://github.com/statcord/DisStat
 cd DisStat
 
 # build and deploy 
