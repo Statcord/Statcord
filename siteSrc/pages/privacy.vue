@@ -6,7 +6,7 @@
         <h2>Privacy Policy</h2>
       </div>
 
-      <p>
+      <p class="flow-text">
         We only store data you (the user) provide to us, for example by logging in, adding your bot(s) or posting data from your bots.
         <br>
         You are free to delete this data at any time by visiting your user settings and clicking "Delete all data".
@@ -18,7 +18,7 @@
 
     <!-- Terms of Service -->
     <div class="divider"></div>
-    <div class="section">
+    <div class="section flow-text">
       <div class="center-align">
         <h2>Terms of Service</h2>
       </div>
