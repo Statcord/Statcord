@@ -71,3 +71,14 @@ CREATE TABLE public.botlinks (
 );
 ALTER TABLE IF EXISTS public.botlinks
     OWNER to disstat;
+
+
+
+
+CREATE TABLE public.newst (
+    botid character varying,
+    token character varying,
+    PRIMARY KEY (botid)
+);
+ALTER TABLE IF EXISTS public.newst
+    OWNER to disstat;

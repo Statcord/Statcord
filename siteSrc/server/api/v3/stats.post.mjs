@@ -2,83 +2,127 @@ import { defineEventHandler, sendNoContent, readBody, createError, sendError } f
 import { Point } from "@influxdata/influxdb-client"
 
 const mainStats = {
-    "servers": "intField",
-
-	// "shardCount": "intField",
-	// "userCount": "intField",
-	// "members": "intField",
-	// "ramUsage": "floatField",
-	// "totalRam": "floatField",
-	// "cpuUsage": "floatField"
+    "guildCount": "intField",
+	"shardCount": "intField",
+	"userCount": "intField",
+	"members": "intField",
+	"ramUsage": "floatField",
+	"totalRam": "floatField",
+	"cpuUsage": "floatField"
 }
 const mainStatsKeys = Object.keys(mainStats)
 
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
-	if (!body.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	if (!body.key) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
+	if (!body.key.startsWith("statcord.com")) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+
+	if (!body.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
-	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+	if (!botExisits[0]) {
+		if (await event.context.redis.exists(`botDubbleNotifCheck:${body.id}`)) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+
+		event.context.pgPool`INSERT INTO newst (botid, token) VALUES (${body.id}, ${body.key}) ON CONFLICT (botid) DO NOTHING`.catch(() => {})
+
+		fetch(event.context.newstwebhook, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				"embeds": [
+				  {
+					"title": "New statcord bot found",
+					"description": `[top.gg](https://top.gg/bot/${body.id})\n[ondiscord](https://bots.ondiscord.xyz/bots/${body.id})\n[bots.gg](https://discord.bots.gg/bots/${body.id})\n[infinity](https://infinitybots.gg/bot/${body.id})\n[discordextremelist](https://discordextremelist.xyz/en-US/bots/${body.id})\n[voidbots](https://voidbots.net/bot/${body.id})\n[discords](https://discords.com/bots/bot/${body.id})\n[wumpus](https://wumpus.store/bot/${body.id})\n[discordlist](https://discordlist.gg/bot/${body.id})`,
+					"color": 5814783,
+					"fields": [
+						{
+						  "name": "id",
+						  "value": body.id,
+						  "inline": true
+						},
+						{
+						  "name": "token",
+						  "value": body.key,
+						  "inline": true
+						}
+					  ]
+				  }
+				]
+			})
+		}).catch(()=>{})
+		
+		event.context.redis.set(`botDubbleNotifCheck:${body.id}`, 1)
+
+		return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
+	}
 	if (body.key !== botExisits[0].token) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-    const statsPostBodyKeys = Object.keys(body)
-    const hasMainStats = mainStatsKeys.some(key=>statsPostBodyKeys.includes(key))
-    if (!hasMainStats) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	if (statsPostBodyKeys.filter(k=>k.toLowerCase().includes("mem")).length === 1) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	const convertedBody = {
+		"guildCount": Number(body.servers ?? 0),
+		"userCount": Number(body.active.length ?? 0),
+		"members": Number(body.users ?? 0),
+		"ramUsage": Number(body.memactive ?? 0),
+		"totalRam": isNaN(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100)) ? 0 : Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100),
+		"cpuUsage": Number(body.cpuload ?? 0),
+		"customCharts": [
+			{
+				"id": "custom1",
+				"data": {
+					"itemOne": Number(body.custom1 ?? 0),
+				}
+			},
+			{
+				"id": "custom2",
+				"data": {
+					"itemOne": Number(body.custom2 ?? 0),
+				}
+			},
+			{
+				"id": "bandwidth",
+				"data": {
+					"itemOne": Number(body.bandwidth ?? 0),
+				}
+			}
+		],
+		"topCommands": body.popular ?? []
+	}
 
 	const writeClient = event.context.influx.influxClient.getWriteApi("disstat", "defaultBucket")
 
-	// if (body.custom1 || body.custom2){
-	// 	const customCharts = []
-	// 	if (body.custom1) customCharts.push({id: "custom1", data: {"itemOne": body.custom1}})
-	// 	if (body.custom2) customCharts.push({id: "custom2", data: {"itemOne": body.custom2}})
+	convertedBody.customCharts.map(customChart => {
+		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 
-	// 	const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${body.id} AND custom = true`.catch(() => {})
-	// 	if ([...existingCustomCharts, ...customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) {
-	// 		writeClient.flush()
-	// 		return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	// 	}
-		
-	// 	body.customCharts.map(customChart => {
-	// 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, custom) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', true) ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+		const customChartsPoint = new Point("customCharts")
+			.tag("botid",  body.id)
+			.tag("customChartID",  customChart.id)
 
-	// 		const customChartsPoint = new Point("customCharts")
-	// 			.tag("botid",  body.id)
-	// 			.tag("customChartID",  customChart.id)
+		Object.keys(customChart.data).forEach(key => {
+			const value = customChart.data[key]
+			if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
+			else customChartsPoint.intField(key, value)
+		})
 
-	// 		Object.keys(customChart.data).forEach(key => {
-	// 			const value = customChart.data[key]
-	// 			if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
-	// 			else customChartsPoint.intField(key, value)
-	// 		})
+		writeClient.writePoint(customChartsPoint)
+	})
 
-	// 		writeClient.writePoint(customChartsPoint)
-	// 	})
-	// }
+	const mainStatsPoint = new Point("botStats")
+	.tag("botid",  path.botID)
+	mainStatsKeys.forEach(key=>{		
+		mainStatsPoint[mainStats[key]](key, convertedBody[key])
+	})
+	writeClient.writePoint(mainStatsPoint)
 
-	// const dataObject = {}
+	if (convertedBody.topCommands.length > 0) {
+		const topCommandsPoint = new Point("topCommands")
+			.tag("botid",  body.id)
 
-    // if (hasMainStats){
-    //     const mainStatsPoint = new Point("botStats")
-    //     .tag("botid",  body.id)
+		convertedBody.topCommands.map(item => {
+			topCommandsPoint.intField(item.name, Number(item.count))
+		})
 
-    //     mainStatsKeys.forEach(key=>{
-    //         if (statsPostBodyKeys.includes(key)) mainStatsPoint[mainStats[key]](key, body[key])
-    //     })
-    //     writeClient.writePoint(mainStatsPoint)
-    // }
-
-	// if (body.topCommands) {
-	// 	const topCommandsPoint = new Point("topCommands")
-	// 		.tag("botid",  body.id)
-
-	// 	body.topCommands.map(item => {
-	// 		topCommandsPoint.intField(item.name, item.count)
-	// 	})
-
-	// 	writeClient.writePoint(topCommandsPoint)
-	// }
+		writeClient.writePoint(topCommandsPoint)
+	}
 
 	writeClient.flush()
 
@@ -102,7 +146,7 @@ export const schema = {
 		"key": [{}]
 	},
 	"requestBody": {
-		"description": "[NOT IMPLEMENTED YET] Post a bots stats (Statcord compatable). Both memactive and memload are REQUIRED if posting your ram usage.",
+		"description": "Post a bots stats (Statcord compatable). Both memactive and memload are REQUIRED if posting your ram usage.",
 		"content": {
 			"application/json": {
 				"schema": {
@@ -134,13 +178,80 @@ export const schema = {
 							"description": "The amount of users your bot is servicing",
 							required: true
 						},
-						// active
-						// commands
-						// popular
-						// memactive
-						// memload
-						// cpuload
-						// bandwidth
+						"active": {
+							required: false,
+							type: "array",
+							"description": "An array of users who have run at least 1 command.",
+							example: [
+								"726515812361437285"
+							],
+							"items": {
+								type: "string"
+							}
+						},
+						"commands": {
+							type: "integer",
+							"format": "int32",
+							example: 366051,
+							"description": "[unused] The amount of commands that have been run",
+							required: false
+						},
+						"popular": {
+							type: "array",
+							"description": "An array of the top 5 commands run",
+							required: false,
+							example: [
+								{
+									name: "help",
+									count: "10"
+								}
+							],
+							"items": {
+								type: "object",
+								"properties": {
+									name: {
+										type: "string",
+										example: "help",
+										"description": "The name of the command",
+										required: true
+									},
+									count: {
+										type: "string",
+										example: "10",
+										"description": "The amount the command has been run",
+										required: true
+									}
+								}
+							}
+						},
+						"memactive": {
+							type: "integer",
+							"format": "float",
+							example: 5000000000,
+							"description": "The amount of memory that is in use. (In Bytes)",
+							required: false
+						},
+						"memload": {
+							type: "integer",
+							"format": "float",
+							example: 50,
+							"description": "The % of memory that is in use",
+							required: false
+						},
+						"cpuload": {
+							type: "integer",
+							"format": "float",
+							"description": "The CPU usage of the bot or host",
+							example: 10.1,
+							required: false
+						},
+						"bandwidth": {
+							type: "integer",
+							"format": "float",
+							example: 5000000,
+							"description": "The amount of network bandwidth used. (In Bytes)",
+							required: false
+						},
 						"custom1": {
 							type: "integer",
 							"format": "int32",
@@ -154,65 +265,7 @@ export const schema = {
 							example: 14,
 							"description": "The value for custom graph 2",
 							required: false
-						},
-
-
-						// "members": {
-						// 	type: "integer",
-						// 	"format": "int32",
-						// 	example: 7687071,
-						// 	"description": "The total member count",
-						// 	required: false
-						// },
-						// "ramUsage": {
-						// 	type: "integer",
-						// 	"format": "float",
-						// 	example: 50.6,
-						// 	required: false,
-						// 	"description": "The amount of RAM the bot's process is using currently in bytes"
-						// },
-						// "totalRam": {
-						// 	type: "integer",
-						// 	"format": "float",
-						// 	"description": "The total amount of RAM available to the bot in bytes",
-						// 	required: false
-						// },
-						// "cpuUsage": {
-						// 	type: "integer",
-						// 	"format": "float",
-						// 	"description": "The CPU usage of the bot or host",
-						// 	example: 10.1,
-						// 	required: false
-						// },
-						// "topCommands": {
-						// 	required: false,
-						// 	type: "array",
-						// 	"description": "An array of the commands run since the last post",
-						// 	example: [
-						// 		{
-						// 			name: "help",
-						// 			count: 10
-						// 		}
-						// 	],
-						// 	"items": {
-						// 		type: "object",
-						// 		"properties": {
-						// 			name: {
-						// 				type: "string",
-						// 				example: "help",
-						// 				"description": "The name of the command",
-						// 				required: true
-						// 			},
-						// 			count: {
-						// 				type: "integer",
-						// 				"format": "int32",
-						// 				example: 10,
-						// 				"description": "The amount the command has been run",
-						// 				required: true
-						// 			}
-						// 		}
-						// 	}
-						// }
+						}
 					}
 				}
 			}
@@ -296,12 +349,3 @@ export const schema = {
 		}
 	}
 }
-
-// let requestBody = {
-//     active: this.activeUsers, // Users that have run commands since the last post
-//     commands: this.commandsRun.toString(), // The how many commands have been run total
-//     popular, // the top 5 commands run and how many times they have been run
-//     memactive: memactive.toString(), // Actively used memory
-//     memload: memload.toString(), // Active memory load in %
-//     cpuload: cpuload.toString(), // CPU load in %
-//     bandwidth: bandwidth.toString(), // Used bandwidth in bytes
