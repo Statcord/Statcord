@@ -4,7 +4,8 @@ const {configFile} = useRuntimeConfig()
 
 const redis = new Redis(configFile.redisURL);
 const allowedRoutes = [
-	"/api/v3/stats"
+	"/api/v3/stats",
+	"/api/logan/stats"
 ]
 
 export default defineEventHandler((event) => {
