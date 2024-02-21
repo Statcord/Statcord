@@ -101,7 +101,7 @@ export default defineEventHandler(async event => {
 						return acc;
 					}, []).map(a=>a._value)
 				} else if (type.chartid === "topCmds"){
-					chartOBJ.labels = Object.keys(commandUsageCounts)
+					chartOBJ.data.labels = Object.keys(commandUsageCounts)
 					chartOBJ.data.datasets[0].data = Object.values(commandUsageCounts)
 				}
 				tempOBJ[type.category].push(chartOBJ)
