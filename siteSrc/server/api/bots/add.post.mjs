@@ -80,7 +80,7 @@ export default defineEventHandler(async event => {
 	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.utils.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
 
 	defaultChartSettings.forEach(chart => {
-		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type) VALUES (${body.botid}, ${chart.id}, ${chart.name}, ${chart.label}, ${chart.type})`.catch(() => {})
+		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.botid}, ${chart.id}, ${chart.name}, ${chart.label}, ${chart.type}, ${chart.category})`.catch(() => {})
 	})
 
 	const botLinks = [
