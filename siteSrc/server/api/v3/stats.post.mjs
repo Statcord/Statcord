@@ -63,7 +63,7 @@ export default defineEventHandler(async event => {
 		"userCount": Number(body.active.length ?? 0),
 		"members": Number(body.users ?? 0),
 		"ramUsage": Number(body.memactive ?? 0),
-		"totalRam": isNaN(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100)) ? 0 : Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100),
+		"totalRam": Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100),
 		"cpuUsage": Number(body.cpuload ?? 0),
 		"shardCount": 0,
 		"customCharts": [
@@ -110,7 +110,7 @@ export default defineEventHandler(async event => {
 	const mainStatsPoint = new Point("botStats")
 	.tag("botid",  body.id)
 	mainStatsKeys.forEach(key=>{		
-		mainStatsPoint[mainStats[key]](key, convertedBody[key])
+		mainStatsPoint[mainStats[key]](key, isNaN(convertedBody[key])?0:convertedBody[key])
 	})
 	writeClient.writePoint(mainStatsPoint)
 
