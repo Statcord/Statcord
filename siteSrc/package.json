@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.0.8",
+    "@nuxtjs/sitemap": "^5.1.0",
     "chart.js": "^4.4.1",
     "nuxt": "^3.9.1"
   },

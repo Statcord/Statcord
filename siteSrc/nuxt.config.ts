@@ -34,9 +34,14 @@ export default defineNuxtConfig({
   ],
 
   modules: [
+    '@nuxtjs/sitemap',
     '@sidebase/nuxt-session'
   ],
 
+  sitemap: {
+    sources: ['/api/sitemap'],
+  },
+  
    session: {
      session: {
        "expiryInSeconds": 604800,
