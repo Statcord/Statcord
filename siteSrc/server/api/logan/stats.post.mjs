@@ -107,7 +107,7 @@ export default defineEventHandler(async event => {
 	})
 
 	const mainStatsPoint = new Point("botStats")
-	.tag("botid",  path.botID)
+	.tag("botid",  body.id)
 	mainStatsKeys.forEach(key=>{		
 		mainStatsPoint[mainStats[key]](key, convertedBody[key])
 	})
