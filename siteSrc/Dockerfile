@@ -11,7 +11,6 @@ RUN apk update && \
 
 # install npm pacages
 RUN npm install
-RUN npm i @materializecss/materialize@2.0.2-alpha
 
 RUN node genDocs.mjs 
 
