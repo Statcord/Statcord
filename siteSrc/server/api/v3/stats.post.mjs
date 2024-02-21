@@ -65,6 +65,7 @@ export default defineEventHandler(async event => {
 		"ramUsage": Number(body.memactive ?? 0),
 		"totalRam": isNaN(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100)) ? 0 : Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100),
 		"cpuUsage": Number(body.cpuload ?? 0),
+		"shardCount": 0,
 		"customCharts": [
 			{
 				"id": "custom1",
