@@ -58,8 +58,7 @@ export default {
         },
         loadNext() {
             window.onscroll = () => {
-                // if (!this.lastPageWithData)
-                if (!this.lastPageWithData && document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight) {
+                if (!this.lastPageWithData && Number((document.documentElement.scrollTop + window.innerHeight).toFixed(0)) === document.documentElement.offsetHeight) {
                     this.page++
                     this.load()
                 }
