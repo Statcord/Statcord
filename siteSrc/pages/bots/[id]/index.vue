@@ -12,8 +12,8 @@
                     <div class="row">
                         <div class="col s6 m12">
                             <object
-                                :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + '.webp?size=128'"
-                                type="image/png"
+                                :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=512'"
+                                :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
                                 aria-label="aaa"
                                 loading="lazy"
                                 class="circle"

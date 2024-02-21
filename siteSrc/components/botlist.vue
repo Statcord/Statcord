@@ -4,8 +4,8 @@
             <div class="card">
                 <div class="card-image no-overflow">
                     <object
-                        :data="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + '.png?size=512'"
-                        type="image/png"
+                        :data="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=512'"
+                        :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
                         aria-label="aaa"
                         loading="lazy"
                         :class="bot.nsfw? 'blur':''"
