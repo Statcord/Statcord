@@ -109,13 +109,8 @@ export default defineEventHandler(async event => {
 			break;
 		}
 	}
-	if (sdafsdf.filter(t=>t.name.toLowerCase().includes("ram")).length === 2){
-		const memusage = tempOBJ.default.findIndex(a=>a.name==="Ram Usage")
-		const totalMEM = tempOBJ.default.findIndex(a=>a.name==="Total Ram")
-		tempOBJ.default[totalMEM].data.datasets[0].label="Total Ram"
-		tempOBJ.default[memusage].data.datasets.push(tempOBJ.default[totalMEM].data.datasets[0])
-		delete tempOBJ.default[totalMEM]
-	}
+	
+	if (sdafsdf.filter(t=>t.name.toLowerCase().includes("ram")).length === 2) delete tempOBJ.default[tempOBJ.default.findIndex(a=>a.name==="Total Ram")]
 
 
 	return {
