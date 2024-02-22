@@ -9,7 +9,7 @@ import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
 export default {
-    name: 'lineChart',
+    name: 'chart',
     data() {
         return {
         }

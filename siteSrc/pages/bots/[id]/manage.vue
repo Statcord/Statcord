@@ -168,10 +168,10 @@
                         <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
                     </div>
                     <div class="col s3 m2">
-                        <div class="waves-effect waves-light btn" @click="sync">Sync<i class="material-icons left">autorenew</i></div>
+                        <div class="waves-effect waves-light btn" @click="sync"><i class="material-icons left">autorenew</i>Sync</div>
                     </div>
                     <div class="col s3 m2">
-                        <div class="waves-effect waves-light btn" @click="save">Save<i class="material-icons left">save</i></div>
+                        <div class="waves-effect waves-light btn" @click="save"><i class="material-icons left">save</i>Save</div>
                     </div>
                     <div class="col s6 m2">
                         <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
@@ -219,13 +219,13 @@
            
             <div v-if="apiKey">
                 <input type="text" disabled :value="apiKey">
-                <div class="waves-effect waves-light btn" @click="copyKey">copy<i class="material-icons left">content_copy</i></div>
+                <div class="waves-effect waves-light btn" @click="copyKey"><i class="material-icons left">content_copy</i>Copy</div>
             </div>
         </div>
         <div class="modal-footer">
             <div>
                 <div class="modal-close waves-effect waves-light btn left">Close</div>
-                <div class="waves-effect waves-light btn" @click="reGenKey">Regenerate API key<i class="material-icons left">autorenew</i></div>
+                <div class="waves-effect waves-light btn" @click="reGenKey"><i class="material-icons left">autorenew</i>Regenerate API key</div>
             </div>
         </div>
     </div>

@@ -14,14 +14,14 @@
             </ul>
 
             <ul class="right ">
-                <li :class="hideLogin()"><a :href="oauthUrl">Login</a></li>
-                <li
+                <li :class="user ? 'hide' : ''"><a :href="oauthUrl">Login</a></li>
+                <li v-if="user"
                     class="dropdown-trigger"
                     ref="dropdown"
-                    :class="hideUserDrop()"
+                    :class="user ? 'right valign-wrapper' : 'hide'"
                     data-target="dropdown1"
                     id="userDropdown">
-                    <img v-if="username" :src="avatarURL" :alt="username" class="circle left-align" />
+                    <img :src="`https://cdn.discordapp.com/avatars/${user.avatar ? `${user.id}/${user.avatar}.${(user.avatar.startsWith('a_')?'gif':'webp')}`: `${(user.id >>> 22) % 5}.png`}?size=32`" :alt="user.username" class="circle left-align" />
                     <i class="material-icons right-align">arrow_drop_down</i>
                 </li>
             </ul>
@@ -35,46 +35,44 @@
         <li><router-link to="/guide" class="white-text">Setup guide</router-link></li>
         <li><router-link to="/pricing">Pricing</router-link></li>
     </ul>
-    <ul id="dropdown1" class="dropdown-content valign-wrapper black">
-        <router-link :to="'/users/'+userID" class="white-text">User</router-link>
+    <ul v-if="user" ref="dropdownContent" id="dropdown1" class="dropdown-content valign-wrapper black">
+        <li><router-link :to="'/users/'+user.id" class="white-text">User</router-link></li>
+        <!-- <router-link :to="'/users/'+user.id" class="white-text">User</router-link> -->
         <li class="divider"></li>
         <li><span @click="logout" class="red-text darken-3">Logout</span></li>
     </ul>
 </template>
+
+
+<script setup>
+    const headers = useRequestHeaders(['cookie'])
+
+    const { data: userFetch } = await useAsyncData(async () => {
+        const [user] = await Promise.all([
+            $fetch(`/api/oauth/user`, { headers })
+        ])
+        return user
+    })
+
+    const user = userFetch.value
+</script>
+
 
 <script>
 export default {
     name: 'navbar',
     data() {
         return {
-            username: "",
-            avatarURL: "",
-            isLoggedIn: false,
-            userID: "",
             oauthUrl: this.$genOauthUrl(this.$route.fullPath),
         }
     },
     async mounted() {
+        // console.log(this.$refs.dropdownContent)
         this.$M.Sidenav.init(this.$refs.sidenav)
 
-        if (this.$auth.isLoggedIn()){
-            this.$M.Dropdown.init(this.$refs.dropdown, { coverTrigger: false })
-            this.isLoggedIn = true;
-
-            const user = this.$auth.getUser()
-
-            this.username = user.username
-            this.avatarURL = `https://cdn.discordapp.com/avatars/${user.avatar ? `${user.id}/${user.avatar}.webp`: `${(user.id >>> 22) % 5}.png`}?size=32`
-            this.userID = user.id
-        }
+        if (this.$refs.dropdownContent) this.$M.Dropdown.init(this.$refs.dropdown, { coverTrigger: false })
     },
     methods: {
-        hideLogin() {
-            return this.isLoggedIn ? "hide" : "right"
-        },
-        hideUserDrop() {
-            return this.isLoggedIn ? "right valign-wrapper" : "hide"
-        },
         async logout(){
             const { remove } = await useSession()
             await remove()

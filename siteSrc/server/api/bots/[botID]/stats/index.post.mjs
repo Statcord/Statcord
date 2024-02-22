@@ -41,20 +41,24 @@ export default defineEventHandler(async event => {
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 		}
 
-		body.customCharts.map(customChart => {
-			event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+		event.context.pgPool.begin(async sql => {
+			return body.customCharts.map(async customChart => {
+				const [chartsettingsInsert] = await sql`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+	
+				const customChartsPoint = new Point("customCharts")
+					.tag("botid",  path.botID)
+					.tag("customChartID",  customChart.id)
+	
+				Object.keys(customChart.data).forEach(key => {
+					const value = customChart.data[key]
+					if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
+					else customChartsPoint.intField(key, value)
+				})
+	
+				writeClient.writePoint(customChartsPoint)
 
-			const customChartsPoint = new Point("customCharts")
-				.tag("botid",  path.botID)
-				.tag("customChartID",  customChart.id)
-
-			Object.keys(customChart.data).forEach(key => {
-				const value = customChart.data[key]
-				if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
-				else customChartsPoint.intField(key, value)
+				return chartsettingsInsert
 			})
-
-			writeClient.writePoint(customChartsPoint)
 		})
 	}
 

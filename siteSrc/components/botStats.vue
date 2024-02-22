@@ -39,17 +39,17 @@
             <div v-if="stats.length>0" class="row">
                 <div v-for="stat in stats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
-                    <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
+                    <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
                 
                 <div v-for="stat in commandStats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
-                    <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
+                    <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
 
                 <div v-for="stat in customStats" :key="stat.id" class="col s12 l4">
                     <h1>{{ stat.name }}</h1>
-                    <lineChart :chartData="stat.data" :chartType="stat.type"></lineChart>
+                    <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
             </div>
             <div v-else>
@@ -62,12 +62,12 @@
 </template>
 
 <script>
-import lineChart from './lineChart.vue'
+import chart from './chart.vue'
 
 export default {
     name: 'bot',
     components: {
-        lineChart
+        chart
     },
     props: {
         botJson: Object
@@ -128,6 +128,47 @@ export default {
 
             this.stats = defaultStatsJson.mainStats.stats.map(t=>{
                 t.data.labels = defaultStatsJson.mainStats.labels.map(d=>this.formatDate(d))
+                switch(t.name){
+                    case "CPU Usage":{
+                        t.options = {
+                            	scales: {
+									y: {
+										ticks: {
+											callback: value => `${value}%` 
+										},
+										beginAtZero: true
+									}
+								},
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: context => `${context.dataset.label} ${context.parsed.y}%`
+                                    }
+                                }
+                            }
+                        }
+                    }break;
+                    case "Ram Usage":{
+                        t.options={
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: value => this.bytesToSize(value) 
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        // if (context.parsed.y !== null) {
+
+                                        label: context => `${context.dataset.label}: ${this.bytesToSize(context.parsed.y)}`
+                                    }
+                                }
+                            }
+                        }
+                    }break;
+                }
                 return t
             })
 
@@ -145,6 +186,11 @@ export default {
         getLastStat(mainStats, stat){
             const dataSet = mainStats[mainStats.findIndex(a=>a.name===stat)].data.datasets[0].data
             return dataSet[dataSet.length-1]
+        },
+        bytesToSize(bytes) {
+            const units = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"];
+            const unit = Math.floor(Math.log(bytes) / Math.log(1024));
+            return new Intl.NumberFormat("en", {style: "unit", unit: units[unit]}).format(bytes / 1024 ** unit);
         }
     }
 }

@@ -38,4 +38,3 @@ for (const file of apiDir) {
 }
 
 writeFile('swaggerRoutes.mjs', `export default ${JSON.stringify(openapiJSON)}`);
-// console.log(openapiJSON)
