@@ -1,6 +1,8 @@
 node_modules/
 package-lock.json
-.nuxt/
-siteSrc/config.mjs
-siteSrc/swaggerRoutes.mjs
-siteSrc/config.mjs
+
+/siteSrc/.nuxt/
+/siteSrc/.output/
+/siteSrc/config.mjs
+/siteSrc/swaggerRoutes.mjs
+/siteSrc/config/settings.mjs

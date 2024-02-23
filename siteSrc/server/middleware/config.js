@@ -5,9 +5,8 @@ export default defineEventHandler((event) => {
 
     switch (url){
         case "/api/logan/stats":
-        case "/api/v3/stats": {
+        case "/api/v3/stats":
             event.context.newstwebhook = configFile.webhooks.newSt
-        }
         break;
     }
 })
