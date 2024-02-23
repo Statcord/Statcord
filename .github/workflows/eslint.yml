@@ -2,6 +2,9 @@ name: ESLint
 
 on:
   push:
+    authors:
+      - "DEVTomatoCake"
+  pull_request:
 
 jobs:
   lint:
