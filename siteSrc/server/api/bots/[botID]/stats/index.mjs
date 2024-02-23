@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery, createError, getRouterParams, sendError } from "h3"
+import { defineEventHandler, getQuery, createError, getRouterParams, sendError, appendCorsPreflightHeaders } from "h3"
 import { flux, fluxDuration } from "@influxdata/influxdb-client"
 
 export default defineEventHandler(async event => {
@@ -112,7 +112,7 @@ export default defineEventHandler(async event => {
 	
 	if (sdafsdf.filter(t=>t.name.toLowerCase().includes("ram")).length === 2) delete tempOBJ.default[tempOBJ.default.findIndex(a=>a.name==="Total Ram")]
 
-
+	appendCorsPreflightHeaders(event, {"allowHeaders": "*"})
 	return {
 		mainStats: {
 			stats: tempOBJ.default.filter(a=>typeof a !== "undefined"),
