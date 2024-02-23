@@ -4,13 +4,13 @@
         <div class="divider"></div>
 
         <div>
-            <div v-if="longdescRendered !== ''" v-html="longdescRendered" class="flow-text" ></div>
+            <div v-if="longdescRendered !== ''" v-html="longdescRendered" class="flow-text"></div>
         </div>
         
         <div class="divider"></div>
         <div>
             <h5>links</h5>
-            <openLink icon="add" name="Invite" :url="botJson.invite" ></openLink>
+            <openLink icon="add" name="Invite" :url="botJson.invite"></openLink>
             <openLink v-for="link in botJson.links" :icon="link.icon" :name="link.name" :url="link.url"></openLink>
         </div>
     </div>

@@ -106,7 +106,7 @@ const influxRun = class{
 		|> yield(name: "mean")`
 		// |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
 	
-		let tableObjects = []
+		const tableObjects = []
 		for await (const { values, tableMeta } of this.#queryApi.iterateRows(fluxQuery)) {
 			tableObjects.push(tableMeta.toObject(values))
 		}

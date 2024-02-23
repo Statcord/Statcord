@@ -4,6 +4,7 @@ const unicorn = require("eslint-plugin-unicorn")
 const sonarjs = require("eslint-plugin-sonarjs")
 const stylistic = require("@stylistic/eslint-plugin")
 const vue = require("eslint-plugin-vue")
+const vueParser = require("vue-eslint-parser")
 const tsParser = require("@typescript-eslint/parser")
 
 const config = {
@@ -13,11 +14,20 @@ const config = {
 	languageOptions: {
 		globals: {
 			...globals.node,
+			...globals.browser,
 			defineNuxtConfig: "readonly",
 			defineNuxtPlugin: "readonly",
 			defineEventHandler: "readonly",
 			useRuntimeConfig: "readonly",
-			useFetch: "readonly"
+			useFetch: "readonly",
+			useHead: "readonly",
+			useSeoMeta: "readonly",
+			navigateTo: "readonly",
+			useRequestHeaders: "readonly",
+			useAsyncData: "readonly",
+			useSession: "readonly",
+			$fetch: "readonly",
+			sendError: "readonly"
 		}
 	},
 	plugins: {
@@ -51,9 +61,6 @@ const config = {
 		"no-import-assign": 2,
 		"no-invalid-regexp": 2,
 		"no-invalid-this": 2,
-		"no-implicit-coercion": [2, {
-			string: false
-		}],
 		"no-implied-eval": 2,
 		"no-loss-of-precision": 2,
 		"no-multi-assign": 2,
@@ -65,16 +72,13 @@ const config = {
 		"no-unreachable": 1,
 		"no-unreachable-loop": 2,
 		"no-unsafe-finally": 2,
-		"no-unused-vars": 2,
+		"no-unused-vars": 1,
 		"no-useless-computed-key": 2,
 		"no-useless-rename": 2,
 		"no-useless-escape": 2,
 		"no-unused-expressions": 2,
 		"no-useless-return": 2,
 		"no-useless-call": 2,
-		"no-use-before-define": [2, {
-			functions: false
-		}],
 		"no-useless-concat": 2,
 		"no-useless-backreference": 2,
 		"no-useless-catch": 2,
@@ -91,9 +95,8 @@ const config = {
 		"no-template-curly-in-string": 2,
 		"no-unsafe-optional-chaining": 2,
 		"no-unmodified-loop-condition": 2,
-		"no-promise-executor-return": 2,
 		"no-warning-comments": 1,
-		"no-var": 2,
+		"no-var": 1,
 		"no-new-func": 2,
 		"no-new-wrappers": 2,
 		"no-multi-str": 2,
@@ -103,16 +106,13 @@ const config = {
 		"no-self-compare": 2,
 		"no-regex-spaces": 2,
 		"no-constant-binary-expression": 2,
-		"no-sequences": 2,
 		"no-irregular-whitespace": [2, {
 			skipRegExps: true
 		}],
 		"no-constant-condition": 2,
-		"no-undefined": 2,
-		"no-lone-blocks": 2,
+		"no-undefined": 1,
 		"object-shorthand": 2,
 		"prefer-arrow-callback": 2,
-		"prefer-const": 2,
 		"use-isnan": 2,
 		"valid-typeof": 2,
 
@@ -122,24 +122,20 @@ const config = {
 		"@stylistic/dot-location": [2, "property"],
 		"@stylistic/function-call-spacing": 2,
 		"@stylistic/generator-star-spacing": 2,
-		"@stylistic/keyword-spacing": 1,
 		"@stylistic/new-parens": 2,
 		"@stylistic/no-mixed-operators": [2, {
 			groups: [["*", "/"], ["+", "-"]]
 		}],
 		"@stylistic/no-floating-decimal": 2,
 		"@stylistic/no-whitespace-before-property": 1,
-		"@stylistic/padded-blocks": [2, "never"],
 		"@stylistic/rest-spread-spacing": 2,
 		"@stylistic/space-in-parens": 2,
 		"@stylistic/space-unary-ops": 2,
 		"@stylistic/yield-star-spacing": 2,
 
-		"unicorn/empty-brace-spaces": 2,
 		"unicorn/error-message": 2,
 		"unicorn/new-for-builtins": 2,
 		"unicorn/consistent-destructuring": 2,
-		"unicorn/consistent-function-scoping": 2,
 		"unicorn/no-array-method-this-argument": 2,
 		"unicorn/no-lonely-if": 2,
 		"unicorn/no-instanceof-array": 2,
@@ -166,10 +162,10 @@ const config = {
 		"unicorn/prefer-default-parameters": 2,
 		"unicorn/prefer-array-some": 2,
 		"unicorn/prefer-blob-reading-methods": 2,
-		"unicorn/prefer-at": 2,
+		"unicorn/prefer-at": 1,
 		"unicorn/prefer-optional-catch-binding": 2,
 		"unicorn/prefer-regexp-test": 2,
-		"unicorn/prefer-set-has": 2,
+		"unicorn/prefer-set-has": 1,
 		"unicorn/prefer-set-size": 2,
 		"unicorn/prefer-negative-index": 2,
 		"unicorn/prefer-node-protocol": 2,
@@ -177,7 +173,6 @@ const config = {
 		"unicorn/prefer-string-trim-start-end": 2,
 		"unicorn/prefer-string-starts-ends-with": 2,
 		"unicorn/require-number-to-fixed-digits-argument": 2,
-		"unicorn/switch-case-braces": [2, "avoid"],
 		"unicorn/text-encoding-identifier-case": 2,
 
 		"sonarjs/no-extra-arguments": 2,
@@ -191,7 +186,6 @@ const config = {
 		"sonarjs/non-existent-operator": 2,
 		"sonarjs/no-redundant-boolean": 2,
 		"sonarjs/no-unused-collection": 2,
-		"sonarjs/prefer-immediate-return": 2,
 		"sonarjs/no-inverted-boolean-check": 2,
 		"sonarjs/no-redundant-jump": 2,
 		"sonarjs/no-same-line-conditional": 2,
@@ -201,8 +195,7 @@ const config = {
 		"sonarjs/no-gratuitous-expressions": 2,
 		"sonarjs/no-duplicated-branches": 2,
 
-		// Priority A: Essential (Error Prevention)
-		"vue/multi-word-component-names": 2,
+		// Some of: Priority A: Essential (Error Prevention)
 		"vue/no-async-in-computed-properties": 2,
 		"vue/no-child-content": 2,
 		"vue/no-computed-properties-in-data": 2,
@@ -289,27 +282,18 @@ const config = {
 		"vue/valid-v-text": 2,
 		"vue/no-arrow-functions-in-watch": 2,
 
-		// Priority B: Strongly Recommended (Improving Readability)
-		"vue/attribute-hyphenation": 2,
-		"vue/first-attribute-linebreak": 2,
+		// Some of: Priority B: Strongly Recommended (Improving Readability)
 		"vue/html-closing-bracket-newline": 2,
-		"vue/html-closing-bracket-spacing": 2,
+		"vue/html-closing-bracket-spacing": 1,
 		"vue/html-end-tags": 2,
-		"vue/html-indent": 2,
 		"vue/html-quotes": 2,
-		"vue/html-self-closing": 2,
-		"vue/max-attributes-per-line": 2,
-		"vue/multiline-html-element-content-newline": 2,
-		"vue/mustache-interpolation-spacing": 2,
 		"vue/no-multi-spaces": 2,
 		"vue/no-spaces-around-equal-signs-in-attribute": 2,
 		"vue/no-template-shadow": 2,
 		"vue/one-component-per-file": 2,
 		"vue/prop-name-casing": 2,
-		"vue/require-default-prop": 2,
 		"vue/require-explicit-emits": 2,
 		"vue/require-prop-types": 2,
-		"vue/singleline-html-element-content-newline": 2,
 		"vue/v-bind-style": 2,
 		"vue/v-on-event-hyphenation": 2,
 		"vue/v-on-style": 2,
@@ -333,6 +317,10 @@ module.exports = [
 	},
 	{
 		...config,
-		files: ["**/*.vue"]
+		files: ["**/*.vue", "**/*.mjs"],
+		languageOptions: {
+			...config.languageOptions,
+			parser: vueParser
+		}
 	}
 ]

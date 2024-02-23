@@ -1,4 +1,4 @@
-import { readdir, writeFile } from 'fs/promises'
+import { readdir, writeFile } from 'node:fs/promises'
 import config from './config/settings.mjs'
 
 const openapiJSON = {
@@ -26,7 +26,7 @@ for (const file of apiDir) {
     
     if (schema.hidden) continue;
     
-    if (typeof openapiJSON.paths[routeString] === "undefined") {
+    if (openapiJSON.paths[routeString] === void 0) {
         openapiJSON.paths[routeString] = {
             [method]: schema
         };

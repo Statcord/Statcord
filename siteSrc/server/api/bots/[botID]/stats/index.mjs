@@ -115,7 +115,7 @@ export default defineEventHandler(async event => {
 	appendCorsPreflightHeaders(event, {"allowHeaders": "*"})
 	return {
 		mainStats: {
-			stats: tempOBJ.default.filter(a=>typeof a !== "undefined"),
+			stats: tempOBJ.default.filter(a=>a !== void 0),
 			labels: mainStatsLabels
 		},
 		custom: tempOBJ.custom,
@@ -311,7 +311,7 @@ const influxRun = class{
 		|> yield(name: "mean")`
 		// |> map(fn: (r) => ({r with _value: math.round(x: r._value)}))
 	
-		let tableObjects = []
+		const tableObjects = []
 		for await (const { values, tableMeta } of this.#queryApi.iterateRows(fluxQuery)) {
 			tableObjects.push(tableMeta.toObject(values))
 		}
