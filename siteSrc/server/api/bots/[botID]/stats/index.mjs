@@ -93,13 +93,14 @@ export default defineEventHandler(async event => {
 					}
 				}
 				if (type.chartid === "cmdTotalUse"){
-					chartOBJ.labels = data.commands.map(i => i._time)
-					chartOBJ.data.datasets[0].data = data.commands.reduce((acc, cur, i) => {
+					const cmdData = data.commands.reduce((acc, cur, i) => {
 						const item = i > 0 && acc.find(({_time}) => _time === cur._time)
 						if (item) item._value += cur._value;
 						else acc.push({ _time: cur._time, _value: cur._value });
 						return acc;
-					}, []).map(a=>a._value)
+					}, [])
+					chartOBJ.data.datasets[0].data = cmdData.map(a=>a._value)
+					chartOBJ.labels = cmdData.map(i => i._time)
 				} else if (type.chartid === "topCmds"){
 					chartOBJ.data.labels = Object.keys(commandUsageCounts)
 					chartOBJ.data.datasets[0].data = Object.values(commandUsageCounts)
