@@ -10,11 +10,16 @@ const nav = {
 function updateNav(elem) {
 	const current = window.location.pathname
 	elem.innerHTML =
+		"<header>" +
+		"<div class='banner'>" +
+		"We recommend using the new frontend at <a href='https://Statcord.com'>Statcord.com</a>!" +
+		"</div>" +
 		"<nav>" +
 		"<a href='/'><img src='/assets/logo.png' alt='DisStat Logo'></a>" +
 		Object.keys(nav).map(path => "<a href='" + encode(path) + "'" + (current == path ? " class='active'" : "") + ">" + encode(nav[path]) + "</a>").join("") +
 		"<ion-icon name='invert-mode-outline' onclick='toggleTheme()'></ion-icon>" +
-		"</nav>"
+		"</nav>" +
+		"</header>"
 }
 class Navbar extends HTMLElement {
 	constructor() {

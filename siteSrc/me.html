@@ -33,6 +33,7 @@
 				const params = new URLSearchParams(location.search)
 				if (params.has("code")) login(params.get("code"))
 				async function load() {
+					document.getElementById("bots").innerHTML = ""
 					const bots = await getBotsFromUser()
 					if (bots.length == 0) return document.getElementById("bots").innerHTML += "<p>You don't have any bots yet. Add one with the button above.</p>"
 					bots.forEach(bot => {
