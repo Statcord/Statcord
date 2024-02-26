@@ -1,5 +1,5 @@
 export default defineEventHandler((event) => {
-    if (!event.node.req.url || !(event.node.req.url.startsWith('/api/bots/') && event.node.req.url.endsWith('/genKey'))) return;
+    if (!event.node.req.url || !(event.node.req.url.startsWith('/api/bots/') && (event.node.req.url.endsWith('/genKey') || event.node.req.url.endsWith('/add')))) return;
 
     event.context.genKey = () => {
         return "SC-xxxxxxxxxxxx4xxxyxxxxxxxx".replace(/[xy]/g, c => {
