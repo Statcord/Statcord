@@ -77,7 +77,7 @@ export default defineEventHandler(async event => {
 	const bot = await event.context.oauth.rest.users.get(body.botid).catch(e=>{})
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.utils.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
 
 	defaultChartSettings.forEach(chart => {
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.botid}, ${chart.id}, ${chart.name}, ${chart.label}, ${chart.type}, ${chart.category})`.catch(() => {})
