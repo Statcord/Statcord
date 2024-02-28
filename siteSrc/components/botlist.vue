@@ -12,7 +12,7 @@
                         :alt="bot.username+`'s profile picture`"
                         style="max-width: 100%; border-radius: 12px 12px 0 0 ;"
                         >
-                        <img :src="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" alt="Defualt Bot icon" style="border-radius: 12px 12px 0 0 " />
+                        <img :src="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" alt="Defualt Bot icon" loading="lazy" style="border-radius: 12px 12px 0 0 " />
                     </object>
                 </div>
                 <div class="card-stacked">
