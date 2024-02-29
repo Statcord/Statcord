@@ -4,11 +4,11 @@
 
     <p class="flow-text">
       This site allows tracking of Discord bot statistics like: guild, user, member counts, and command usage. It's a fully
-      <a href="https://github.com/statcord/DisStat" target="_blank" rel="noopener" class="blue-text text-darken-2">open source</a>.
+      <a href="https://github.com/statcord/DisStat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">open source</a>.
     </p>
 
     <p class="flow-text">
-      <router-link to="/bots/add" class="blue-text text-darken-2">Add your bot now</router-link> or <router-link to="/bots/685166801394335819" class="blue-text text-darken-2">View a demo</router-link>!
+      <router-link to="/bots/add" class="blue-text text-darken-2 underline">Add your bot now</router-link> or <router-link to="/bots/685166801394335819" class="blue-text text-darken-2 underline">View a demo</router-link>!
     </p>
    
     <h2>All currently tracked, public bots</h2>

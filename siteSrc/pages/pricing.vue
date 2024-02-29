@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row" style="gap:10px;">
-            <div class="col s12 m6">
+            <div class="col s12 m3 offset-m3">
                 <div class="card">
                     <div class="card-image">
                         <img src="/img/icon.png" class="responsive-img">
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="col s12 m6">
+            <div class="col s12 m3">
                 <div class="card">
                     <div class="card-image">
                         <img src="/img/icon.png" class="responsive-img">

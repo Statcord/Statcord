@@ -9,7 +9,7 @@
 
       <p class="flow-text">
         While we are still in development you can already post your data. You can either implement the endpoints yourself using our 
-        <router-link to="/docs" class="blue-text text-darken-2">API documentation</router-link> or you use one of our API wrappers.
+        <router-link to="/docs" class="blue-text text-darken-2 underline">API documentation</router-link> or you use one of our API wrappers.
         <br>
         You should post your bots general data at most once a minute.
         <br>
@@ -21,9 +21,9 @@
       <div class="section">
         <h3>API wrappers</h3>
         <ul class="flow-text">
-          <li><b>Node.js</b>: <a href="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2">disstat</a> by TomatoCake</li>
-          <li><b>Python</b>: <a href="https://pypi.org/project/disstat/">disstat</a> by The Untraceable</li>
-          <li><b>Python</b>: <a href="https://pypi.org/project/disstat.py/">disstat.py</a> by The DT</li>
+          <li><b>Node.js</b>: <a href="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">disstat</a> by TomatoCake</li>
+          <li><b>Python</b>: <a href="https://pypi.org/project/disstat/" class="blue-text text-darken-2 underline">disstat</a> by The Untraceable</li>
+          <li><b>Python</b>: <a href="https://pypi.org/project/disstat.py/" class="blue-text text-darken-2 underline">disstat.py</a> by The DT</li>
         </ul>
       </div>
 
