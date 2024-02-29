@@ -1,17 +1,17 @@
 <template>
-  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><i class="material-icons left">add</i>Add your bot</router-link>
-  <router-link v-if="isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
+  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><i class="material-icons left">add</i>Add your bot</router-link>
+  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
 
   <div>
     <div class="row">
-      <img :src="userAvatar" alt="" class="circle">
-      <h1>{{profileInfo.username}}</h1>
+      <img :src="user.avatarURL" alt="" class="circle">
+      <h1>{{user.username}}</h1>
 
     </div>
-    <h4>{{ profileInfo.aboutme }}</h4>
+    <h4>{{ user.aboutme }}</h4>
 
-    <div v-if="profileInfo.website">
-      <safeLinkPopUp icon="link" name="Website" :url="profileInfo.website"></safeLinkPopUp>
+    <div v-if="user.website">
+      <safeLinkPopUp icon="link" name="Website" :url="user.website"></safeLinkPopUp>
     </div>
   </div>
 
@@ -19,6 +19,33 @@
   <botlist :botListRoute="'/api/user/'+userID+'/bots/'"></botlist>
 </template>
 <script setup>
+  import { useRoute } from 'vue-router';
+
+  const route = useRoute()
+  const headers = useRequestHeaders(['cookie'])
+
+  const { data: userFetch, status } = await useAsyncData(async () => {
+    const [bot] = await Promise.all([
+      $fetch(`/api/user/${route.params.userID}`, { headers })
+    ])
+    return bot
+  })
+
+  if (status.value === "error") {
+    userFetch.value = {
+      username: "Private user",
+      aboutme: '',
+      website: ""
+    }
+    await navigateTo("/");
+  }
+  
+  const user = {
+    ...userFetch.value,
+    avatarURL: `https://cdn.discordapp.com/avatars/${userFetch.value.avatar ? `${route.params.userID}/${userFetch.value.avatar}.${userFetch.value.avatar.startsWith("_a") ? '.gif' : 'webp'}`: `${(route.params.userID >>> 22) % 5}.png`}`
+  }
+
+
 useSeoMeta({
   themeColor: "#0080F0",
   title: 'Statcord - My bots',
@@ -58,20 +85,8 @@ export default {
   },
   data() {
     return {
-      isProfileOwner: false,
-      profileInfo: {},
-      userAvatar:"",
       userID: this.$route.params.userID
     };
-  },
-  async mounted() {
-    this.isProfileOwner = this.$auth.getUser()?.id === this.$route.params.userID
-
-    const {data: user, error} = await useFetch(`/api/user/${this.$route.params.userID}`)
-    if (!this.isProfileOwner && error.value) return await navigateTo("/");
-
-    this.profileInfo = user.value
-    this.userAvatar = `https://cdn.discordapp.com/avatars/${user.value.avatar ? `${this.$route.params.userID}/${user.value.avatar}.webp`: `${(this.$route.params.userID >>> 22) % 5}.png`}`
   }
 }
 </script>
