@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
 	return {
 		...userFromDB[0],
-		isProfileOwner: path.userID === event.context.session.userInfo.id
+		isProfileOwner: path.userID === event.context.session.userInfo?.id
 	}
 })
 
