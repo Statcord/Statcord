@@ -11,6 +11,7 @@
                 <li><router-link to="/privacy">Privacy</router-link></li>
                 <li><router-link to="/guide">Setup guide</router-link></li>
                 <li><router-link to="/pricing">Pricing</router-link></li>
+                <li><router-link to="/partners">Partners</router-link></li>
             </ul>
 
             <ul class="right ">
@@ -33,11 +34,11 @@
         <li><a href="/support" class="white-text">Support</a></li>
         <li><router-link to="/privacy" class="white-text">Privacy</router-link></li>
         <li><router-link to="/guide" class="white-text">Setup guide</router-link></li>
-        <li><router-link to="/pricing">Pricing</router-link></li>
+        <li><router-link to="/pricing" class="white-text">Pricing</router-link></li>
+        <li><router-link to="/partners" class="white-text">Partners</router-link></li>
     </ul>
     <ul v-if="user" ref="dropdownContent" id="dropdown1" class="dropdown-content valign-wrapper black">
         <li><router-link :to="'/users/'+user.id" class="white-text">User</router-link></li>
-        <!-- <router-link :to="'/users/'+user.id" class="white-text">User</router-link> -->
         <li class="divider"></li>
         <li><span @click="logout" class="red-text darken-3">Logout</span></li>
     </ul>

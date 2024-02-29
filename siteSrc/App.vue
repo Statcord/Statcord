@@ -1,15 +1,18 @@
 <template>
-  <navbar />
+  <navbar/>
   <router-view></router-view>
+  <footerbar></footerbar>
 </template>
 
 <script>
 import navbar from './components/nav.vue'
+import footerbar from './components/footer.vue'
 
 export default {
   name: 'App',
   components: {
-    navbar
+    navbar,
+    footerbar
   }
 }
 </script>
@@ -45,5 +48,9 @@ export default {
 
 .no-overflow {
   overflow: hidden;
+}
+
+.underline {
+  text-decoration-line: underline;
 }
 </style>
