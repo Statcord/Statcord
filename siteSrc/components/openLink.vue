@@ -1,7 +1,7 @@
 <template>
     <div v-if="url">
-        <span class="flow-text modal-trigger blue-text text-darken-2 myLink" data-target="linkModal1"><i class="material-icons">{{icon}}</i> {{name}}</span>
-        <div id="linkModal1" ref="linkModal1" class="modal hide">
+        <span class="flow-text modal-trigger blue-text text-darken-2 myLink" :data-target="uuid"><i class="material-icons">{{icon}}</i> {{name}}</span>
+        <div :id="uuid" :ref="uuid" class="modal hide">
             <div class="modal-content">
                 <h4>Leaving Statcord</h4>
                 <h6 class="flow-text">This link will take you to the following website</h6>
@@ -27,7 +27,8 @@ export default {
     data() {
         const displayURL= this.$props.url?.replace("https://","").split("/")
         return {
-            displayURL
+            displayURL,
+            uuid: (Math.floor(Math.random() * 560987)*150).toString(36)
         }
     },
     props: {
@@ -36,8 +37,8 @@ export default {
         url: String
     },
     async mounted() {
-        this.$M.Modal.init(this.$refs.linkModal1, {
-            onOpenStart: ()=> this.$refs.linkModal1.classList.remove("hide")
+        this.$M.Modal.init(this.$refs[this.uuid], {
+            onOpenStart: ()=> this.$refs[this.uuid].classList.remove("hide")
         })
     },
     methods: {
