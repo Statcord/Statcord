@@ -2,13 +2,26 @@
 import settings from "./config/settings.mjs"
 
 export default defineNuxtConfig({
+  extends: ['nuxt-umami'],
+
   devtools: {
     enabled: true,
-
     timeline: {
       enabled: true
     }
   },
+
+  appConfig: {
+		umami: {
+			id: 'f1a7b62f-bcde-4dbf-9fbc-b04b1af2fb48',
+			host: 'https://insights.numselli.xyz/',
+			version: 2,
+			ignoreDnt: true,
+			useDirective: true,
+			customEndpoint: '/',
+			ignoreLocalhost: true
+		}
+	},
 
   runtimeConfig:{
     public: {
