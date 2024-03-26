@@ -36,8 +36,8 @@
                 <div class="row">
                     <div class="col s12">
                         <ul class="tabs" ref="tabs">
-                            <li class="tab col s3"><a href="#overview">Overview</a></li>
-                            <li class="tab col s3"><a class="active" href="#stats">Stats</a></li>
+                            <li class="tab col s3"><NuxtLink to="#overview" replace>Overview</NuxtLink></li>
+                            <li class="tab col s3"><NuxtLink class="active" to="#stats" replace>Stats</NuxtLink></li>
                             <!-- <li class="tab col s3 disabled"><a href="#reviews">Reviews</a></li>
                             <li class="tab col s3 disabled"><a href="#updates">Updates</a></li> -->
                         </ul>

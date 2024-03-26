@@ -18,7 +18,7 @@
             <p>Welcome to SafeGuard Hosting, a reliable and secure web hosting company that provides a wide range of hosting solutions for businesses and individuals.</p>
           </div>
           <div class="card-action">
-            <a href="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">Explore Services</a>
+            <NuxtLink to="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">Explore Services</NuxtLink>
           </div>
         </div>
       </div>

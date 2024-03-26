@@ -8,7 +8,7 @@
               <img src="/img/logo.png" loading="lazy" alt="Statcord logo" style="max-width: 40%;">
             </li>
             <li>
-              <span class="left">© {{year}} <a href="https://numselli.xyz" target="_blank" rel="noopener noreferrer" class="underline">numselli</a></span>
+              <span class="left">© {{year}} <NuxtLink to="https://numselli.xyz" target="_blank" rel="noopener noreferrer" class="underline">numselli</NuxtLink></span>
             </li>
           </ul>
         </div>
@@ -16,9 +16,9 @@
           <h6><router-link to="/partners" class="underline">Partners</router-link></h6>
           <ul>
             <li>
-              <a href="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">
+              <NuxtLink to="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">
                 <img src="/img/partners/SafeGuard/SafeGuard_logo_text_right.svg" alt="SafeGuard hosting logo" loading="lazy" style="max-width: 60%;">
-              </a>
+              </NuxtLink>
             </li>
           </ul>
         </div>

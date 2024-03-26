@@ -1,13 +1,13 @@
 <template>
     <nav>
         <div class="nav-wrapper black">
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+            <div data-target="mobile-demo" class="sidenav-trigger hide-on-large-only">
                 <i class="material-icons">menu</i>
-            </a>
+            </div>
             <ul class="left hide-on-med-and-down">
                 <li><router-link to="/">Home</router-link></li>
                 <li><router-link to="/docs">Docs</router-link></li>
-                <li><a href="/support">Support</a></li>
+                <li><router-link to="/support">Support</router-link></li>
                 <li><router-link to="/privacy">Privacy</router-link></li>
                 <li><router-link to="/guide">Setup guide</router-link></li>
                 <li><router-link to="/pricing">Pricing</router-link></li>
@@ -15,7 +15,7 @@
             </ul>
 
             <ul class="right ">
-                <li :class="user ? 'hide' : ''"><a :href="oauthUrl">Login</a></li>
+                <li :class="user ? 'hide' : ''"><NuxtLink :to="oauthUrl" replace>Login</NuxtLink></li>
                 <li v-if="user"
                     class="dropdown-trigger"
                     ref="dropdown"
@@ -31,7 +31,7 @@
     <ul class="sidenav black" ref="sidenav" id="mobile-demo">
         <li><router-link to="/" class="white-text">Home</router-link></li>
         <li><router-link to="/docs" class="white-text">Docs</router-link></li>
-        <li><a href="/support" class="white-text">Support</a></li>
+        <li><router-link to="/support" class="white-text">Support</router-link></li>
         <li><router-link to="/privacy" class="white-text">Privacy</router-link></li>
         <li><router-link to="/guide" class="white-text">Setup guide</router-link></li>
         <li><router-link to="/pricing" class="white-text">Pricing</router-link></li>
@@ -68,7 +68,6 @@ export default {
         }
     },
     async mounted() {
-        // console.log(this.$refs.dropdownContent)
         this.$M.Sidenav.init(this.$refs.sidenav)
 
         if (this.$refs.dropdownContent) this.$M.Dropdown.init(this.$refs.dropdown, { coverTrigger: false })
