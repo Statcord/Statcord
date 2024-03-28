@@ -8,7 +8,17 @@ const openapiJSON = {
         version: config.version
     },
     schemes: ["https"],
-    paths: {}
+    paths: {},
+    components: {
+        "securitySchemes": {
+            "PostKey": {
+                "type": "apiKey",
+                "name": "Authorisation",
+                "in": "header",
+                "description": "Statcord token used for posting bot stats. Example: \"SC-17812626251248269fcfb24b7\""
+            }
+        }
+    }
 }
 
 const apiDir = await readdir("./server/api", { recursive: true, "withFileTypes": true })

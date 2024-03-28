@@ -94,14 +94,22 @@ export const schema = {
 	],
     parameters: [
 		{
+			name: 'botID',
+			in: 'path',
+			required: true,
+			example: "726560538145849374",
+			content: { media: 'application/json' }
+		},
+		{
 			name: 'Authorisation',
 			in: 'header',
+			example: 'SC-17812626251248269fcfb24b7',
 			required: true,
 			content: { media: 'application/json' }
 		}
     ],
 	"security": {
-		"Authorisation": [{}]
+		"PostKey": [{}]
 	},
 	"requestBody": {
 		"description": "Post a bots stats. At least one field is required. Both totalRam and ramUsage are REQUIRED if posting your ram usage.",
