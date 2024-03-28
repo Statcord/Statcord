@@ -84,6 +84,8 @@ export default defineEventHandler(async event => {
 	writeClient.flush()
 
 	sendNoContent(event, 200)
+
+	event.context.redis.set(`legacyRouteTracking:${body.id}`, "stats")  
 })
 
 export const schema = {

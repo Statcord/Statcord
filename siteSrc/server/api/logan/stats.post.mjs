@@ -22,8 +22,6 @@ export default defineEventHandler(async event => {
 	if (!botExisits[0]) {
 		if (await event.context.redis.exists(`botDubbleNotifCheck:${body.id}`)) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-		event.context.pgPool`INSERT INTO newst (botid, token) VALUES (${body.id}, ${body.key}) ON CONFLICT (botid) DO NOTHING`.catch(() => {})
-
 		fetch(event.context.newstwebhook, {
 			method: 'POST',
 			headers: {
@@ -57,6 +55,8 @@ export default defineEventHandler(async event => {
 		return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	}
 	if (body.key !== botExisits[0].token) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+
+	event.context.redis.set(`legacyRouteTracking:${body.id}`, "logan")  
 
 	const convertedBody = {
 		"guildCount": Number(body.servers ?? 0),

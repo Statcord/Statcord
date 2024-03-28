@@ -86,6 +86,8 @@ export default defineEventHandler(async event => {
 	writeClient.flush()
 
 	sendNoContent(event, 200)
+
+	if (await event.context.redis.exists(`legacyRouteTracking:${path.botID}`)) event.context.redis.del(`legacyRouteTracking:${path.botID}`)  
 })
 
 export const schema = {

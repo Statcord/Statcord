@@ -63,6 +63,7 @@ CREATE TABLE public.chartsettings (
 ALTER TABLE IF EXISTS public.chartsettings
     OWNER to disstat;
 
+
 CREATE TABLE public.botlinks (
     botid character varying,
     name character varying,
@@ -70,15 +71,4 @@ CREATE TABLE public.botlinks (
     icon character varying
 );
 ALTER TABLE IF EXISTS public.botlinks
-    OWNER to disstat;
-
-
-
-
-CREATE TABLE public.newst (
-    botid character varying,
-    token character varying,
-    PRIMARY KEY (botid)
-);
-ALTER TABLE IF EXISTS public.newst
     OWNER to disstat;
