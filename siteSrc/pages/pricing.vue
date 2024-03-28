@@ -55,9 +55,11 @@
                         </div>
                         <div>
                             <ul class="browser-default">
-                                <li>Everything in Free teir</li>
+                                <li>Basic stats tracking</li>
                                 <li>More custom charts</li>
-                                <li>Toggle defualt chart visibility</li>
+                                <li>Toggle chart visibility</li>
+                                <li>Toggle card visibility<sub style="vertical-align:top;">1</sub></li>
+                                <li>Custom bot url<sub style="vertical-align:top;">2</sub></li>
                             </ul>
                         </div>
                     </div>
