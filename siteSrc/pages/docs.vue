@@ -36,11 +36,11 @@
   export default {
     name: 'docs',
     async mounted(){
-        const apiDefinition = await useFetch('/api/docs/json')
+        const apiDefinition = await $fetch('/api/docs/json')
 
         SwaggerUIBundle({
             "dom_id": "#test",
-            spec: apiDefinition.data.value
+            spec: apiDefinition
         })
     }
   }

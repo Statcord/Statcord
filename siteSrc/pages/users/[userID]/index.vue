@@ -42,14 +42,14 @@
 
 useSeoMeta({
   themeColor: "#0080F0",
-  title: 'Statcord - My bots',
-  description: "Track your Discord bot's statistics using Statcord.",
-  ogTitle: 'Statcord - My bots',
-  ogDescription: "Track your Discord bot's statistics using Statcord.",
+  title: 'Statcord - User profile',
+  description: "View a users profile on Statcord.",
+  ogTitle: 'Statcord - User profile',
+  ogDescription: "View a users profile on Statcord.",
   ogImage: '/img/icon.png',
   ogUrl: 'https://statcord.com',
-  twitterTitle: 'Statcord - My bots',
-  twitterDescription: "Track your Discord bot's statistics using Statcord.",
+  twitterTitle: 'Statcord - User profile',
+  twitterDescription: "View a users profile on Statcord.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })
@@ -72,7 +72,7 @@ import botlist from '../../../components/botlist.vue'
 import safeLinkPopUp from '../../../components/openLink.vue'
 
 export default {
-  name: 'me',
+  name: 'userPage',
   components: {
     botlist,
     safeLinkPopUp

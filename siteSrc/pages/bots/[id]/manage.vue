@@ -272,7 +272,7 @@ useSeoMeta({
     ogDescription:  () => `Manage ${bot?.username} on Statcord.`,
     ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
     twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
-    // twitterCard: 'summary_large_image',
+    twitterCard: 'summary',
     ogUrl: () => `https://statcord.com/${route.params.id}/manage`,
     twitterTitle: () =>`Statcord - ${bot?.username}`,
     twitterDescription:  () => `Manage ${bot?.username} on Statcord.`,
@@ -293,7 +293,7 @@ useHead({
 
 <script>
 export default {
-    name: 'server',
+    name: 'manageBot',
     data() {
         const config = useRuntimeConfig()
         return {

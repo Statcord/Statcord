@@ -20,7 +20,7 @@
 import openLink from './openLink.vue'
 
 export default {
-    name: 'bot',
+    name: 'botLongListing',
     components: {
         openLink
     },

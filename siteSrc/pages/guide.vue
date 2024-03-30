@@ -68,6 +68,6 @@ useHead({
 </script>
 <script>
 export default {
-  name: 'privacy'
+  name: 'guide'
 }
 </script>

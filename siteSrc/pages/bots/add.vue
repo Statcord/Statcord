@@ -110,14 +110,14 @@
 
   useSeoMeta({
     themeColor: "#0080F0",
-    title: 'Statcord - My bots',
-    description: "Track your Discord bot's statistics using Statcord.",
-    ogTitle: 'Statcord - My bots',
-    ogDescription: "Track your Discord bot's statistics using Statcord.",
+    title: 'Statcord - Add bot',
+    description: "Start tracking your Discord bot's statistics using Statcord.",
+    ogTitle: 'Statcord - Add bot',
+    ogDescription: "Start tracking your Discord bot's statistics using Statcord.",
     ogImage: '/img/icon.png',
     ogUrl: 'https://statcord.com',
-    twitterTitle: 'Statcord - My bots',
-    twitterDescription: "Track your Discord bot's statistics using Statcord.",
+    twitterTitle: 'Statcord - Add bot',
+    twitterDescription: "Start tracking your Discord bot's statistics using Statcord.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
@@ -137,7 +137,7 @@
 </script>
 <script>
   export default {
-    name: 'addbot',
+    name: 'addBot',
     data() {
       const config = useRuntimeConfig()
       return {

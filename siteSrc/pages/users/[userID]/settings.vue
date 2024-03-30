@@ -56,14 +56,14 @@
   
 useSeoMeta({
   themeColor: "#0080F0",
-  title: 'Statcord - My bots',
-  description: "Track your Discord bot's statistics using Statcord.",
-  ogTitle: 'Statcord - My bots',
-  ogDescription: "Track your Discord bot's statistics using Statcord.",
+  title: 'Statcord - User settings',
+  description: "Manage your user settings on Statcord.",
+  ogTitle: 'Statcord - User settings',
+  ogDescription: "Manage your user settings on Statcord.",
   ogImage: '/img/icon.png',
   ogUrl: 'https://statcord.com',
-  twitterTitle: 'Statcord - My bots',
-  twitterDescription: "Track your Discord bot's statistics using Statcord.",
+  twitterTitle: 'Statcord - User settings',
+  twitterDescription: "Manage your user settings on Statcord.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })

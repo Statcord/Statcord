@@ -79,17 +79,17 @@
     </div>
   </template>
   
-  <script setup>
+<script setup>
   useSeoMeta({
     themeColor: "#0080F0",
     title: 'Statcord - Pricing',
-    // description: "Read Statcord's bot statistics tracking setup guide.",
+    description: "Checkout Statcord premium offerings.",
     ogTitle: 'Statcord - Pricing',
-    // ogDescription: "Read Statcord's bot statistics tracking setup guide.",
+    ogDescription: "Checkout Statcord premium offerings.",
     ogImage: '/img/icon.png',
     ogUrl: 'https://statcord.com',
     twitterTitle: 'Statcord - Pricing',
-    // twitterDescription: "Read Statcord's bot statistics tracking setup guide.",
+    twitterDescription: "Checkout Statcord premium offerings.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })

@@ -65,7 +65,7 @@
 import chart from './chart.vue'
 
 export default {
-    name: 'bot',
+    name: 'botStats',
     components: {
         chart
     },

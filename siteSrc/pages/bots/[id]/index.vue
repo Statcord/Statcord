@@ -75,7 +75,7 @@
         ogDescription:  () => `View ${bot?.username}'s stats on Statcord.`,
         ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
-        // twitterCard: 'summary_large_image',
+        twitterCard: 'summary',
         ogUrl: () => `https://statcord.com/bots/${route.params.id}`,
         twitterTitle: () =>`Statcord - ${bot?.username}`,
         twitterDescription:  () => `View ${bot?.username}'s stats on Statcord.`,

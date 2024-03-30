@@ -7,14 +7,14 @@
   <script setup>
   useSeoMeta({
     themeColor: "#0080F0",
-    title: 'Statcord - My bots',
-    description: "Track your Discord bot's statistics using Statcord.",
-    ogTitle: 'Statcord - My bots',
-    ogDescription: "Track your Discord bot's statistics using Statcord.",
+    title: 'Statcord - Bots',
+    description: "View bots listed on Statcord.",
+    ogTitle: 'Statcord - Bots',
+    ogDescription: "View bots listed on Statcord.",
     ogImage: '/img/icon.png',
     ogUrl: 'https://statcord.com',
-    twitterTitle: 'Statcord - My bots',
-    twitterDescription: "Track your Discord bot's statistics using Statcord.",
+    twitterTitle: 'Statcord - Bots',
+    twitterDescription: "View bots listed on Statcord.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
@@ -36,7 +36,7 @@
   import botlist from '../../../components/botlist.vue'
   
   export default {
-    name: 'me',
+    name: 'bots',
     components: {
       botlist
     },
