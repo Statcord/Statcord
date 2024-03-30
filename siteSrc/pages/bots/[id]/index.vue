@@ -1,75 +1,71 @@
 <template>
     <div class="px-6">
-        <div v-if="botJsonLoaded">
-            <div v-if="bot.nsfw" ref="nsfwBTN">
-                <h3 class="center-align">This bot has been marked as NSFW.
-                    <br>
-                    <div class="btn" @click="dismissNSFW">I understand</div>
-                </h3>
-            </div>
-            <div class="row" ref="nsfwBotInfoContent" :class="bot.nsfw ? 'blur' : ''">
-                <div class="col s12 m2 container">
-                    <div class="row">
-                        <div class="col s6 m12">
-                            <object
-                                :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'"
-                                :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
-                                aria-label="aaa"
-                                loading="lazy"
-                                class="circle"
-                                :alt="bot.username + `'s profile picture`"
-                            >
-                                <img :src="'https://cdn.discordapp.com/embed/avatars/' + (botid >>> 22) % 5 + '.png?size=128'" alt="Defualt Bot icon" class="circle" />
-                            </object>
-                        </div>
-                        <div class="col s6 m12">
-                            <h3 class="truncate">{{ bot.username }}</h3>
-                            <h5>Made by: <router-link :to="'/users/' + bot.ownerid" class="blue-text text-darken-2">{{ bot.ownername }}</router-link></h5>
-                        </div>
-                    </div>
-                
-                    <router-link v-if="bot.isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn"><i class="material-icons left">build</i>Manage bot</router-link>
-                </div>
-            </div>
-    
-            <div ref="nsfwBotContent" :class="bot.nsfw ? 'blur' : ''">
+        <div v-if="bot.nsfw" ref="nsfwBTN">
+            <h3 class="center-align">This bot has been marked as NSFW.
+                <br>
+                <div class="btn" @click="dismissNSFW">I understand</div>
+            </h3>
+        </div>
+        <div class="row" ref="nsfwBotInfoContent" :class="bot.nsfw ? 'blur' : ''">
+            <div class="col s12 m2 container">
                 <div class="row">
-                    <div class="col s12">
-                        <ul class="tabs" ref="tabs">
-                            <li class="tab col s3"><NuxtLink to="#overview" replace>Overview</NuxtLink></li>
-                            <li class="tab col s3"><NuxtLink class="active" to="#stats" replace>Stats</NuxtLink></li>
-                            <!-- <li class="tab col s3 disabled"><a href="#reviews">Reviews</a></li>
-                            <li class="tab col s3 disabled"><a href="#updates">Updates</a></li> -->
-                        </ul>
+                    <div class="col s6 m12">
+                        <object
+                            :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'"
+                            :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
+                            aria-label="aaa"
+                            loading="lazy"
+                            class="circle"
+                            :alt="bot.username + `'s profile picture`"
+                        >
+                            <img :src="'https://cdn.discordapp.com/embed/avatars/' + (botid >>> 22) % 5 + '.png?size=128'" alt="Defualt Bot icon" class="circle" />
+                        </object>
                     </div>
-                    <div id="overview" class="col s12">
-                        <botLongListing v-if="Object.keys(bot)[1]" :botJson="bot"></botLongListing>
-                    </div>
-                    <div id="stats" class="col s12">
-                        <botStats v-if="Object.keys(bot)[1]" :botJson="bot"></botStats>
+                    <div class="col s6 m12">
+                        <h3 class="truncate">{{ bot.username }}</h3>
+                        <h5>Made by: <router-link :to="'/users/' + bot.ownerid" class="blue-text text-darken-2">{{ bot.ownername }}</router-link></h5>
                     </div>
                 </div>
+            
+                <router-link v-if="bot.isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn"><i class="material-icons left">build</i>Manage bot</router-link>
             </div>
         </div>
 
-        <div v-else>
-            <spinner></spinner>
+        <div ref="nsfwBotContent" :class="bot.nsfw ? 'blur' : ''">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs" ref="tabs">
+                        <li class="tab col s3"><NuxtLink to="#overview" replace>Overview</NuxtLink></li>
+                        <li class="tab col s3"><NuxtLink class="active" to="#stats" replace>Stats</NuxtLink></li>
+                        <!-- <li class="tab col s3 disabled"><a href="#reviews">Reviews</a></li>
+                        <li class="tab col s3 disabled"><a href="#updates">Updates</a></li> -->
+                    </ul>
+                </div>
+                <div id="overview" class="col s12">
+                    <botLongListing v-if="Object.keys(bot)[1]" :botJson="bot"></botLongListing>
+                </div>
+                <div id="stats" class="col s12">
+                    <botStats v-if="Object.keys(bot)[1]" :botJson="bot"></botStats>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
     import { useRoute } from 'vue-router';
+    const { $authRequest } = useNuxtApp()
     const route = useRoute()
-    const { data: botFetch, status} = await useAsyncData(async () => {
-        const [bot] = await Promise.all([
-            $fetch(`/api/bots/${route.params.id}`)
-        ])
-        return bot
-    })
 
-    const bot = botFetch.value
-    const botJsonLoaded = status.value
+    const bot = await $authRequest(`/api/bots/${route.params.id}`)
+    if (bot === "404") throw createError({
+        statusCode: 404,
+        message: 'Bot not found'
+    })
+    if (bot === "401") throw createError({
+        statusCode: 401,
+        message: 'You do not have permission to access this bot'
+    })
 
     useSeoMeta({
         themeColor: "#0080F0",

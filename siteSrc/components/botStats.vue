@@ -123,8 +123,7 @@ export default {
             this.getData()
         },
         async getData() {
-            const {data: rawDefaultStatsFetch} = await useFetch(() => `/api/bots/${this.botid}/stats?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
-            const defaultStatsJson = rawDefaultStatsFetch.value
+            const defaultStatsJson = await $fetch(`/api/bots/${this.botid}/stats?groupBy=1${this.groupByTimeFrame}${this.startDate && this.endDate ? `&start=${this.startDate}&end=${this.endDate}` : ''}`)
 
             this.stats = defaultStatsJson.mainStats.stats.map(t=>{
                 t.data.labels = defaultStatsJson.mainStats.labels.map(d=>this.formatDate(d))

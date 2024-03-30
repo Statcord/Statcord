@@ -51,9 +51,9 @@ export default {
     },
     methods: {
         async load() {
-            const fetchData = await useFetch(() => `${this.$props.botListRoute}?page=${this.page}`)
-            if (fetchData.data._rawValue.length === 0) return this.lastPageWithData = true
-            this.bots = this.bots.concat(fetchData.data._rawValue)
+            const fetchData = await $fetch(`${this.$props.botListRoute}?page=${this.page}`)
+            if (fetchData.length === 0) return this.lastPageWithData = true
+            this.bots = this.bots.concat(fetchData)
             if (this.page === 0) this.loadNext()
         },
         loadNext() {

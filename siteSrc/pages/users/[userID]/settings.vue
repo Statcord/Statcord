@@ -34,12 +34,59 @@
   </div>
 </template>
 
+<script setup>
+  import { useRoute } from 'vue-router';
+  const { $authRequest, $genOauthUrl } = useNuxtApp()
+  const route = useRoute()
+  const oauthUrl = $genOauthUrl(route.fullPath)
+
+  const {accessToken} = await $authRequest("/api/session")
+  if (!accessToken) await navigateTo(oauthUrl, {external: true});
+
+  const profileInfo = await $authRequest(`/api/user/${route.params.userID}`)
+  if (profileInfo === "404") throw createError({
+    statusCode: 404,
+    message: 'User not found'
+  })
+  if (profileInfo === "401") throw createError({
+    statusCode: 401,
+    message: 'You do not have permission to veiw this user'
+  })
+  
+  
+useSeoMeta({
+  themeColor: "#0080F0",
+  title: 'Statcord - My bots',
+  description: "Track your Discord bot's statistics using Statcord.",
+  ogTitle: 'Statcord - My bots',
+  ogDescription: "Track your Discord bot's statistics using Statcord.",
+  ogImage: '/img/icon.png',
+  ogUrl: 'https://statcord.com',
+  twitterTitle: 'Statcord - My bots',
+  twitterDescription: "Track your Discord bot's statistics using Statcord.",
+  twitterImage: '/img/icon.png',
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/img/favicon.ico'
+    }
+  ]
+})
+</script>
+
 <script>
 export default {
   name: 'userSettings',
   data() {
     return {
-      profileInfo: {}
     };
   },
   methods: {
@@ -72,15 +119,6 @@ export default {
     }
   },
   async mounted() {
-    const oauthUrl = this.$genOauthUrl(this.$route.fullPath)
-    const oauthUser = this.$auth.getUser()
-
-    if (!oauthUser) return await navigateTo(oauthUrl, {external: true});
-    if (oauthUser.id !== this.$route.params.userID) return await navigateTo(oauthUrl, {external: true});
-
-    const {data: user} = await useFetch(`/api/user/${this.$route.params.userID}`)
-    this.profileInfo = user.value
-
     this.$M.Modal.init(this.$refs.modal, {
       onOpenStart: ()=> this.$refs.modal.classList.remove("hide")
     })

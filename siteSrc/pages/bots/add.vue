@@ -102,6 +102,12 @@
 </template>
 
 <script setup>
+  const { $authRequest, $genOauthUrl } = useNuxtApp()
+  const route = useRoute()
+
+  const {accessToken} = await $authRequest(`/api/session`)
+  if (!accessToken) await navigateTo($genOauthUrl(route.fullPath), {external: true});
+
   useSeoMeta({
     themeColor: "#0080F0",
     title: 'Statcord - My bots',
@@ -170,9 +176,6 @@
         if (this.$refs.botid.value==="") return this.botid = "685166801394335819"
         this.botid = this.$refs.botid.value
       }
-    },
-    async mounted() {
-      if (!this.$auth.isLoggedIn()) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
     }
   }
 </script>

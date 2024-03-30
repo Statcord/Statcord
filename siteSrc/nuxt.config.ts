@@ -39,11 +39,8 @@ export default defineNuxtConfig({
   plugins: [
     {
       src: '~/plugins/materialize.js',
-      mode: 'client' },
-    {
-      src: '~/plugins/auth.js',
       mode: 'client'
-    }
+    },
   ],
 
   modules: [

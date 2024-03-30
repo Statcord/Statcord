@@ -1,7 +1,7 @@
 <template>
   <navbar/>
-  <router-view></router-view>
-  <footerbar></footerbar>
+  <NuxtPage/>
+  <footerbar/>
 </template>
 
 <script>

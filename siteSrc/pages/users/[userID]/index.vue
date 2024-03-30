@@ -18,31 +18,25 @@
   <h1>Bots</h1>
   <botlist :botListRoute="'/api/user/'+userID+'/bots/'"></botlist>
 </template>
+
 <script setup>
   import { useRoute } from 'vue-router';
-
+  const { $authRequest } = useNuxtApp()
   const route = useRoute()
-  const headers = useRequestHeaders(['cookie'])
 
-  const { data: userFetch, status } = await useAsyncData(async () => {
-    const [bot] = await Promise.all([
-      $fetch(`/api/user/${route.params.userID}`, { headers })
-    ])
-    return bot
+  const userFetch = await $authRequest(`/api/user/${route.params.userID}`)
+  if (userFetch === "404") throw createError({
+    statusCode: 404,
+    message: 'User not found'
   })
-
-  if (status.value === "error") {
-    userFetch.value = {
-      username: "Private user",
-      aboutme: '',
-      website: ""
-    }
-    await navigateTo("/");
-  }
+  if (userFetch === "401") throw createError({
+    statusCode: 401,
+    message: 'You do not have permission to veiw this user'
+  })
   
   const user = {
-    ...userFetch.value,
-    avatarURL: `https://cdn.discordapp.com/avatars/${userFetch.value.avatar ? `${route.params.userID}/${userFetch.value.avatar}.${userFetch.value.avatar.startsWith("_a") ? '.gif' : 'webp'}`: `${(route.params.userID >>> 22) % 5}.png`}`
+    ...userFetch,
+    avatarURL: `https://cdn.discordapp.com/avatars/${userFetch.avatar ? `${route.params.userID}/${userFetch.avatar}.${userFetch.avatar.startsWith("_a") ? '.gif' : 'webp'}`: `${(route.params.userID >>> 22) % 5}.png`}`
   }
 
 

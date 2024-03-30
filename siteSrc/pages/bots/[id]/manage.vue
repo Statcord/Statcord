@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <form action="#">
-            <div class="section" v-if="!currentSettingsPending">
+            <div class="section">
                 <h6>Access control</h6>
                 <div class="row">
                   <div class="col s12 m12">
@@ -31,7 +31,7 @@
             </div>
 
             <div class="divider"></div>
-            <div class="section" v-if="!currentSettingsPending">
+            <div class="section">
                 <h6>Bot Description</h6>
                 <div class="row">
                     <div class="col s12 m12">
@@ -47,7 +47,7 @@
             </div>
 
             <div class="divider"></div>
-            <div class="section" v-if="!currentSettingsPending">
+            <div class="section">
                 <h6>Add additional links (optional)</h6>
                 <div class="row" style="gap: 10px;">
                     <div class="col s12 m6">
@@ -73,7 +73,7 @@
             </div>
 
             <div class="divider"></div>
-            <div class="section" v-if="!currentSettingsPending">
+            <div class="section">
                 <h6>Defualt charts</h6>
                 <div class="row">
                     <div v-for="chart in currentSettings.default" class="col s4 m3">
@@ -89,7 +89,7 @@
             </div>
 
             <div class="divider"></div>
-            <div class="section" v-if="!currentSettingsPending">
+            <div class="section">
                 <h6>Command charts</h6>
                 <div class="row">
                     <div v-for="chart in currentSettings.commands" class="col s4 m3">
@@ -105,7 +105,7 @@
             </div>
 
             <div class="divider"></div>
-            <div class="section" v-if="!currentSettingsPending">
+            <div class="section">
                 <h6>Custom charts</h6>
                 <div>
                     <div v-for="chart in currentSettings.custom" class="row">
@@ -244,23 +244,38 @@
 </template>
 
 <script setup>
- import { useRoute } from 'vue-router';
-    const route = useRoute()
-    // const id = ref(route.params.id)
-    const bot = await $fetch(`/api/bots/${route.params.id}`)
-    // console.log(route)
-    useSeoMeta({
-        themeColor: "#0080F0",
-        title: () =>`Statcord - ${bot?.username}`,
-        ogTitle: () => `Statcord - ${bot?.username}`,
-        description:  () => `Manage ${bot?.username} on Statcord.`,
-        ogDescription:  () => `Manage ${bot?.username} on Statcord.`,
-        ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
-        twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
-        // twitterCard: 'summary_large_image',
-        ogUrl: () => `https://statcord.com/${route.params.id}/manage`,
-        twitterTitle: () =>`Statcord - ${bot?.username}`,
-        twitterDescription:  () => `Manage ${bot?.username} on Statcord.`,
+import { useRoute } from 'vue-router';
+const { $authRequest } = useNuxtApp()
+const route = useRoute()
+
+const bot = await $authRequest(`/api/bots/${route.params.id}`)
+if (bot === "404") throw createError({
+    statusCode: 404,
+    message: 'Bot not found'
+})
+if (bot === "401") throw createError({
+    statusCode: 401,
+    message: 'You do not have permission to access this bot'
+})
+
+const currentSettings = await $authRequest(`/api/bots/${route.params.id}/settings/get`)
+if (currentSettings === "401") throw createError({
+    statusCode: 401,
+    message: 'You do not have permission to access this bot'
+})
+
+useSeoMeta({
+    themeColor: "#0080F0",
+    title: () =>`Statcord - ${bot?.username}`,
+    ogTitle: () => `Statcord - ${bot?.username}`,
+    description:  () => `Manage ${bot?.username} on Statcord.`,
+    ogDescription:  () => `Manage ${bot?.username} on Statcord.`,
+    ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+    twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
+    // twitterCard: 'summary_large_image',
+    ogUrl: () => `https://statcord.com/${route.params.id}/manage`,
+    twitterTitle: () =>`Statcord - ${bot?.username}`,
+    twitterDescription:  () => `Manage ${bot?.username} on Statcord.`,
 })
 useHead({
   htmlAttrs: {
@@ -285,31 +300,25 @@ export default {
             host: config.public.domain,
             botid: "",
             apiKey: undefined,
-            currentSettingsPending:true,
-            currentSettings:{},
             importExport: "export",
             importExportMode:"",
-            plevel: 0
+            plevel: 0,
+            userID: ""
         }
     },
-    async mounted() {
-        if (!await this.$auth.canSeeBot(this.$route.params.id, true)) return await navigateTo(this.$route.fullPath.substring(0, this.$route.fullPath.lastIndexOf('/')))
-        const { data: plevel } = await useFetch(`/api/user/${this.$auth.getUser().id}`, {
-            pick: ['plevel']
-        })
-        this.plevel=plevel.value
+    async mounted() {        
+        const {userInfo} = await this.$authRequest("/api/session")
+        if (!userInfo) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
 
+        this.userID = userInfo.id
         this.botid = this.$route.params.id
 
-        const {data: botSettingsJson, pending} = await useFetch(`/api/bots/${this.$route.params.id}/settings/get`)
-
-        this.currentSettingsPending = pending.value
-        this.currentSettings = botSettingsJson.value
+        const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
+        this.plevel=plevel
 
         this.$M.FormSelect.init(this.$refs.importExportSelector)
         this.$M.FormSelect.init(this.$refs.importSourceSelector)
 
-        await this.sleep(10)
         Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
             const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
             this.$M.Modal.init(mRef, {
@@ -318,9 +327,6 @@ export default {
         })
     },
     methods: {
-        async sleep(delay){
-            return new Promise(resolve => setTimeout(resolve, delay));
-        },
         importExportChanged(event){
             this.importExport = event.target.value
         },
@@ -361,7 +367,7 @@ export default {
                 body: {id: this.botid}
             })
             if (!error.value) {
-                await navigateTo(`/users/${this.$auth.getUser().id}`)
+                await navigateTo(`/users/${this.userID}`)
             }
         },
         async confirmedCustomDelete(a){
