@@ -9,23 +9,23 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.0.8",
-    "@nuxtjs/sitemap": "^5.1.0",
+    "@nuxt/devtools": "^1.1.5",
+    "@nuxtjs/sitemap": "^5.1.2",
     "@sidebase/nuxt-session": "^0.2.8",
-    "chart.js": "^4.4.1",
-    "nuxt": "^3.9.1"
+    "chart.js": "^4.4.2",
+    "nuxt": "^3.11.1"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.33.2",
     "@influxdata/influxdb-client-apis": "^1.33.2",
     "@materializecss/materialize": "^2.0.3",
-    "@types/node": "^20.11.0",
-    "@vueuse/shared": "^10.7.1",
+    "@types/node": "^20.12.0",
+    "@vueuse/shared": "^10.9.0",
     "ioredis": "^5.3.2",
-    "markdown-it": "^14.0.0",
+    "markdown-it": "^14.1.0",
     "nuxt-umami": "^2.6.0",
     "oceanic.js": "github:counting-bot/Oceanic#build",
-    "postgres": "^3.4.3",
-    "swagger-ui-dist": "^5.11.0"
+    "postgres": "^3.4.4",
+    "swagger-ui-dist": "^5.13.0"
   }
 }
