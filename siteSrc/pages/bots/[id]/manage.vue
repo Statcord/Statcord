@@ -162,7 +162,7 @@
             <div class="section">
                 <div class="row" style="gap: 10px;">
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Import/export data</div>
+                        <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Export data</div>
                     </div>
                     <div class="col s6 m2">
                         <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
@@ -184,30 +184,18 @@
 
     <div id="importModal1" ref="importModal1" class="modal hide">
         <div class="modal-content">
-            <h4>Import/export</h4>
-            <select ref="importExportSelector" @change="importExportChanged">
-                <option value="export">Export</option>
-                <option value="import" disabled>Import</option>
-            </select>
-            <label>Would you like to import or export</label>
-           
-            <div v-if="importExport === 'import'">
-                <select ref="importSourceSelector" @change="importSourceChange">
-                    <option value="disStat">Statcord</option>
-                    <option value="statcord">Statcord</option>
-                    <option value="json">JSON</option>
-                </select>
+            <h4>Export</h4>
 
-                <div v-if="importExportMode === 'disStat' || importExportMode === 'json'" class="btn">Upload</div>
-                <div v-else class="btn">Go</div>
-            </div>
-            <div v-else>
-                <div class="btn" @click="downloadData"><span>Download</span></div>
-            </div>
+            <p class="flow-text">
+                Download a copy of your data
+            </p>
         </div>
         <div class="modal-footer">
             <div>
                 <div class="modal-close waves-effect waves-light btn left">Close</div>
+            </div>
+            <div>
+                <div class="btn" @click="downloadData"><span>Download</span></div>
             </div>
         </div>
     </div>
@@ -300,8 +288,6 @@ export default {
             host: config.public.domain,
             botid: "",
             apiKey: undefined,
-            importExport: "export",
-            importExportMode:"",
             plevel: 0,
             userID: ""
         }
@@ -316,9 +302,6 @@ export default {
         const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
         this.plevel=plevel
 
-        this.$M.FormSelect.init(this.$refs.importExportSelector)
-        this.$M.FormSelect.init(this.$refs.importSourceSelector)
-
         Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
             const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
             this.$M.Modal.init(mRef, {
@@ -327,12 +310,6 @@ export default {
         })
     },
     methods: {
-        importExportChanged(event){
-            this.importExport = event.target.value
-        },
-        importSourceChange(event){
-            this.importExportMode = event.target.value
-        },
         async downloadData(){
             const {data} = await useFetch(`/api/bots/${this.$route.params.id}/stats/export`)
 
