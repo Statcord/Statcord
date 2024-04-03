@@ -25,10 +25,11 @@
 export default {
     name: 'openlink',
     data() {
-        const displayURL= this.$props.url?.replace("https://","").split("/")
+        const {icon, url, name} = this.$props
+        const displayURL = url?.replace("https://","").split("/")
         return {
             displayURL,
-            uuid: (Math.floor(Math.random() * 560987)*150).toString(36)
+            uuid: `${url}:${name}:${icon}`
         }
     },
     props: {

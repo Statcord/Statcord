@@ -16,7 +16,7 @@
   </div>
 
   <h1>Bots</h1>
-  <botlist :botListRoute="'/api/user/'+userID+'/bots/'"></botlist>
+  <botlist :botsProvided="botListBots"></botlist>
 </template>
 
 <script setup>
@@ -38,7 +38,17 @@
     ...userFetch,
     avatarURL: `https://cdn.discordapp.com/avatars/${userFetch.avatar ? `${route.params.userID}/${userFetch.avatar}.${userFetch.avatar.startsWith("_a") ? '.gif' : 'webp'}`: `${(route.params.userID >>> 22) % 5}.png`}`
   }
-
+  
+  const botListBotsFetch = await $authRequest(`/api/user/${route.params.userID}/bots`)
+  if (botListBotsFetch === "404") throw createError({
+    statusCode: 404,
+    message: 'User not found'
+  })
+  if (botListBotsFetch === "401") throw createError({
+    statusCode: 401,
+    message: 'You do not have permission to veiw this user'
+  })
+  const botListBots = botListBotsFetch
 
 useSeoMeta({
   themeColor: "#0080F0",

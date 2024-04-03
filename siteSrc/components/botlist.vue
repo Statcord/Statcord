@@ -42,9 +42,13 @@ export default {
     },
     props: {
         botListRoute: String,
+        botsProvided: Array
     },
     mounted() {
-        this.load()
+        if (this.botsProvided){
+            this.bots = this.botsProvided
+        } else this.load()
+        this.loadNext()
     },
     unmounted(){
         window.onscroll = null
@@ -54,7 +58,6 @@ export default {
             const fetchData = await $fetch(`${this.$props.botListRoute}?page=${this.page}`)
             if (fetchData.length === 0) return this.lastPageWithData = true
             this.bots = this.bots.concat(fetchData)
-            if (this.page === 0) this.loadNext()
         },
         loadNext() {
             window.onscroll = () => {
