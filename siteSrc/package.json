@@ -10,21 +10,21 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.1.5",
-    "@nuxtjs/sitemap": "^5.1.2",
+    "@nuxtjs/sitemap": "^5.1.4",
     "chart.js": "^4.4.2",
-    "nuxt": "^3.11.1"
+    "nuxt": "^3.11.2"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.33.2",
     "@influxdata/influxdb-client-apis": "^1.33.2",
-    "@materializecss/materialize": "^2.0.3",
-    "@types/node": "^20.12.0",
+    "@materializecss/materialize": "^2.0.4",
+    "@types/node": "^20.12.7",
     "@vueuse/shared": "^10.9.0",
     "ioredis": "^5.3.2",
     "markdown-it": "^14.1.0",
     "nuxt-umami": "^2.6.0",
     "oceanic.js": "github:counting-bot/Oceanic#build",
     "postgres": "^3.4.4",
-    "swagger-ui-dist": "^5.13.0"
+    "swagger-ui-dist": "^5.14.0"
   }
 }
