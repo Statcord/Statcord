@@ -11,7 +11,6 @@
   "devDependencies": {
     "@nuxt/devtools": "^1.1.5",
     "@nuxtjs/sitemap": "^5.1.2",
-    "@sidebase/nuxt-session": "^0.2.8",
     "chart.js": "^4.4.2",
     "nuxt": "^3.11.1"
   },

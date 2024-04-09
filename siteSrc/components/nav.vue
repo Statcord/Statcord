@@ -74,8 +74,9 @@ export default {
     },
     methods: {
         async logout(){
-            const { remove } = await useSession()
-            await remove()
+            this.$authRequest('/api/session', {
+                method: "DELETE"
+            })
             await navigateTo("/", {"external": true})
         }
     },

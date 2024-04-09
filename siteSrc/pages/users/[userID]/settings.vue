@@ -91,13 +91,13 @@ export default {
   },
   methods: {
     async confirmedDelete() {
-      const { remove } = await useSession()
-
       const { error } = await useFetch(() => `/api/oauth/user/delete`, {
         method: 'delete',
       })
       if (!error.value) {
-        await remove()
+        this.$authRequest('/api/session', {
+          method: "DELETE"
+        })
         await navigateTo("/", {"external": true})
       }
     },

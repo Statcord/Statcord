@@ -29,6 +29,28 @@ export default defineNuxtConfig({
       botID: settings.discord.botID,
       domain: settings.domain
     },
+    session: {
+      ttl: 604800,
+      redisURL: settings.redisURL,
+      ignoredRoutes: [
+        {
+          path: "/api/bots/^\d{17,19}$/stats",
+          method: "post"
+        },
+        {
+          path: "/api/v3/stats",
+          method: "post"
+        },
+        {
+          path: "/api/logan/stats",
+          method: "post"
+        }
+      ],
+      session: {
+        idLength: 64
+      //   "expiryInSeconds": 604800,
+      },
+    },
     configFile: settings
   },
 
@@ -45,26 +67,31 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxtjs/sitemap',
-    '@sidebase/nuxt-session'
+    // '@sidebase/nuxt-session'
   ],
 
   sitemap: {
     sources: ['/api/sitemap'],
   },
   
-   session: {
-     session: {
-       "expiryInSeconds": 604800,
-      storageOptions: {
-        driver: 'redis',
-        options: {
-          base: "sessions",
-          url: settings.redisURL,
-          ttl: 604800
-        }
-      }
-    }
-  },
+  //  session: {
+  //    session: {
+  //      "expiryInSeconds": 604800,
+  //     storageOptions: {
+  //       driver: 'redis',
+  //       options: {
+  //         base: "sessions",
+  //         url: settings.redisURL,
+  //         ttl: 604800
+  //       }
+  //     }
+  //   },
+  //   api: {
+  //     isEnabled: false,
+  //   }
+  // },
+
+
 
   routeRules:{
     '/support': {
