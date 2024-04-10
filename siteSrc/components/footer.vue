@@ -5,7 +5,7 @@
         <div class="l6 s6">
           <ul>
             <li>
-              <img src="/img/logo.png" loading="lazy" alt="Statcord logo" style="max-width: 40%;">
+              <img src="~/assets/img/logo.png" loading="lazy" alt="Statcord logo" style="max-width: 40%;">
             </li>
             <li>
               <span class="left">© {{year}} <NuxtLink to="https://numselli.xyz" target="_blank" rel="noopener noreferrer" class="underline">numselli</NuxtLink></span>
@@ -17,7 +17,7 @@
           <ul>
             <li>
               <NuxtLink to="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">
-                <img src="/img/partners/SafeGuard/SafeGuard_logo_text_right.svg" alt="SafeGuard hosting logo" loading="lazy" style="max-width: 60%;">
+                <img src="~/assets/img/partners/SafeGuard/SafeGuard_logo_text_right.svg" alt="SafeGuard hosting logo" loading="lazy" style="max-width: 60%;">
               </NuxtLink>
             </li>
           </ul>

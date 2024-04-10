@@ -12,7 +12,7 @@
       <div class="col s12 m2 offset-m5">
         <div class="card">
           <div class="card-image">
-            <img src="/img/partners/SafeGuard/logo_-_text_under.svg">
+            <img src="~/assets/img/partners/SafeGuard/logo_-_text_under.svg">
           </div>
           <div class="card-content">
             <p>Welcome to SafeGuard Hosting, a reliable and secure web hosting company that provides a wide range of hosting solutions for businesses and individuals.</p>
