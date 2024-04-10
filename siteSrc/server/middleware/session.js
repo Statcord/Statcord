@@ -7,7 +7,7 @@ import { useRuntimeConfig } from '#imports'
 const {session: sessionSettings} = useRuntimeConfig()
 
 const redis = new Redis(sessionSettings.redisURL);
-const prefixStorage = (sessionId) => `sessionsTEST:${sessionId}`
+const prefixStorage = (sessionId) => `sessions:${sessionId}`
 const setStorageSession = async(sessionId, session) => redis.set(prefixStorage(sessionId), JSON.stringify(session), "EX", sessionSettings.ttl)
 
 
@@ -160,6 +160,8 @@ export default eventHandler(async (event) => {
 
     await setStorageSession(session.id, event.context.session)
   })
+  
+  event.context.deleteSession = deleteSession
 })
 
 
