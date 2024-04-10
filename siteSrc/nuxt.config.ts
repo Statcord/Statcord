@@ -67,7 +67,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxtjs/sitemap',
-    // '@sidebase/nuxt-session'
+    '@nuxt/ui'
   ],
 
   sitemap: {
@@ -91,7 +91,9 @@ export default defineNuxtConfig({
   //   }
   // },
 
-
+  ui: {
+    "disableGlobalStyles": true
+  },
 
   routeRules:{
     '/support': {
