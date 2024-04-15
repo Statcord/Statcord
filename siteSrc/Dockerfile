@@ -1,4 +1,4 @@
-FROM node:20.5.0-alpine3.17 as build-stage
+FROM node:21.7.2-bookworm-slim as build-stage
 
 # setup working dir
 WORKDIR /preApp
