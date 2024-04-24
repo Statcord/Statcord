@@ -22,8 +22,8 @@
         <h3>API wrappers</h3>
         <ul class="flow-text">
           <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">disstat</NuxtLink> by TomatoCake</li>
+          <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/statcord-npm" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">statcord-npm</NuxtLink> by numselli</li>
           <li><b>Python</b>: <NuxtLink to="https://pypi.org/project/disstat/" class="blue-text text-darken-2 underline">disstat</NuxtLink> by The Untraceable</li>
-          <li><b>Python</b>: <NuxtLink to="https://pypi.org/project/disstat.py/" class="blue-text text-darken-2 underline">disstat.py</NuxtLink> by The DT</li>
         </ul>
       </div>
 
