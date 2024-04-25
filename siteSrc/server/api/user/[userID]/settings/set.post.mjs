@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
     const body = await readBody(event)
     const path = getRouterParams(event)
 
-    if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+    if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     // console.log("1")
     if (event.context.session.userInfo.id !== path.userID) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))

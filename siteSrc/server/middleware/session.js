@@ -93,7 +93,11 @@ const getSession = async (event) => {
   }
 
   // 2. Does the session exist in our storage?
-  const session = JSON.parse(await redis.get(prefixStorage(existingSessionId)))
+  const sessionData = await redis.get(prefixStorage(existingSessionId))
+  if (!sessionData) {
+    return null
+  }
+  const session = JSON.parse(sessionData)
   if (!isSession(session)) {
     return null
   }
@@ -130,8 +134,6 @@ const ensureSession = async (event) => {
 
   let session = await getSession(event)
   if (!session) {
-    // console.log(`new session for path: ${event.path} with method ${event.node.req.method}`)
-    // only create session on callback route
     session = await newSession(event)
   } else if (sessionOptions.rolling) {
     session = updateSessionExpirationDate(session, event)
@@ -142,26 +144,26 @@ const ensureSession = async (event) => {
   return session
 }
 
-export default eventHandler(async (event) => {
-  // if route is blacklisted
-  // const isBlackListedRoute = sessionSettings.ignoredRoutes.find((el)=>event.path.match(el.path) && el.method === event.node.req.method.toLowerCase())
-  // if (isBlackListedRoute) return;
-  
-  // 1. Ensure that a session is present by either loading or creating one
-  await ensureSession(event)
+export default eventHandler(async (event) => {  
+  // // 1. Ensure that a session is present by either loading or creating one
+  // await ensureSession(event)
+  event.context.session = await getSession(event)
+
 
   // 2. Setup a hook that saves any changed made to the session by the subsequent endpoints & middlewares
-  event.node.res.on('finish', async () => {
-    // Session id may not exist if session was deleted
-    const session = await getSession(event)
-    if (!session) {
-      return
-    }
+  // event.node.res.on('finish', async () => {
+  //   // Session id may not exist if session was deleted
+  //   const session = await getSession(event)
+  //   if (!session) {
+  //     return
+  //   }
 
-    await setStorageSession(session.id, event.context.session)
-  })
+  //   await setStorageSession(session.id, event.context.session)
+  // })
   
   event.context.deleteSession = deleteSession
+  event.context.ensureSession = ensureSession
+  event.context.setStorageSession = setStorageSession
 })
 
 

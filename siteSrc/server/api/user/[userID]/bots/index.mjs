@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
     const path = getRouterParams(event)
     // console.log(path)
 
-	// if (!event.context.session.accessToken)
+	// if (!event.context.session?.accessToken)
 	// return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	return event.context.pgPool`SELECT username, avatar, botid, nsfw FROM bots WHERE ownerid = ${path.userID} LIMIT 30 OFFSET 30*${Number(getQuery(event).page ?? 0)}`.catch().catch(() => {})

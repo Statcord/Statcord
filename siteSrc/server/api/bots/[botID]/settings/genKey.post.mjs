@@ -1,7 +1,7 @@
 import { defineEventHandler, createError, getRouterParams, sendError } from "h3"
 
 export default defineEventHandler(async event => {
-	if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const path = getRouterParams(event)
 

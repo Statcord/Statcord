@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
     const path = getRouterParams(event)
 
     if (!path.botID) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
-    if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+    if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const botExisits = await event.context.pgPool`SELECT ownerid, longDesc, shortDesc from bots WHERE botid = ${path.botID}`.catch(() => {})
     if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))

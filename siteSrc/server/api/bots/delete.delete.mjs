@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody, sendNoContent, createError, sendError } from "h3"
 
 export default defineEventHandler(async event => {
-	if (!event.context.session.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const botID = await readBody(event)
 	if (!botID.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
