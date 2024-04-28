@@ -1,4 +1,4 @@
-FROM node:21.7.2-bookworm-slim as build-stage
+FROM node:22.0.0-alpine3.19 as build-stage
 
 # setup working dir
 WORKDIR /preApp
@@ -21,7 +21,7 @@ ENV NODE_ENV production
 RUN npm run build
 
 
-FROM node:20.5.0-alpine3.17 as production-stage
+FROM node:22.0.0-alpine3.19 as production-stage
 
 RUN mkdir /app
 COPY --from=build-stage /preApp/.output /app/.output
