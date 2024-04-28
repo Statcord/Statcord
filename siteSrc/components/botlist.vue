@@ -35,7 +35,7 @@ export default {
     name: 'botlist',
     data() {
         return {
-            bots: [],
+            bots: this.$props.botsProvided ?? [],
             page: 0,
             lastPageWithData: false
         }
@@ -45,9 +45,7 @@ export default {
         botsProvided: Array
     },
     mounted() {
-        if (this.botsProvided){
-            this.bots = this.botsProvided
-        } else this.load()
+        if (!this.$props.botsProvided) this.load()
         this.loadNext()
     },
     unmounted(){
