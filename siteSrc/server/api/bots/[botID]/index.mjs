@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
 	if (!bot[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	const isOwner = !!event.context.session?.accessToken && bot[0].ownerid === event.context.session.userInfo.id
+	const isOwner = !!event.context.session?.accessToken && bot[0].ownerid === event.context.session?.userInfo.id
 	const isPublic = bot[0].public
 
 	if ((!isPublic && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))

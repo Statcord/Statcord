@@ -11,5 +11,5 @@ const allowedRoutes = [
 
 export default defineEventHandler((event) => {
 	const url = event.node.req.url.split("?")[0]
-	if (allowedRoutes.includes(url)) event.context.redis = redis;
+	if (allowedRoutes.includes(url) || (url.startsWith("/api/bots/") && url.endsWith("/stats"))) event.context.redis = redis;
 });

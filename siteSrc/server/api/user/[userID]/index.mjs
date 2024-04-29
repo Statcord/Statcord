@@ -5,11 +5,11 @@ export default defineEventHandler(async event => {
 
 	const userFromDB = await event.context.pgPool`SELECT plevel, avatar, aboutme, username, website, public FROM owners WHERE ownerid = ${path.userID}`.catch(() => {})
 
-	if (!userFromDB[0].public && path.userID !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	if (!userFromDB[0].public && path.userID !== event.context.session?.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	return {
 		...userFromDB[0],
-		isProfileOwner: path.userID === event.context.session.userInfo?.id
+		isProfileOwner: path.userID === event.context.session?.userInfo?.id
 	}
 })
 
