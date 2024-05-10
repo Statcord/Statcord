@@ -105,8 +105,8 @@
   const { $authRequest, $genOauthUrl } = useNuxtApp()
   const route = useRoute()
 
-  const {accessToken} = await $authRequest(`/api/session`)
-  if (!accessToken) await navigateTo($genOauthUrl(route.fullPath), {external: true});
+  const sessionFetch = await $authRequest(`/api/session`)
+  if (!sessionFetch.accessToken) await navigateTo($genOauthUrl(route.fullPath), {external: true});
 
   useSeoMeta({
     themeColor: "#0080F0",

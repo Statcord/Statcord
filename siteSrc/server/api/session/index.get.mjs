@@ -1,6 +1,9 @@
-import { eventHandler } from 'h3'
+import { eventHandler, createError, sendError } from 'h3'
 
-export default eventHandler(event => event.context.session)
+export default eventHandler(event => {
+	if (!event.context.session) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	return event.context.session
+})
 
 export const schema = {
 	hidden: true,
