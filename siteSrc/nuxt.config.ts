@@ -50,13 +50,26 @@ export default defineNuxtConfig({
     },
   ],
 
-  modules: [
-    '@nuxtjs/sitemap',
-    '@nuxt/ui'
-  ],
+  modules: ['@nuxt/ui', "@nuxtjs/seo"],
 
+  site: {
+    url: 'https://statcord.com',
+  },
   sitemap: {
-    sources: ['/api/sitemap'],
+    sources: [
+      '/api/sitemap/bots',
+      '/api/sitemap/users',
+    ],
+  },
+  robots:{
+    "disallow":[
+      '/api/',
+      '/img/',
+      '/webfonts/'
+    ]
+  },
+  "seo":{
+    "redirectToCanonicalSiteUrl": true
   },
   
   ui: {
