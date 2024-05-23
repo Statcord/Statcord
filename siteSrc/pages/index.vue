@@ -19,13 +19,10 @@
 <script setup>
 useSeoMeta({
   themeColor: "#0080F0",
-  title: 'Statcord',
   description: "Track your Discord bot's statistics using Statcord.",
-  ogTitle: 'Statcord',
   ogDescription: "Track your Discord bot's statistics using Statcord.",
   ogImage: '/img/icon.png',
   ogUrl: 'https://statcord.com',
-  twitterTitle: 'Statcord',
   twitterDescription: "Track your Discord bot's statistics using Statcord.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'

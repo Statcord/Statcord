@@ -52,13 +52,13 @@
 
 useSeoMeta({
   themeColor: "#0080F0",
-  title: 'Statcord - User profile',
+  title: 'User profile',
   description: "View a users profile on Statcord.",
-  ogTitle: 'Statcord - User profile',
+  ogTitle: 'User profile',
   ogDescription: "View a users profile on Statcord.",
   ogImage: '/img/icon.png',
   ogUrl: 'https://statcord.com',
-  twitterTitle: 'Statcord - User profile',
+  twitterTitle: 'User profile',
   twitterDescription: "View a users profile on Statcord.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'

@@ -11,14 +11,14 @@
                 <div class="row">
                     <div class="col s6 m12">
                         <object
-                            :data="'https://cdn.discordapp.com/avatars/' + botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'"
+                            :data="'https://cdn.discordapp.com/avatars/' + route.params.id + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'"
                             :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
                             aria-label="aaa"
                             loading="lazy"
                             class="circle"
                             :alt="bot.username + `'s profile picture`"
                         >
-                            <img :src="'https://cdn.discordapp.com/embed/avatars/' + (botid >>> 22) % 5 + '.png?size=128'" alt="Defualt Bot icon" class="circle" />
+                            <img :src="'https://cdn.discordapp.com/embed/avatars/' + (route.params.id >>> 22) % 5 + '.png?size=128'" alt="Defualt Bot icon" class="circle" />
                         </object>
                     </div>
                     <div class="col s6 m12">
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             
-                <router-link v-if="bot.isOwner" :to="'/bots/' + botid + '/manage'" class="waves-effect waves-light btn"><i class="material-icons left">build</i>Manage bot</router-link>
+                <router-link v-if="bot.isOwner" :to="'/bots/' + route.params.id + '/manage'" class="waves-effect waves-light btn"><i class="material-icons left">build</i>Manage bot</router-link>
             </div>
         </div>
 
@@ -69,15 +69,15 @@
 
     useSeoMeta({
         themeColor: "#0080F0",
-        title: () =>`Statcord - ${bot?.username}`,
-        ogTitle: () => `Statcord - ${bot?.username}`,
+        title: () => bot?.username,
+        ogTitle: () => bot?.username,
         description:  () => `View ${bot?.username}'s stats on Statcord.`,
         ogDescription:  () => `View ${bot?.username}'s stats on Statcord.`,
         ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
         twitterCard: 'summary',
         ogUrl: () => `https://statcord.com/bots/${route.params.id}`,
-        twitterTitle: () =>`Statcord - ${bot?.username}`,
+        twitterTitle: () => bot?.username,
         twitterDescription:  () => `View ${bot?.username}'s stats on Statcord.`,
     })
     useHead({
@@ -108,7 +108,6 @@ export default {
     },
     data() {
         return {
-            botid: this.$route.params.id,
         }
     },
     async mounted() {

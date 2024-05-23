@@ -254,15 +254,15 @@ if (currentSettings === "401") throw createError({
 
 useSeoMeta({
     themeColor: "#0080F0",
-    title: () =>`Statcord - ${bot?.username}`,
-    ogTitle: () => `Statcord - ${bot?.username}`,
+    title: () =>`Manage ${bot?.username}`,
+    ogTitle: () => `Manage ${bot?.username}`,
     description:  () => `Manage ${bot?.username} on Statcord.`,
     ogDescription:  () => `Manage ${bot?.username} on Statcord.`,
     ogImage: () =>`https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
     twitterImage:() => `https://cdn.discordapp.com/avatars/${route.params.id}/${bot?.avatar}.png`,
     twitterCard: 'summary',
     ogUrl: () => `https://statcord.com/${route.params.id}/manage`,
-    twitterTitle: () =>`Statcord - ${bot?.username}`,
+    twitterTitle: () =>`Manage ${bot?.username}`,
     twitterDescription:  () => `Manage ${bot?.username} on Statcord.`,
 })
 useHead({

@@ -7,13 +7,10 @@
   <script setup>
   useSeoMeta({
     themeColor: "#0080F0",
-    title: 'Statcord - Bots',
     description: "View bots listed on Statcord.",
-    ogTitle: 'Statcord - Bots',
     ogDescription: "View bots listed on Statcord.",
     ogImage: '/img/icon.png',
     ogUrl: 'https://statcord.com',
-    twitterTitle: 'Statcord - Bots',
     twitterDescription: "View bots listed on Statcord.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'

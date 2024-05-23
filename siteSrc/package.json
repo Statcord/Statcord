@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "Statcord",
   "private": true,
   "scripts": {
     "build": "nuxt build",

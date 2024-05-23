@@ -110,13 +110,13 @@
 
   useSeoMeta({
     themeColor: "#0080F0",
-    title: 'Statcord - Add bot',
+    title: 'Add bot',
     description: "Start tracking your Discord bot's statistics using Statcord.",
-    ogTitle: 'Statcord - Add bot',
+    ogTitle: 'Add bot',
     ogDescription: "Start tracking your Discord bot's statistics using Statcord.",
     ogImage: '/img/icon.png',
     ogUrl: 'https://statcord.com',
-    twitterTitle: 'Statcord - Add bot',
+    twitterTitle: 'Add bot',
     twitterDescription: "Start tracking your Discord bot's statistics using Statcord.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'

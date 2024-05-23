@@ -56,13 +56,13 @@
   
 useSeoMeta({
   themeColor: "#0080F0",
-  title: 'Statcord - User settings',
+  title: 'User settings',
   description: "Manage your user settings on Statcord.",
-  ogTitle: 'Statcord - User settings',
+  ogTitle: 'User settings',
   ogDescription: "Manage your user settings on Statcord.",
   ogImage: '/img/icon.png',
   ogUrl: 'https://statcord.com',
-  twitterTitle: 'Statcord - User settings',
+  twitterTitle: 'User settings',
   twitterDescription: "Manage your user settings on Statcord.",
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'

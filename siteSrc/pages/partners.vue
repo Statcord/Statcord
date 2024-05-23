@@ -29,13 +29,10 @@
 <script setup>
   useSeoMeta({
     themeColor: "#0080F0",
-    title: 'Statcord - Partners',
     description: "Check out our amazing partners.",
-    ogTitle: 'Statcord - Partners',
     ogDescription: "Check out our amazing partners.",
     ogImage: '/img/icon.png',
     ogUrl: 'https://statcord.com',
-    twitterTitle: 'Statcord - Partners',
     twitterDescription: "Check out our amazing partners.",
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'

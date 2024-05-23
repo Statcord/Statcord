@@ -52,11 +52,11 @@
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
             </div>
-            <div v-else>
+            <!-- <div v-else> -->
                 <!-- <div class="container">
                     <h3 class="center-align">No chart data has been found for this time period.</h3>
                 </div> -->
-                <div class="row">
+                <!-- <div class="row">
                     <div v-for="card in 3" class="col s4 l4">
                         <div class="flex justify-center">
                             <USkeleton class="h-10 w-1/6"/>
@@ -78,10 +78,82 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
+
+<script setup>
+    import { useRoute } from 'vue-router';
+    const route = useRoute()
+
+    const formatDate = (timeStamp) => {
+        const date = new Date(timeStamp)
+        return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    }
+    const bytesToSize = (bytes) => {
+        const units = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"];
+        const unit = Math.floor(Math.log(bytes) / Math.log(1024));
+        return new Intl.NumberFormat("en", {style: "unit", unit: units[unit]}).format(bytes / 1024 ** unit);
+    }
+
+    const defaultStatsJson = await $fetch(`/api/bots/${route.params.id}/stats?groupBy=1d`)
+
+    const stats = defaultStatsJson.mainStats.stats.map(t=>{
+        t.data.labels = defaultStatsJson.mainStats.labels.map(d=>formatDate(d))
+        switch(t.name){
+            case "CPU Usage":{
+                t.options = {
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: value => `${value}%` 
+                                },
+                                beginAtZero: true
+                            }
+                        },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: context => `${context.dataset.label} ${context.parsed.y}%`
+                            }
+                        }
+                    }
+                }
+            }break;
+            case "Ram Usage":{
+                t.options={
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: value => bytesToSize(value) 
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: context => `${context.dataset.label}: ${bytesToSize(context.parsed.y)}`
+                            }
+                        }
+                    }
+                }
+            }break;
+        }
+        return t
+})
+
+const commandStats = defaultStatsJson.commands.map(t=>{
+    if (t.name==="Command usage over time") t.data.labels = t.labels.map(d=>formatDate(d))
+    return t
+})
+const customStats = defaultStatsJson.custom?.map(t=>{
+    if (t.type === "line") t.data.labels = defaultStatsJson.mainStats.labels.map(d=>formatDate(d))
+    return t
+})
+
+const cards = defaultStatsJson.cards
+</script>
 
 <script>
 import chart from './chart.vue'
@@ -117,7 +189,7 @@ export default {
 
         this.datePickerMin = new Date(this.$props.botJson.addedon).toISOString().substring(0, 10)
 
-        this.getData()
+        // this.getData()
     },
     methods:{
         genRandomHight(){

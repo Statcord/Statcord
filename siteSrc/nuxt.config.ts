@@ -63,8 +63,6 @@ export default defineNuxtConfig({
   },
   robots:{
     "disallow":[
-      '/api/',
-      '/img/',
       '/webfonts/'
     ]
   },
