@@ -2,7 +2,7 @@
    <div id="test"></div>
 </template>
   
-  <script setup>
+<script setup>
   useSeoMeta({
     themeColor: "#0080F0",
     description: "Read Statcord's API Docs.",
@@ -13,22 +13,9 @@
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
-  
-  useHead({
-    htmlAttrs: {
-      lang: 'en'
-    },
-    link: [
-      {
-        rel: 'icon',
-        type: 'image/png',
-        href: '/img/favicon.ico'
-      }
-    ]
-  })
 </script> 
-  <script>
-    import { SwaggerUIBundle } from "swagger-ui-dist"
+<script>
+  import { SwaggerUIBundle } from "swagger-ui-dist"
 
   export default {
     name: 'docs',
@@ -41,7 +28,7 @@
         })
     }
   }
-  </script>
+</script>
   
 <style>
 @import url(https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui.css);

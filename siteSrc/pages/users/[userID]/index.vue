@@ -50,32 +50,19 @@
   })
   const botListBots = botListBotsFetch
 
-useSeoMeta({
-  themeColor: "#0080F0",
-  title: 'User profile',
-  description: "View a users profile on Statcord.",
-  ogTitle: 'User profile',
-  ogDescription: "View a users profile on Statcord.",
-  ogImage: '/img/icon.png',
-  ogUrl: 'https://statcord.com',
-  twitterTitle: 'User profile',
-  twitterDescription: "View a users profile on Statcord.",
-  twitterImage: '/img/icon.png',
-  twitterCard: 'summary'
-})
-
-useHead({
-  htmlAttrs: {
-    lang: 'en'
-  },
-  link: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: '/img/favicon.ico'
-    }
-  ]
-})
+  useSeoMeta({
+    themeColor: "#0080F0",
+    title: 'User profile',
+    description: "View a users profile on Statcord.",
+    ogTitle: 'User profile',
+    ogDescription: "View a users profile on Statcord.",
+    ogImage: '/img/icon.png',
+    ogUrl: 'https://statcord.com',
+    twitterTitle: 'User profile',
+    twitterDescription: "View a users profile on Statcord.",
+    twitterImage: '/img/icon.png',
+    twitterCard: 'summary'
+  })
 </script>
 <script>
 import botlist from '../../../components/botlist.vue'

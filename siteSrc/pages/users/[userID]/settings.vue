@@ -54,32 +54,19 @@
   })
   
   
-useSeoMeta({
-  themeColor: "#0080F0",
-  title: 'User settings',
-  description: "Manage your user settings on Statcord.",
-  ogTitle: 'User settings',
-  ogDescription: "Manage your user settings on Statcord.",
-  ogImage: '/img/icon.png',
-  ogUrl: 'https://statcord.com',
-  twitterTitle: 'User settings',
-  twitterDescription: "Manage your user settings on Statcord.",
-  twitterImage: '/img/icon.png',
-  twitterCard: 'summary'
-})
-
-useHead({
-  htmlAttrs: {
-    lang: 'en'
-  },
-  link: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: '/img/favicon.ico'
-    }
-  ]
-})
+  useSeoMeta({
+    themeColor: "#0080F0",
+    title: 'User settings',
+    description: "Manage your user settings on Statcord.",
+    ogTitle: 'User settings',
+    ogDescription: "Manage your user settings on Statcord.",
+    ogImage: '/img/icon.png',
+    ogUrl: 'https://statcord.com',
+    twitterTitle: 'User settings',
+    twitterDescription: "Manage your user settings on Statcord.",
+    twitterImage: '/img/icon.png',
+    twitterCard: 'summary'
+  })
 </script>
 
 <script>

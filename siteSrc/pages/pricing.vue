@@ -90,23 +90,10 @@
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
-  
-  useHead({
-    htmlAttrs: {
-      lang: 'en'
-    },
-    link: [
-      {
-        rel: 'icon',
-        type: 'image/png',
-        href: '/img/favicon.ico'
-      }
-    ]
-  })
-  </script>
-  <script>
+</script>
+<script>
   export default {
     name: 'pricing'
   }
-  </script>
+</script>
   

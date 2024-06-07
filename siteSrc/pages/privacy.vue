@@ -38,32 +38,19 @@
 </template>
 
 <script setup>
-useSeoMeta({
-  themeColor: "#0080F0",
-  description: "Read Statcord's privacy policy and terms of service.",
-  ogDescription: "Read Statcord's privacy policy and terms of service.",
-  ogImage: '/img/icon.png',
-  ogUrl: 'https://statcord.com',
-  twitterDescription: "Read Statcord's privacy policy and terms of service.",
-  twitterImage: '/img/icon.png',
-  twitterCard: 'summary'
-})
-
-useHead({
-  htmlAttrs: {
-    lang: 'en'
-  },
-  link: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: '/img/favicon.ico'
-    }
-  ]
-})
+  useSeoMeta({
+    themeColor: "#0080F0",
+    description: "Read Statcord's privacy policy and terms of service.",
+    ogDescription: "Read Statcord's privacy policy and terms of service.",
+    ogImage: '/img/icon.png',
+    ogUrl: 'https://statcord.com',
+    twitterDescription: "Read Statcord's privacy policy and terms of service.",
+    twitterImage: '/img/icon.png',
+    twitterCard: 'summary'
+  })
 </script>
 <script>
-export default {
-  name: 'privacy'
-}
+  export default {
+    name: 'privacy'
+  }
 </script>
