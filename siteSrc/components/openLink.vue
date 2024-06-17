@@ -1,6 +1,6 @@
 <template>
     <div v-if="url">
-        <span class="flow-text modal-trigger blue-text text-darken-2 myLink" :data-target="uuid"><i class="material-icons">{{icon}}</i> {{name}}</span>
+        <span class="flow-text modal-trigger blue-text text-darken-2 myLink" :data-target="uuid"><UIcon :name="`i-heroicons-${icon}`" /> {{name}}</span>
         <div :id="uuid" :ref="uuid" class="modal hide">
             <div class="modal-content">
                 <h4>Leaving Statcord</h4>

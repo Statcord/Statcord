@@ -17,9 +17,8 @@
   
   
   
-    <div class="waves-effect waves-light btn-large red modal-trigger" data-target="modal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
-    <div class="waves-effect waves-light btn-large" @click="saveSettings"><i class="material-icons left">save</i>Save</div>
-  
+    <div class="waves-effect waves-light btn-large red modal-trigger" data-target="modal1"><UIcon name="i-heroicons-trash" /> Delete all data</div>
+    <div class="waves-effect waves-light btn-large" @click="saveSettings"><UIcon name="i-heroicons-check" />Save</div>
     <div id="modal1" ref="modal" class="modal hide">
       <div class="modal-content">
         <h4>Confirm data deletion</h4>
@@ -27,7 +26,7 @@
       <div class="modal-footer">
         <div>
           <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-          <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete">Delete forever (really!)<i class="material-icons left">delete_forever</i></div>
+          <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete"><UIcon name="i-heroicons-trash" />Delete forever (really!)</div>
         </div>
       </div>
     </div>

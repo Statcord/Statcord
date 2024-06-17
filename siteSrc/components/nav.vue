@@ -2,7 +2,7 @@
     <nav>
         <div class="nav-wrapper black">
             <div data-target="mobile-demo" class="sidenav-trigger hide-on-large-only">
-                <i class="material-icons">menu</i>
+                <UIcon name="i-heroicons-bars-3" />
             </div>
             <ul class="left hide-on-med-and-down">
                 <li><router-link to="/">Home</router-link></li>

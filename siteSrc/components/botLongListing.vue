@@ -10,7 +10,7 @@
         <UDivider />
         <div>
             <h5>links</h5>
-            <openLink icon="add" name="Invite" :url="botJson.invite"></openLink>
+            <openLink icon="plus" name="Invite" :url="botJson.invite"></openLink>
             <openLink v-for="link in botJson.links" :icon="link.icon" :name="link.name" :url="link.url"></openLink>
         </div>
     </UContainer>

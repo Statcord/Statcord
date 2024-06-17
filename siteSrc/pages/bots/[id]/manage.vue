@@ -162,7 +162,7 @@
             <div class="section">
                 <div class="row" style="gap: 10px;">
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Export data</div>
+                        <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><UIcon name="i-heroicons-arrows-up-down" />Export data</div>
                     </div>
                     <div class="col s6 m2">
                         <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><UIcon name="i-heroicons-key" />API key</div> 
@@ -171,7 +171,7 @@
                         <div class="waves-effect waves-light btn" @click="sync"><UIcon name="i-heroicons-arrow-path" />Sync</div>
                     </div>
                     <div class="col s3 m2">
-                        <div class="waves-effect waves-light btn" @click="save"><i class="material-icons left">save</i>Save</div>
+                        <div class="waves-effect waves-light btn" @click="save"><UIcon name="i-heroicons-check" />Save</div>
                     </div>
                     <div class="col s6 m2">
                         <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><UIcon name="i-heroicons-trash" />Delete all data</div>
@@ -207,7 +207,7 @@
            
             <div v-if="apiKey">
                 <input type="text" disabled :value="apiKey">
-                <div class="waves-effect waves-light btn" @click="copyKey"><i class="material-icons left">content_copy</i>Copy</div>
+                <div class="waves-effect waves-light btn" @click="copyKey"><UIcon name="i-heroicons-document-duplicate" />Copy</div>
             </div>
         </div>
         <div class="modal-footer">
