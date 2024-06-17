@@ -4,7 +4,7 @@
       <h2>Partners</h2>
       <h6>Statcord wouldn't be possible without our amazing partners.</h6>
     </div>
-    <div class="divider"></div>
+    <UDivider />
   </div>
 
   <div class="section">

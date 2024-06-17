@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <UContainer>
     <!-- Privacy Policy -->
     <div class="section">
       <div class="center-align">
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Terms of Service -->
-    <div class="divider"></div>
+    <UDivider />
     <div class="section flow-text">
       <div class="center-align">
         <h2>Terms of Service</h2>
@@ -34,7 +34,7 @@
         <li>Post your bot stats more than once per minute, you might get ratelimited or temporarily banned otherwise</li>
       </ol>
     </div>
-  </div>
+  </UContainer>
 </template>
 
 <script setup>

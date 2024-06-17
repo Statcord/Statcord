@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <UContainer>
     <h4>Add your bot</h4>
     <form>
       <div class="section">
@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <UDivider />
 
       <div class="section">
         <h6>Access control</h6>
@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <UDivider />
 
       <div class="section">
         <h6>Bot Description</h6>
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <UDivider />
 
       <div class="section">
         <h6>Add additional links (optional)</h6>
@@ -92,13 +92,13 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <UDivider />
 
       <div class="section">
         <input type="submit" class="waves-effect waves-light btn right" @click.prevent="submitBot" value="Add bot">
       </div>
     </form>
-  </div>
+  </UContainer>
 </template>
 
 <script setup>

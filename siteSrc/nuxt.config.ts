@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     },
   ],
 
-  modules: ['@nuxt/ui', "@nuxtjs/seo"],
+  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxt/image"],
 
   site: {
     url: 'https://statcord.com',

@@ -1,6 +1,6 @@
 <template>
-  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><i class="material-icons left">add</i>Add your bot</router-link>
-  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+userID+'/settings'"><i class="material-icons left">settings</i>User Settings</router-link>
+  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><UIcon name="i-heroicons-plus" />Add your bot</router-link>
+  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+userID+'/settings'"><UIcon name="i-heroicons-cog-6-tooth" />User Settings</router-link>
 
   <div>
     <div class="row">

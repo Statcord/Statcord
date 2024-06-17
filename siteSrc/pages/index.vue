@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <UContainer>
     <h1>Statcord - Track statistics of your Discord bot</h1>
 
     <p class="flow-text">
@@ -13,7 +13,7 @@
    
     <h2>All currently tracked, public bots</h2>
     <botlist botListRoute="/api/bots"></botlist>
-  </div>
+  </UContainer>
 </template>
 
 <script setup>

@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
+  <UContainer>
     <div class="section">
       <div class="center-align">
         <h2>How to setup statistics tracking</h2>
       </div>
-      <div class="divider"></div>
+      <UDivider />
 
 
       <p class="flow-text">
@@ -17,7 +17,7 @@
       </p>
 
 
-      <div class="divider"></div>
+      <UDivider />
       <div class="section">
         <h3>API wrappers</h3>
         <ul class="flow-text">
@@ -27,7 +27,7 @@
         </ul>
       </div>
 
-      <div class="divider"></div>
+      <UDivider />
       <div class="section">
         <h3>Importing data from Statcord</h3>
         <p class="flow-text">
@@ -35,7 +35,7 @@
         </p>
       </div>
     </div>
-  </div>
+  </UContainer>
 </template>
 
 <script setup>

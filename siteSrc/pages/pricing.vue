@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <UContainer>
         <div class="row" style="gap:10px;">
             <div class="col s12 m3 offset-m3">
                 <div class="card">
@@ -76,7 +76,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </UContainer>
   </template>
   
 <script setup>

@@ -1,31 +1,17 @@
 <template>
-    <div class="row" style="gap: 1rem;">
-        <router-link class="col s12 m2" :to="'/bots/' + bot.botid" v-for="bot in bots" v-bind:key="bot.id">
-            <div class="card">
-                <div class="card-image no-overflow">
-                    <object
-                        :data="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=512'"
-                        :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
-                        aria-label="aaa"
-                        loading="lazy"
-                        :class="bot.nsfw? 'blur':''"
-                        :alt="bot.username+`'s profile picture`"
-                        style="max-width: 100%; border-radius: 12px 12px 0 0 ;"
-                        >
-                        <img :src="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" alt="Defualt Bot icon" loading="lazy" style="border-radius: 12px 12px 0 0 " />
-                    </object>
-                </div>
-                <div class="card-stacked">
-                    <div class="card-content">
-                        <p class="flow-text blue-text text-darken-2">{{ bot.username }}</p>
-                    </div>
+    <div class="grid md:grid-cols-6 sm:grid-cols-1 gap-4" style="gap: 1rem;">
+        <router-link :to="'/bots/' + bot.botid" v-for="bot in bots" v-bind:key="bot.id">
+            <div class="max-w-sm overflow-hidden shadow-md rounded-xl">
+                <nuxt-img :class="bot.nsfw? 'blur-lg w-full':'w-full'" :alt="bot.username+`'s profile picture`" :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=512'" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" />
+                <div class="px-4 py-4">
+                    <div class="text-2xl">{{ bot.username }}</div>
                 </div>
             </div>
         </router-link>
     </div>
     <div class="fixed-action-btn">
-    <button v-if="page>0" class="btn-floating btn-large waves-effect deep-purple darken-2" @click="scrollToTop">
-      <i class="large material-icons">expand_less</i>
+    <button v-if="page>0" class="btn-floating btn-large waves-effect deep-purple darken-2 place-content-center" @click="scrollToTop">
+      <UIcon class="large" name="i-heroicons-chevron-up" />
     </button>
   </div>
 </template>
@@ -59,6 +45,8 @@ export default {
         },
         loadNext() {
             window.onscroll = () => {
+
+                console.log("s")
                 if (!this.lastPageWithData && Number((document.documentElement.scrollTop + window.innerHeight).toFixed(0)) === document.documentElement.offsetHeight) {
                     this.page++
                     this.load()

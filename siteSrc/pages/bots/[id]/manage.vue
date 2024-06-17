@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <UContainer>
         <form action="#">
             <div class="section">
                 <h6>Access control</h6>
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <UDivider />
             <div class="section">
                 <h6>Bot Description</h6>
                 <div class="row">
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <UDivider />
             <div class="section">
                 <h6>Add additional links (optional)</h6>
                 <div class="row" style="gap: 10px;">
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <UDivider />
             <div class="section">
                 <h6>Defualt charts</h6>
                 <div class="row">
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <UDivider />
             <div class="section">
                 <h6>Command charts</h6>
                 <div class="row">
@@ -104,7 +104,7 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <UDivider />
             <div class="section">
                 <h6>Custom charts</h6>
                 <div>
@@ -138,7 +138,7 @@
                                 </div>
 
                                 <div class="col s12 m6">
-                                    <div class="waves-effect waves-light btn red modal-trigger" :data-target="'delCustomModal-'+chart.chartid"><i class="material-icons left">delete_forever</i>Delete chart</div>
+                                    <div class="waves-effect waves-light btn red modal-trigger" :data-target="'delCustomModal-'+chart.chartid"><UIcon name="i-heroicons-trash" />Delete chart</div>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +150,7 @@
                             <div class="modal-footer">
                                 <div>
                                     <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-                                    <div class="modal-close waves-effect waves-light btn red accent-3 right" :chartid="chart.chartid" @click="confirmedCustomDelete">Delete forever (really!)<i class="material-icons left">delete_forever</i></div>
+                                    <div class="modal-close waves-effect waves-light btn red accent-3 right" :chartid="chart.chartid" @click="confirmedCustomDelete">Delete forever (really!)<UIcon name="i-heroicons-trash" /></div>
                                 </div>
                             </div>
                         </div>
@@ -158,28 +158,28 @@
                 </div>
             </div>
 
-            <div class="divider"></div>
+            <UDivider />
             <div class="section">
                 <div class="row" style="gap: 10px;">
                     <div class="col s6 m2">
                         <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><i class="material-icons left">import_export</i>Export data</div>
                     </div>
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><i class="material-icons left">keygen</i>API key</div> 
+                        <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><UIcon name="i-heroicons-key" />API key</div> 
                     </div>
                     <div class="col s3 m2">
-                        <div class="waves-effect waves-light btn" @click="sync"><i class="material-icons left">autorenew</i>Sync</div>
+                        <div class="waves-effect waves-light btn" @click="sync"><UIcon name="i-heroicons-arrow-path" />Sync</div>
                     </div>
                     <div class="col s3 m2">
                         <div class="waves-effect waves-light btn" @click="save"><i class="material-icons left">save</i>Save</div>
                     </div>
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><i class="material-icons left">delete_forever</i>Delete all data</div>
+                        <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><UIcon name="i-heroicons-trash" />Delete all data</div>
                     </div>
                 </div>
             </div>
         </form>
-    </div>
+    </UContainer>
 
 
     <div id="importModal1" ref="importModal1" class="modal hide">
@@ -213,7 +213,7 @@
         <div class="modal-footer">
             <div>
                 <div class="modal-close waves-effect waves-light btn left">Close</div>
-                <div class="waves-effect waves-light btn" @click="reGenKey"><i class="material-icons left">autorenew</i>Regenerate API key</div>
+                <div class="waves-effect waves-light btn" @click="reGenKey"><UIcon name="i-heroicons-arrow-path" />Regenerate API key</div>
             </div>
         </div>
     </div>
@@ -225,7 +225,7 @@
         <div class="modal-footer">
             <div>
                 <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-                <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete">Delete forever (really!)<i class="material-icons left">delete_forever</i></div>
+                <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete">Delete forever (really!) <UIcon name="i-heroicons-trash" /></div>
             </div>
         </div>
     </div>

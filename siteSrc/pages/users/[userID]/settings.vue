@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <UContainer>
     <div>
       <label>
         <input type="checkbox" :checked="profileInfo.public" @change="updateSettingsValue" name="public" ref="settings:public">
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </UContainer>
 </template>
 
 <script setup>

@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <div class="container">
+    <UContainer>
       <div class="row">
         <div class="l6 s6">
           <ul>
@@ -23,7 +23,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </UContainer>
   </div>
 </template>
 

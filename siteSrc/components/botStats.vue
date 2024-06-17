@@ -52,33 +52,6 @@
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
             </div>
-            <!-- <div v-else> -->
-                <!-- <div class="container">
-                    <h3 class="center-align">No chart data has been found for this time period.</h3>
-                </div> -->
-                <!-- <div class="row">
-                    <div v-for="card in 3" class="col s4 l4">
-                        <div class="flex justify-center">
-                            <USkeleton class="h-10 w-1/6"/>
-                        </div>
-
-                        <div class="flex justify-center pt-1">
-                            <USkeleton class="h-6 w-14"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row pt-5">
-                    <div class="col s12 l4 pt-2" v-for="placeholder in 7">
-                        <div class="flex justify-center">
-                            <USkeleton class="h-10 w-1/6"/>
-                        </div>
-                        <div class="flex items-end space-x-4 justify-center pt-5">
-                            <USkeleton v-for="card in 10" :class="genRandomHight()"/>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </template>

@@ -23,7 +23,7 @@
                     data-target="dropdown1"
                     id="userDropdown">
                     <img :src="`https://cdn.discordapp.com/avatars/${user.avatar ? `${user.id}/${user.avatar}.${(user.avatar.startsWith('a_')?'gif':'webp')}`: `${(user.id >>> 22) % 5}.png`}?size=32`" :alt="user.username" class="circle left-align" />
-                    <i class="material-icons right-align">arrow_drop_down</i>
+                    <UIcon name="i-heroicons-chevron-down" />
                 </li>
             </ul>
         </div>
@@ -39,7 +39,7 @@
     </ul>
     <ul v-if="user" ref="dropdownContent" id="dropdown1" class="dropdown-content valign-wrapper black">
         <li><router-link :to="'/users/'+user.id" class="white-text">User</router-link></li>
-        <li class="divider"></li>
+        <UDivider />
         <li><span @click="logout" class="red-text darken-3">Logout</span></li>
     </ul>
 </template>

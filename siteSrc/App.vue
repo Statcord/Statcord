@@ -56,16 +56,4 @@ export default {
   -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
-
-.blur {
-  filter: blur(1.3rem);
-}
-
-.no-overflow {
-  overflow: hidden;
-}
-
-.underline {
-  text-decoration-line: underline;
-}
 </style>

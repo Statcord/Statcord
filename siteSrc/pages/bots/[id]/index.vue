@@ -6,8 +6,8 @@
                 <div class="btn" @click="dismissNSFW">I understand</div>
             </h3>
         </div>
-        <div class="row" ref="nsfwBotInfoContent" :class="bot.nsfw ? 'blur' : ''">
-            <div class="col s12 m2 container">
+        <div class="row" ref="nsfwBotInfoContent" :class="bot.nsfw ? 'blur-lg' : ''">
+            <UContainer class="col s12 m2">
                 <div class="row">
                     <div class="col s6 m12">
                         <object
@@ -26,12 +26,12 @@
                         <h5>Made by: <router-link :to="'/users/' + bot.ownerid" class="blue-text text-darken-2">{{ bot.ownername }}</router-link></h5>
                     </div>
                 </div>
-            
-                <router-link v-if="bot.isOwner" :to="'/bots/' + route.params.id + '/manage'" class="waves-effect waves-light btn"><i class="material-icons left">build</i>Manage bot</router-link>
-            </div>
+
+                <router-link v-if="bot.isOwner" :to="'/bots/' + route.params.id + '/manage'" class="waves-effect waves-light btn"><UIcon name="i-heroicons-wrench"/>Manage bot</router-link>
+            </UContainer>
         </div>
 
-        <div ref="nsfwBotContent" :class="bot.nsfw ? 'blur' : ''">
+        <div ref="nsfwBotContent" :class="bot.nsfw ? 'blur-lg' : ''">
             <div class="row">
                 <div class="col s12">
                     <ul class="tabs" ref="tabs">

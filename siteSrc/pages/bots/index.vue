@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <UContainer>
     <botlist botListRoute="/api/bots"></botlist>  
 
-  </div>
+  </UContainer>
 </template>
   <script setup>
   useSeoMeta({
