@@ -4,9 +4,10 @@
 
   <div>
     <div class="row">
-      <img :src="user.avatarURL" alt="" class="circle">
-      <h1>{{user.username}}</h1>
-
+      <div class="col s7">
+        <img :src="user.avatarURL" alt="" class="circle">
+        <h1>{{user.username}}</h1>
+      </div>
     </div>
     <h4>{{ user.aboutme }}</h4>
 
