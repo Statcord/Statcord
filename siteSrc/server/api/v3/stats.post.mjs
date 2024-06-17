@@ -132,7 +132,7 @@ export default defineEventHandler(async event => {
 
 	writeClient.flush()
 
-	sendNoContent(event, 200)
+	return {}
 })
 
 export const schema = {
