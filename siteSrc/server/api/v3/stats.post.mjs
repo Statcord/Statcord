@@ -12,6 +12,11 @@ const mainStats = {
 }
 const mainStatsKeys = Object.keys(mainStats)
 
+const isNanOrInfinity = number => {
+	if (number === NaN || number === Infinity) return 0
+	return number
+}
+
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
 
@@ -59,30 +64,30 @@ export default defineEventHandler(async event => {
 	event.context.redis.set(`legacyRouteTracking:${body.id}`, "v3")  
 
 	const convertedBody = {
-		"guildCount": Number(body.servers ?? 0),
-		"userCount": Number(body.active.length ?? 0),
-		"members": Number(body.users ?? 0),
-		"ramUsage": Number(body.memactive ?? 0),
-		"totalRam": Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100),
-		"cpuUsage": Number(body.cpuload ?? 0),
+		"guildCount": isNanOrInfinity(Number(body.servers ?? 0)),
+		"userCount": isNanOrInfinity(Number(body.active.length ?? 0)),
+		"members": isNanOrInfinity(Number(body.users ?? 0)),
+		"ramUsage": isNanOrInfinity(Number(body.memactive ?? 0)),
+		"totalRam": isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100)),
+		"cpuUsage": isNanOrInfinity(Number(body.cpuload ?? 0)),
 		"shardCount": 0,
 		"customCharts": [
 			{
 				"id": "custom1",
 				"data": {
-					"itemOne": Number(body.custom1 ?? 0),
+					"itemOne": isNanOrInfinity(Number(body.custom1 ?? 0)),
 				}
 			},
 			{
 				"id": "custom2",
 				"data": {
-					"itemOne": Number(body.custom2 ?? 0),
+					"itemOne": isNanOrInfinity(Number(body.custom2 ?? 0)),
 				}
 			},
 			{
 				"id": "bandwidth",
 				"data": {
-					"itemOne": Number(body.bandwidth ?? 0),
+					"itemOne": isNanOrInfinity(Number(body.bandwidth ?? 0)),
 				}
 			}
 		],
