@@ -51,8 +51,8 @@ export default defineEventHandler(async event => {
 	
 				Object.keys(customChart.data).forEach(key => {
 					const value = customChart.data[key]
-					if (value.toString().includes(".")) customChartsPoint.floatField(key, value)
-					else customChartsPoint.intField(key, value)
+					if (value.toString().includes(".")) customChartsPoint.floatField(key, isNaN(value) ? 0 : value)
+					else customChartsPoint.intField(key, isNaN(value) ? 0 : value)
 				})
 	
 				writeClient.writePoint(customChartsPoint)
