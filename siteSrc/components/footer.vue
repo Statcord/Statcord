@@ -1,30 +1,54 @@
 <template>
-  <div class="footer">
-    <UContainer>
-      <div class="row">
-        <div class="l6 s6">
-          <ul>
-            <li>
-              <img src="~/assets/img/logo.png" loading="lazy" alt="Statcord logo" style="max-width: 40%;">
-            </li>
-            <li>
-              <span class="left">© {{year}} <NuxtLink to="https://numselli.xyz" target="_blank" rel="noopener noreferrer" class="underline">numselli</NuxtLink></span>
-            </li>
-          </ul>
+  <footer class="relative bg-gray-800 pt-8 pb-6">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap text-left lg:text-left">
+        <div class="w-full lg:w-6/12 px-4">
+          <div class="mt-6 lg:mb-0 mb-6 text-white">
+            <img src="~/assets/img/logo.png" loading="lazy" alt="Statcord logo" style="max-width: 40%;">
+            <span>© {{year}} </span> <NuxtLink to="https://numselli.xyz" target="_blank" rel="noopener noreferrer" class="underline">numselli</NuxtLink>
+          </div>
         </div>
-        <div class="l4 offset-l8 s6">
-          <h6><router-link to="/partners" class="underline">Partners</router-link></h6>
-          <ul>
-            <li>
-              <NuxtLink to="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">
-                <img src="~/assets/img/partners/SafeGuard/SafeGuard_logo_text_right.svg" alt="SafeGuard hosting logo" loading="lazy" style="max-width: 60%;">
-              </NuxtLink>
-            </li>
-          </ul>
-        </div>
+        <!-- <div class="w-full lg:w-6/12 px-4">
+          <div class="flex flex-wrap items-top mb-6">
+            <div class="w-full lg:w-4/12 px-4 ml-auto">
+              <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Useful Links</span>
+              <ul class="list-unstyled">
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://www.creative-tim.com/presentation?ref=njs-profile">About Us</a>
+                </li>
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://blog.creative-tim.com?ref=njs-profile">Blog</a>
+                </li>
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://www.github.com/creativetimofficial?ref=njs-profile">Github</a>
+                </li>
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://www.creative-tim.com/bootstrap-themes/free?ref=njs-profile">Free Products</a>
+                </li>
+              </ul>
+            </div>
+            <div class="w-full lg:w-4/12 px-4">
+              <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Other Resources</span>
+              <ul class="list-unstyled">
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://github.com/creativetimofficial/notus-js/blob/main/LICENSE.md?ref=njs-profile">MIT License</a>
+                </li>
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://creative-tim.com/terms?ref=njs-profile">Terms &amp; Conditions</a>
+                </li>
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://creative-tim.com/privacy?ref=njs-profile">Privacy Policy</a>
+                </li>
+                <li>
+                  <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="https://creative-tim.com/contact-us?ref=njs-profile">Contact Us</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div> -->
       </div>
-    </UContainer>
-  </div>
+    </div>
+  </footer>
 </template>
 
 <script>
@@ -37,35 +61,3 @@
     }
   }
 </script>
-<style>
-  .footer {
-    color: #ffffff;
-    background-color: #006495;
-  }
-  .footer a {
-    color: #ffffff;
-  }
-  .footer{
-    overflow: hidden;
-    min-height: 50px;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-    padding: 10px 0px;
-    color: #ffffff;
-    background-color: #006495;
-  }
-  .footer ul {
-    padding-left: 0;
-    list-style-type: none;
-  }
-</style>
