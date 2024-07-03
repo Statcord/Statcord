@@ -29,7 +29,7 @@
               <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
-                <nuxt-img class="h-8 w-8 rounded-full" alt="user.username" :src="`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${(user.avatar.startsWith('a_')?'gif':'webp')}`" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(user.id >>> 22) % 5+'.png?size=512'" />
+                <nuxt-img class="h-8 w-8 rounded-full" alt="user.username" :src="`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${(user.avatar?.startsWith('a_')?'gif':'webp')}`" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+((user.id??0) >>> 22) % 5+'.png?size=512'" />
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
