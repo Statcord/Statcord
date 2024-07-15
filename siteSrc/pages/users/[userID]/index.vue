@@ -5,7 +5,7 @@
   <div>
     <div class="row">
       <div class="col s7">
-        <img :src="user.avatarURL" alt="" class="circle">
+        <nuxt-img class="circle" :alt="user.username+`'s profile picture`" :src="user.avatarURL" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(route.params.userID >>> 22) % 5+'.png?size=512'" />
         <h1>{{user.username}}</h1>
       </div>
     </div>

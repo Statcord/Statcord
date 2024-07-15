@@ -10,16 +10,7 @@
             <UContainer class="col s12 m2">
                 <div class="row">
                     <div class="col s6 m12">
-                        <object
-                            :data="'https://cdn.discordapp.com/avatars/' + route.params.id + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'"
-                            :type="bot.avatar.startsWith('a_')?'image/gif':'image/png'"
-                            aria-label="aaa"
-                            loading="lazy"
-                            class="circle"
-                            :alt="bot.username + `'s profile picture`"
-                        >
-                            <img :src="'https://cdn.discordapp.com/embed/avatars/' + (route.params.id >>> 22) % 5 + '.png?size=128'" alt="Defualt Bot icon" class="circle" />
-                        </object>
+                        <nuxt-img class="circle" :alt="bot.username+`'s profile picture`" :src="'https://cdn.discordapp.com/avatars/' + route.params.id + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(route.params.id >>> 22) % 5+'.png?size=512'" />
                     </div>
                     <div class="col s6 m12">
                         <h3 class="truncate">{{ bot.username }}</h3>

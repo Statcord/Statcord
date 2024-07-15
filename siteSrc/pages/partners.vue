@@ -1,31 +1,23 @@
 <template>
-  <div class="section">
-    <div class="center-align">
-      <h2>Partners</h2>
-      <h6>Statcord wouldn't be possible without our amazing partners.</h6>
-    </div>
-    <UDivider />
-  </div>
-
-  <div class="section">
-    <div class="row" style="gap:10px;">
-      <div class="col s12 m2 offset-m5">
-        <div class="card">
-          <div class="card-image">
-            <img src="~/assets/img/partners/SafeGuard/logo_-_text_under.svg">
-          </div>
-          <div class="card-content">
-            <p>Welcome to SafeGuard Hosting, a reliable and secure web hosting company that provides a wide range of hosting solutions for businesses and individuals.</p>
-          </div>
-          <div class="card-action">
-            <NuxtLink to="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">Explore Services</NuxtLink>
-          </div>
+  <UContainer>
+    <div class="grid md:grid-cols-2 sm:grid-cols-1 justify-evenly">
+      <div class="max-w-sm overflow-hidden shadow-md rounded-xl">
+        <nuxt-img class="w-full" alt="" src="/img/partners/SafeGuard/logo_-_text_under.svg" />
+        <div class="px-4 py-4">
+          <UContainer>
+            <div>
+              <p>Welcome to SafeGuard Hosting, a reliable and secure web hosting company that provides a wide range of hosting solutions for businesses and individuals.</p>
+            </div>
+          </UContainer>
+        </div>
+        <div class="bg-blue-400 text-center text-xl cursor-pointer">
+          <NuxtLink to="https://safeguardhosting.ca/aff.php?aff=17&src=statcord" target="_blank" rel="noopener noreferrer">Explore Services</NuxtLink>
         </div>
       </div>
     </div>
-  </div>
+  </UContainer>
 </template>
-  
+
 <script setup>
   useSeoMeta({
     themeColor: "#0080F0",
