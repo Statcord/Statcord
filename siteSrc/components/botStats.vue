@@ -2,20 +2,13 @@
     <div class="row">
         <div class="col s12 m2">
             <div>
-                <select ref="allTimeOrDateRange" @change="dateOrAllTimeChanged">
-                    <option value="allTime" selected>All Time</option>
-                    <option value="dateRange">Date Range</option>
-                </select>
-                <label>Select date range</label>
+                <USelect v-model="allTimeOrDateRangeSelection" name="allTimeOrDateRangeSelection" :options="allTimeOrDateRange" @change="dateOrAllTimeChanged"/>
+                <label for="allTimeOrDateRangeSelection">Select date range</label>
             </div>
 
             <div>
-                <select ref="groupBySelector" @change="groupBySelectorChanged">
-                    <option value="d" selected>Day</option>
-                    <option value="mo">Month</option>
-                    <option value="y">Year</option>
-                </select>
-                <label>Select group by range</label>
+                <USelect v-model="groupBySelection" name="groupBySelection" :options="groupBySelections"  @change="groupBySelectorChanged"/>
+                <label for=groupBySelection>Select group by range</label>
             </div>
 
             <div v-if="showDateRange">
@@ -131,6 +124,12 @@ const cards = defaultStatsJson.cards
 <script>
 import chart from './chart.vue'
 
+const allTimeOrDateRange = ['All Time', 'Date Range']
+const allTimeOrDateRangeSelection = ref(allTimeOrDateRange[0])
+
+const groupBySelections = ['Day', 'Month', 'Year']
+const groupBySelection = ref(groupBySelections[0])
+
 export default {
     name: 'botStats',
     components: {
@@ -157,22 +156,14 @@ export default {
     async mounted() {
         this.botid = this.$route.params.id
 
-        this.$M.FormSelect.init(this.$refs.allTimeOrDateRange)
-        this.$M.FormSelect.init(this.$refs.groupBySelector)
-
         this.datePickerMin = new Date(this.$props.botJson.addedon).toISOString().substring(0, 10)
 
         // this.getData()
     },
     methods:{
-        genRandomHight(){
-            const hights = ['24', '32', '28', '20']
-            const randomHeight = hights[Math.floor(Math.random() * hights.length)]
-            return `h-${randomHeight} w-5`
-        },
         dateOrAllTimeChanged(event) {
-            this.showDateRange = event.target.value === "dateRange"
-            if (event.target.value === "allTime") {
+            this.showDateRange = event === "Date Range"
+            if (event === "All Time") {
                 this.startDate = null
                 this.endDate = null
             }

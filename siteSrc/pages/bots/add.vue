@@ -156,7 +156,7 @@
           method: 'post',
           body: values
         })
-        if (error.value) this.$M.toast({text: "error adding bot"})
+        if (error.value) this.$toast.add({title: "error adding bot"})
         else await navigateTo(`/bots/${this.$refs.botid.value}`);
       },
       botIdUpdated(){

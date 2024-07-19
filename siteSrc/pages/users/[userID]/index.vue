@@ -1,11 +1,8 @@
 <template>
-  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" to="/bots/add"><UIcon name="i-heroicons-plus" />Add your bot</router-link>
-  <router-link v-if="user.isProfileOwner" class="waves-effect waves-light btn-large" :to="'/users/'+userID+'/settings'"><UIcon name="i-heroicons-cog-6-tooth" />User Settings</router-link>
-
   <div>
     <div class="row">
       <div class="col s7">
-        <nuxt-img class="circle" :alt="user.username+`'s profile picture`" :src="user.avatarURL" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(route.params.userID >>> 22) % 5+'.png?size=512'" />
+        <nuxt-img class="h-32 w-32 rounded-full" :alt="user.username+`'s profile picture`" :src="user.avatarURL" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(route.params.userID >>> 22) % 5+'.png?size=512'" />
         <h1>{{user.username}}</h1>
       </div>
     </div>

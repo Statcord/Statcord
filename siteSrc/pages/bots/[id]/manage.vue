@@ -22,7 +22,7 @@
                 <div class="row">
                   <div class="col s12 m11">
                     <label for="customurl">Custom URL</label>
-                    <input disabled type="url" :placeholder="host + '/bots/' + botid" ref="setting:customurl">
+                    <input disabled type="url" :placeholder="host + '/bots/' + route.params.id" ref="setting:customurl">
                   </div>
                   <div class="col s12 m1">
                     <div class="waves-effect waves-light btn-large right disabled">Check</div>
@@ -138,19 +138,7 @@
                                 </div>
 
                                 <div class="col s12 m6">
-                                    <div class="waves-effect waves-light btn red modal-trigger" :data-target="'delCustomModal-'+chart.chartid"><UIcon name="i-heroicons-trash" />Delete chart</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div :id="'delCustomModal-'+chart.chartid" :ref="'delCustomModal-'+chart.chartid" class="modal hide">
-                            <div class="modal-content">
-                                <h4>Confirm deletion of {{ chart.name }}</h4>
-                            </div>
-                            <div class="modal-footer">
-                                <div>
-                                    <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-                                    <div class="modal-close waves-effect waves-light btn red accent-3 right" :chartid="chart.chartid" @click="confirmedCustomDelete">Delete forever (really!)<UIcon name="i-heroicons-trash" /></div>
+                                    <DeleteCustomChart :chartName="chart.name" :chartid="chart.chartid"></DeleteCustomChart>
                                 </div>
                             </div>
                         </div>
@@ -168,10 +156,10 @@
                         <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><UIcon name="i-heroicons-key" />API key</div> 
                     </div>
                     <div class="col s3 m2">
-                        <div class="waves-effect waves-light btn" @click="sync"><UIcon name="i-heroicons-arrow-path" />Sync</div>
+                        <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />
                     </div>
                     <div class="col s3 m2">
-                        <div class="waves-effect waves-light btn" @click="save"><UIcon name="i-heroicons-check" />Save</div>
+                        <UButton label="Save" icon="i-heroicons-check" @click="save" />
                     </div>
                     <div class="col s6 m2">
                         <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><UIcon name="i-heroicons-trash" />Delete all data</div>
@@ -232,6 +220,11 @@
 </template>
 
 <script setup>
+// const isOpen = ref(false)
+// const isOpen = ref(false)
+// const isOpen = ref(false)
+
+
 import { useRoute } from 'vue-router';
 const { $authRequest } = useNuxtApp()
 const route = useRoute()
@@ -286,7 +279,6 @@ export default {
         const config = useRuntimeConfig()
         return {
             host: config.public.domain,
-            botid: "",
             apiKey: undefined,
             plevel: 0,
             userID: ""
@@ -297,17 +289,16 @@ export default {
         if (!userInfo) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
 
         this.userID = userInfo.id
-        this.botid = this.$route.params.id
 
         const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
         this.plevel=plevel
 
-        Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
-            const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
-            this.$M.Modal.init(mRef, {
-                onOpenStart: () => mRef.classList.remove("hide")
-            })
-        })
+        // Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
+        //     const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
+        //     this.$M.init(mRef, {
+        //         onOpenStart: () => mRef.classList.remove("hide")
+        //     })
+        // })
     },
     methods: {
         async downloadData(){
@@ -331,34 +322,24 @@ export default {
             navigator.clipboard.writeText(this.apiKey)
         },
         async sync() {
-            this.$M.toast({text: 'bot is syncing'})
+            this.$toast.add({ title: 'Syncing' })
             const ajaxdata = await $fetch(`/api/bots/${this.$route.params.id}/settings/sync`, {
                 method: 'post',
             }).catch(console.error);
-            if (ajaxdata) this.$M.toast({text: 'bot has synced'})
-            else this.$M.toast({text: 'An error has occurred'})
+            if (ajaxdata) this.$toast.add({ title: 'Synced' })
+            else this.$toast.add({title: 'An error has occurred'})
         },
         async confirmedDelete() {
             const {error} = await useFetch(() => `/api/bots/delete`, {
                 method: 'delete',
-                body: {id: this.botid}
+                body: {id: this.$route.params.id}
             })
             if (!error.value) {
                 await navigateTo(`/users/${this.userID}`)
             }
         },
-        async confirmedCustomDelete(a){
-            this.$M.toast({text: 'Deleting'})
-            const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/deleteCustomChart`, {
-                method: 'delete',
-                body: {
-                    chartid: a.target.getAttribute("chartid")
-                }
-            });
-            this.$M.toast({text: error.value? 'Error deleting' : 'Deleted'})
-        },
         async save(){
-            this.$M.toast({text: 'Saving'})
+            this.$toast.add({title: 'Saving'})
 
             const settings = {}
             Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).forEach(a=>{
@@ -388,12 +369,12 @@ export default {
                 }            
             })
 
-            const {error} = await useFetch(() => `/api/bots/${this.botid}/settings/set`, {
+            const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/set`, {
                 method: 'post',
                 body: settings
             })
 
-            this.$M.toast({text: error.value? 'Error saving' : 'Saved'})
+            this.$toast.add({title: error.value? 'Error saving' : 'Saved'})
         },
         inputTypeToValue(input, type){
             switch (type) {

@@ -38,6 +38,12 @@
                   <router-link :to="'/users/'+user.id" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">User</router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
+                  <router-link to="/bots/add/" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Add your bot</router-link>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <router-link :to="'/users/'+user.id+'/settings'" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">User Settings</router-link>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
                   <span @click="logout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Logout</span>
                 </MenuItem>
               </MenuItems>
@@ -80,7 +86,6 @@
   })
 
   const user = userFetch.value
-  console.log(user)
 </script>
 
 
@@ -91,11 +96,6 @@ export default {
     return {
       oauthUrl: this.$genOauthUrl(this.$route.fullPath),
     }
-  },
-  async mounted() {
-    this.$M.Sidenav.init(this.$refs.sidenav)
-
-    if (this.$refs.dropdownContent) this.$M.Dropdown.init(this.$refs.dropdown, { coverTrigger: false })
   },
   methods: {
     async logout(){

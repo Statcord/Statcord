@@ -1,6 +1,23 @@
 import { defineEventHandler, getQuery, createError, getRouterParams, sendError, appendCorsPreflightHeaders } from "h3"
 import { flux, fluxDuration } from "@influxdata/influxdb-client"
 
+const selectGroupBy = (input) =>{
+	switch(input) {
+		case "Day":{
+			return "1d"
+		}break;
+		case "Month":{
+			return "mo"
+		}break;
+		case "Year":{
+			return "y"
+		}break;
+		default: {
+			return "1d"
+		}
+	}
+}
+
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
 
@@ -16,13 +33,15 @@ export default defineEventHandler(async event => {
 	const start = new Date(Number(query.start ?? 0)).toISOString()
 	const stop = query.end ? new Date(Number(query.end)).toISOString() : new Date().toISOString()
 
+	const groupBy = selectGroupBy(query.groupBy)
+
 	const runInfluxQuery = new influxRun(
 		{
 			event,
 			start,
 			stop,
 			// groupBy: "1m",
-			groupBy: query.groupBy ?? "1d",
+			groupBy,
 			botID: path.botID
 		}
 	)

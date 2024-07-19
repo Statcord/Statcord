@@ -14,26 +14,34 @@
         <span>Website</span>
       </label>
     </div>
-  
-  
-  
-    <div class="waves-effect waves-light btn-large red modal-trigger" data-target="modal1"><UIcon name="i-heroicons-trash" /> Delete all data</div>
-    <div class="waves-effect waves-light btn-large" @click="saveSettings"><UIcon name="i-heroicons-check" />Save</div>
-    <div id="modal1" ref="modal" class="modal hide">
-      <div class="modal-content">
-        <h4>Confirm data deletion</h4>
-      </div>
-      <div class="modal-footer">
+    
+    <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteAllModalOpen = true" />
+    <UButton label="Save" icon="i-heroicons-check" @click="saveSettings" />
+    
+    <UModal v-model="deleteAllModalOpen">
+      <div class="p-4 bg-gray-800 text-gray-300 font-medium">
         <div>
-          <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-          <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete"><UIcon name="i-heroicons-trash" />Delete forever (really!)</div>
+          <h4>Confirm data deletion</h4>
+        </div>
+        <div>
+          <div class="grid grid-cols-6 gap-4">
+            <div class="col-start-1 col-end-3">
+              <UButton label="Cancel" @click="deleteAllModalOpen = false" />
+            </div>
+            <div class="col-end-7 col-span-2">
+              <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </UModal>
   </UContainer>
 </template>
 
 <script setup>
+  const deleteAllModalOpen = ref(false)
+
+
   import { useRoute } from 'vue-router';
   const { $authRequest, $genOauthUrl } = useNuxtApp()
   const route = useRoute()
@@ -100,14 +108,9 @@ export default {
         body: outOBJ
       })
 
-      this.$M.toast({text: error.value ? 'Error saving' : 'Saved'})
-      console.log(outOBJ)
+      this.$toast.add({title: error.value ? 'Error saving' : 'Saved'})
+      // console.log(outOBJ)
     }
-  },
-  async mounted() {
-    this.$M.Modal.init(this.$refs.modal, {
-      onOpenStart: ()=> this.$refs.modal.classList.remove("hide")
-    })
   }
 }
 </script>

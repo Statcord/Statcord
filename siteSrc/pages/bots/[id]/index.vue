@@ -10,7 +10,7 @@
             <UContainer class="col s12 m2">
                 <div class="row">
                     <div class="col s6 m12">
-                        <nuxt-img class="circle" :alt="bot.username+`'s profile picture`" :src="'https://cdn.discordapp.com/avatars/' + route.params.id + '/' + bot.avatar + (bot.avatar.startsWith('a_')?'.gif':'.png')+'?size=128'" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(route.params.id >>> 22) % 5+'.png?size=512'" />
+                        <nuxt-img class="h-32 w-32 rounded-full" :alt="bot.username+`'s profile picture`" :src="'https://cdn.discordapp.com/avatars/' + route.params.id + '/' + bot.avatar + (bot.avatar?.startsWith('a_')?'.gif':'.png')+'?size=128'" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(route.params.id >>> 22) % 5+'.png?size=512'" />
                     </div>
                     <div class="col s6 m12">
                         <h3 class="truncate">{{ bot.username }}</h3>
@@ -18,25 +18,18 @@
                     </div>
                 </div>
 
-                <router-link v-if="bot.isOwner" :to="'/bots/' + route.params.id + '/manage'" class="waves-effect waves-light btn"><UIcon name="i-heroicons-wrench"/>Manage bot</router-link>
+                <UButton v-if="bot.isOwner" label="Manage bot" :to="'/bots/' + route.params.id + '/manage'" icon="i-heroicons-wrench"/>
             </UContainer>
         </div>
 
         <div ref="nsfwBotContent" :class="bot.nsfw ? 'blur-lg' : ''">
             <div class="row">
                 <div class="col s12">
-                    <ul class="tabs" ref="tabs">
-                        <li class="tab col s3"><NuxtLink to="#overview" replace>Overview</NuxtLink></li>
-                        <li class="tab col s3"><NuxtLink class="active" to="#stats" replace>Stats</NuxtLink></li>
-                        <!-- <li class="tab col s3 disabled"><a href="#reviews">Reviews</a></li>
-                        <li class="tab col s3 disabled"><a href="#updates">Updates</a></li> -->
-                    </ul>
+                    <UTabs :items="tabItems" :default-index="1" @change="tabChanged" />
                 </div>
-                <div id="overview" class="col s12">
-                    <botLongListing v-if="Object.keys(bot)[1]" :botJson="bot"></botLongListing>
-                </div>
-                <div id="stats" class="col s12">
-                    <botStats v-if="Object.keys(bot)[1]" :botJson="bot"></botStats>
+                <div v-if="Object.keys(bot)[1]" class="col s12">
+                    <botLongListing v-if="currentTab === 'overview'" :botJson="bot"></botLongListing>
+                    <botStats v-else-if="currentTab === 'stats'" :botJson="bot"></botStats>
                 </div>
             </div>
         </div>
@@ -47,6 +40,20 @@
     import { useRoute } from 'vue-router';
     const { $authRequest } = useNuxtApp()
     const route = useRoute()
+    let currentTab = ref("stats")
+
+
+    const tabItems = [
+        {
+            label: 'Overview'
+        },
+        {
+            label: 'Stats',
+            
+        }
+        // Reviews
+        // Updates
+    ];
 
     const bot = await $authRequest(`/api/bots/${route.params.id}`)
     if (bot === "404") throw createError({
@@ -83,6 +90,10 @@
             }
         ]
     })
+
+    const tabChanged = (index)=>{
+        currentTab.value = tabItems[index].label.toLowerCase()
+    }
 </script>
 
 <script>
@@ -100,13 +111,6 @@ export default {
     data() {
         return {
         }
-    },
-    async mounted() {
-        this.$M.Tabs.init(this.$refs.tabs, {
-            onShow: (a)=>{
-                // console.log(a)
-            }
-        });
     },
     methods:{
         dismissNSFW(){

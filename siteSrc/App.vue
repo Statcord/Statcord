@@ -1,6 +1,7 @@
 <template>
   <navbar/>
   <NuxtPage/>
+  <UNotifications />
   <footerbar/>
 </template>
 
