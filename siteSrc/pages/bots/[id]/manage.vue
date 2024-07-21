@@ -293,12 +293,12 @@ export default {
         const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
         this.plevel=plevel
 
-        // Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
-        //     const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
-        //     this.$M.init(mRef, {
-        //         onOpenStart: () => mRef.classList.remove("hide")
-        //     })
-        // })
+        Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
+            const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
+            this.$M.Modal.init(mRef, {
+                onOpenStart: () => mRef.classList.remove("hide")
+            })
+        })
     },
     methods: {
         async downloadData(){

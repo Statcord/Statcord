@@ -43,6 +43,13 @@ export default defineNuxtConfig({
     '@materializecss/materialize/dist/css/materialize.min.css'
   ],
 
+  plugins: [
+    {
+      src: '~/plugins/materialize.js',
+      mode: 'client'
+    },
+  ],
+  
   modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxt/image"],
 
   site: {
