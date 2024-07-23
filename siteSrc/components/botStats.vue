@@ -1,6 +1,6 @@
 <template>
-    <div class="row">
-        <div class="col s12 m2">
+    <div>
+        <div>
             <div>
                 <USelect v-model="allTimeOrDateRangeSelection" name="allTimeOrDateRangeSelection" :options="allTimeOrDateRange" @change="dateOrAllTimeChanged"/>
                 <label for="allTimeOrDateRangeSelection">Select date range</label>
@@ -20,27 +20,31 @@
             </div>
         </div>
 
+        <div class="pt-8 pb-8">
+            <div v-if="stats.length>0" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <UCard v-for="card in cards" class="text-center">
+                    <template #header>
+                        <span class="h-1 align-middle text-gray-300">{{ card.name }}</span>
+                    </template>
 
-        <div class="col s12 m10">
-            <div v-if="stats.length>0" class="row">
-                <div v-for="card in cards" :class="'col s'+12/cards.length+' l4'">
-                    <h5 class="center-align">{{ card.name }}</h5>
-                    <h6 class="center-align">{{ parseInt(card.value).toLocaleString() }}</h6>
-                </div>
+                    <span class="h-1 align-middle text-gray-300">{{ parseInt(card.value).toLocaleString() }}</span>
+                </UCard>
             </div>
+        </div>
 
-            <div v-if="stats.length>0" class="row">
-                <div v-for="stat in stats" :key="stat.id" class="col s12 l4">
+        <div>
+            <div v-if="stats.length>0" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div v-for="stat in stats" :key="stat.id">
                     <h1>{{ stat.name }}</h1>
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
                 
-                <div v-for="stat in commandStats" :key="stat.id" class="col s12 l4">
+                <div v-for="stat in commandStats" :key="stat.id">
                     <h1>{{ stat.name }}</h1>
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
 
-                <div v-for="stat in customStats" :key="stat.id" class="col s12 l4">
+                <div v-for="stat in customStats" :key="stat.id">
                     <h1>{{ stat.name }}</h1>
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>

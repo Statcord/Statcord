@@ -1,5 +1,5 @@
 <template>
-    <div class="grid md:grid-cols-6 sm:grid-cols-1 gap-4" style="gap: 1rem;">
+    <div class="grid md:grid-cols-6 sm:grid-cols-1 gap-4">
         <router-link :to="'/bots/' + bot.botid" v-for="bot in bots" v-bind:key="bot.id">
             <div class="max-w-sm overflow-hidden shadow-md rounded-xl">
                 <nuxt-img :class="bot.nsfw? 'blur-lg w-full':'w-full'" :alt="bot.username+`'s profile picture`" :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + (bot.avatar?.startsWith('a_')?'.gif':'.png')+'?size=512'" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" />
