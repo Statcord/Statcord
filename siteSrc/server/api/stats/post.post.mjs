@@ -1,4 +1,4 @@
-import { defineEventHandler, sendNoContent, readBody, getHeader, createError, sendError } from "h3"
+import { defineEventHandler, readBody, getHeader, createError, sendError } from "h3"
 import { Point } from "@influxdata/influxdb-client"
 
 const mainStats = {
@@ -83,7 +83,7 @@ export default defineEventHandler(async event => {
 
 	writeClient.flush()
 
-	sendNoContent(event, 200)
+	sendError(event, createError({statusCode: 500, statusMessage: `/stats endpoint is EOL. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
 
 	event.context.redis.set(`legacyRouteTracking:${body.id}`, "stats")  
 })
