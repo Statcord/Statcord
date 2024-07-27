@@ -150,10 +150,10 @@
             <div class="section">
                 <div class="row" style="gap: 10px;">
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-light btn modal-trigger" data-target="importModal1"><UIcon name="i-heroicons-arrows-up-down" />Export data</div>
+                        <UButton label="Export data" icon="i-heroicons-arrows-up-down" @click="exportIsOpen = true" />
                     </div>
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-ight btn modal-trigger" data-target="keyModal1"><UIcon name="i-heroicons-key" />API key</div> 
+                        <UButton label="API key" icon="i-heroicons-key" @click="keyIsOpen = true" />
                     </div>
                     <div class="col s3 m2">
                         <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />
@@ -162,67 +162,81 @@
                         <UButton label="Save" icon="i-heroicons-check" @click="save" />
                     </div>
                     <div class="col s6 m2">
-                        <div class="waves-effect waves-light btn red modal-trigger" data-target="delModal1"><UIcon name="i-heroicons-trash" />Delete all data</div>
+                        <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteIsOpen = true" />
                     </div>
                 </div>
             </div>
         </form>
     </UContainer>
 
-
-    <div id="importModal1" ref="importModal1" class="modal hide">
-        <div class="modal-content">
-            <h4>Export</h4>
-
-            <p class="flow-text">
-                Download a copy of your data
-            </p>
-        </div>
-        <div class="modal-footer">
-            <div>
-                <div class="modal-close waves-effect waves-light btn left">Close</div>
+    <UModal v-model="exportIsOpen">
+        <div class="p-4 bg-gray-800 text-gray-300 font-medium">
+            <div class="modal-content">
+                <h4>Export</h4>
+                <span>Download a copy of your data</span>
             </div>
+
             <div>
-                <div class="btn" @click="downloadData"><span>Download</span></div>
+                <div class="grid grid-cols-6 gap-4">
+                    <div class="col-start-1 col-end-3">
+                        <UButton label="Close" @click="exportIsOpen = false" />
+                    </div>
+                    <div class="col-end-7 col-span-2">
+                        <UButton label="Download" icon="i-heroicons-arrow-down-tray" @click="downloadData" />
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </UModal>
 
+    <UModal v-model="keyIsOpen">
+        <div class="p-4 bg-gray-800 text-gray-300 font-medium">
+            <div class="modal-content">
+                <h4>API key</h4>
+                <span>Download a copy of your data</span>
+            </div>
 
-    <div id="keyModal1" ref="keyModal1" class="modal hide">
-        <div class="modal-content">
-            <h4>API key</h4>
-           
             <div v-if="apiKey">
                 <input type="text" disabled :value="apiKey">
-                <div class="waves-effect waves-light btn" @click="copyKey"><UIcon name="i-heroicons-document-duplicate" />Copy</div>
+                <UButton label="Copy" icon="i-heroicons-document-duplicate" @click="copyKey" />
             </div>
-        </div>
-        <div class="modal-footer">
-            <div>
-                <div class="modal-close waves-effect waves-light btn left">Close</div>
-                <div class="waves-effect waves-light btn" @click="reGenKey"><UIcon name="i-heroicons-arrow-path" />Regenerate API key</div>
-            </div>
-        </div>
-    </div>
 
-    <div id="delModal1" ref="delModal1" class="modal hide">
-        <div class="modal-content">
-            <h4>Confirm data deletion</h4>
-        </div>
-        <div class="modal-footer">
             <div>
-                <div class="modal-close waves-effect waves-light btn left">Cancel</div>
-                <div class="modal-close waves-effect waves-light btn red accent-3 right" @click="confirmedDelete">Delete forever (really!) <UIcon name="i-heroicons-trash" /></div>
+                <div class="grid grid-cols-6 gap-4">
+                    <div class="col-start-1 col-end-3">
+                        <UButton label="Close" @click="keyIsOpen = false" />
+                    </div>
+                    <div class="col-end-7 col-span-2">
+                        <UButton label="Regenerate API key" icon="i-heroicons-arrow-path" @click="reGenKey" />
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </UModal>
+
+    <UModal v-model="deleteIsOpen">
+        <div class="p-4 bg-gray-800 text-gray-300 font-medium">
+            <div class="modal-content">
+                <h4>Confirm data deletion</h4>
+            </div>
+            <div>
+                <div class="grid grid-cols-6 gap-4">
+                    <div class="col-start-1 col-end-3">
+                        <UButton label="Close" @click="deleteIsOpen = false" />
+                    </div>
+                    <div class="col-end-7 col-span-2">
+                        <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </UModal>
 </template>
 
 <script setup>
-// const isOpen = ref(false)
-// const isOpen = ref(false)
-// const isOpen = ref(false)
+const exportIsOpen = ref(false)
+const keyIsOpen = ref(false)
+const deleteIsOpen = ref(false)
 
 
 import { useRoute } from 'vue-router';
@@ -292,13 +306,6 @@ export default {
 
         const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
         this.plevel=plevel
-
-        Object.keys(this.$refs).filter(r=>r.toLocaleLowerCase().includes("moda")).forEach(ref => {
-            const mRef = Array.isArray(this.$refs[ref]) ? this.$refs[ref][0] : this.$refs[ref]
-            this.$M.Modal.init(mRef, {
-                onOpenStart: () => mRef.classList.remove("hide")
-            })
-        })
     },
     methods: {
         async downloadData(){
