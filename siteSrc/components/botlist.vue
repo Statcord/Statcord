@@ -9,11 +9,8 @@
             </div>
         </router-link>
     </div>
-    <div class="fixed-action-btn">
-    <button v-if="page>0" class="btn-floating btn-large waves-effect deep-purple darken-2 place-content-center" @click="scrollToTop">
-      <UIcon class="large" name="i-heroicons-chevron-up" />
-    </button>
-  </div>
+
+    <UButton class="fixed z-90 bottom-10 right-8 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:drop-shadow-2xl"v-if="page>0" icon="i-heroicons-chevron-up" :ui="{ rounded: 'rounded-full' }" size="xl" @click="scrollToTop" />
 </template>
 
 <script>
