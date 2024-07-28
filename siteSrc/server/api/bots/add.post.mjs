@@ -1,9 +1,26 @@
 import { defineEventHandler, readBody, sendNoContent, sendError, createError } from "h3"
+import { z } from 'zod'
+
+const zodSchema = z.object({
+	botid: z.string().cuid2(),
+	invite: z.string().url(),
+	nsfw: z.boolean(),
+	public: z.boolean(),
+	customurl: z.string().url().optional(),
+	shortDesc: z.string(),
+	longDesc: z.string(),
+	github: z.string().url().optional(),
+	website: z.string().url().optional(),
+	supportserver: z.string().url().optional(),
+	donations: z.string().url().optional()
+})
 
 export default defineEventHandler(async event => {
 	if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const body = await readBody(event)
+	const zodResponse = await zodSchema.safeParseAsync(body)
+	if (!zodResponse.success)  return sendError(event, createError({statusCode: 400, statusMessage: zodResponse.error.message}))
 
 	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${body.botid}`.catch(() => {})
 	if (botExisits[0]) return sendError(event, createError({statusCode: 409, statusMessage: 'Bot already exists'}))
@@ -127,154 +144,5 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	"hidden": true,
-	"tags": [
-		"Internal"
-	],
-	"requestBody": {
-		"description": "Add a bot to Statcord",
-		"content": {
-			"application/json": {
-				"schema": {
-					"type": "object",
-					"properties": {
-						"botid": {
-							"type": "string"
-						},
-						"invite": {
-							"type": "string",
-						},
-						"public": {
-							"type": "boolean"
-						},
-						"nsfw": {
-							"type": "boolean"
-						},
-						"customurl": {
-							"type": "string"
-						},
-						"shortDesc": {
-							"type": "string"
-						},
-						"longDesc": {
-							"type": "string"
-						},
-						"github": {
-							"type": "string",
-						},
-						"website": {
-							"type": "string"
-						},
-						"supportserver": {
-							"type": "string"
-						},
-						"donations": {
-							"type": "string",
-						}
-					}
-				}
-			}
-		}
-	},
-	"responses": {
-		401: {
-			"description": "You do not have permission to access this bot.",
-			"content": {
-				"application/json": {
-					"schema": {
-						"type": "object",
-						"properties": {
-							"statusCode": {
-								"type": "number"
-							},
-							"statusMessage": {
-								"type": "string"
-							}
-						}
-					},
-					"examples": [
-						{
-							"statusCode": 401,
-							"statusMessage": "Unauthorized"
-						}
-					]
-				}
-			}
-		},
-		400: {
-			"description": "Bad request. One or more Key-value pairs are either missing or have unsupported data",
-			"content": {
-				"application/json": {
-					"schema": {
-						"type": "object",
-						"properties": {
-							"statusCode": {
-								"type": "number"
-							},
-							"statusMessage": {
-								"type": "string"
-							}
-						}
-					},
-					"examples": [
-						{
-							"statusCode": 400,
-							"statusMessage": "Bad Request"
-						}
-					]
-				}
-			}
-        },
-		409:{
-			"description": "Bot already exists",
-			"content": {
-				"application/json": {
-					"schema": {
-						"type": "object",
-						"properties": {
-							"statusCode": {
-								"type": "number"
-							},
-							"statusMessage": {
-								"type": "string"
-							}
-						}
-					},
-					"examples": [
-						{
-							"statusCode": 409,
-							"statusMessage": "Bot already exists"
-						}
-					]
-				}
-			}
-		},
-		404:{
-			"description": "Bot not found",
-			"content": {
-				"application/json": {
-					"schema": {
-						"type": "object",
-						"properties": {
-							"statusCode": {
-								"type": "number"
-							},
-							"statusMessage": {
-								"type": "string"
-							}
-						}
-					},
-					"examples": [
-						{
-							"statusCode": 409,
-							"statusMessage": "Bot does not exist"
-						}
-					]
-				}
-			}
-		},
-		200: {
-			"description": "Bot added successfully",
-		}
-	}
+	"hidden": true
 }

@@ -27,6 +27,7 @@
     "nuxt-umami": "^2.6.2",
     "oceanic.js": "github:counting-bot/Oceanic#build",
     "postgres": "^3.4.4",
-    "swagger-ui-dist": "^5.17.14"
+    "swagger-ui-dist": "^5.17.14",
+    "zod": "^3.23.8"
   }
 }
