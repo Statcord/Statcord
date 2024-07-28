@@ -1,22 +1,22 @@
 <template>
   <UContainer>
-    <div>
-      <label>
-        <input type="checkbox" :checked="profileInfo.public" @change="updateSettingsValue" name="public" ref="settings:public">
-        <span>Public</span>
-      </label>
-      <label>
-        <input type="text" :placeholder="profileInfo.aboutme" @change="updateSettingsValue" name="aboutme" ref="settings:aboutme">
-        <span>About Me</span>
-      </label>
-      <label>
-        <input type="url" :placeholder="profileInfo.website" @change="updateSettingsValue" name="website" ref="settings:website">
-        <span>Website</span>
-      </label>
-    </div>
-    
-    <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteAllModalOpen = true" />
-    <UButton label="Save" icon="i-heroicons-check" @click="saveSettings" />
+    <UForm :state="state" class="space-y-4" @submit="onSubmit">
+      <UFormGroup label="Public">
+        <UToggle v-model="state.public" icon="i-heroicons-eye" />
+      </UFormGroup>
+
+      <UFormGroup label="About Me">
+        <UInput v-model="state.aboutme" icon="i-heroicons-book-open" />
+      </UFormGroup>
+
+      <UFormGroup label="Website">
+        <UInput v-model="state.website" icon="i-heroicons-link" />
+      </UFormGroup>
+
+      <UButton type="submit" label="Save" icon="i-heroicons-check"/>
+
+      <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteAllModalOpen = true" />
+    </UForm>
     
     <UModal v-model="deleteAllModalOpen">
       <div class="p-4 bg-gray-800 text-gray-300 font-medium">
@@ -41,7 +41,6 @@
 <script setup>
   const deleteAllModalOpen = ref(false)
 
-
   import { useRoute } from 'vue-router';
   const { $authRequest, $genOauthUrl } = useNuxtApp()
   const route = useRoute()
@@ -59,8 +58,12 @@
     statusCode: 401,
     message: 'You do not have permission to veiw this user'
   })
-  
-  
+
+  const state = reactive({
+    public: profileInfo.public,
+    aboutme: profileInfo.aboutme
+  })
+
   useSeoMeta({
     themeColor: "#0080F0",
     title: 'User settings',
@@ -95,21 +98,13 @@ export default {
         await navigateTo("/", {"external": true})
       }
     },
-    updateSettingsValue(a){
-      if (a.target.type === "checkbox") return a.target.newValue=a.target.checked
-      a.target.newValue=a.target.value
-    },
-    async saveSettings(){
-      const outOBJ = {}
-      Object.keys(this.$refs).filter(ref=>ref.startsWith("settings:")).forEach(ref=>outOBJ[ref.replace("settings:", '')] = this.$refs[ref].newValue)
-
+    async onSubmit(a){
       const {error} = await useFetch(() => `/api/user/${this.$route.params.userID}/settings/set`, {
         method: 'post',
-        body: outOBJ
+        body: a.data
       })
 
       this.$toast.add({title: error.value ? 'Error saving' : 'Saved'})
-      // console.log(outOBJ)
     }
   }
 }
