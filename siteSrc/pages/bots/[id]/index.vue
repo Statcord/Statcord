@@ -99,14 +99,12 @@
 <script>
 import botStats from '~/components/botStats.vue';
 import botLongListing from '~/components/botLongListing.vue';
-import spinner from '~/components/spinner.vue';
 
 export default {
     name: 'bot',
     components: {
         botStats,
-        botLongListing,
-        spinner
+        botLongListing
     },
     data() {
         return {
