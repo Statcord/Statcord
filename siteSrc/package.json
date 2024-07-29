@@ -18,7 +18,6 @@
   "dependencies": {
     "@influxdata/influxdb-client": "^1.34.0",
     "@influxdata/influxdb-client-apis": "^1.34.0",
-    "@materializecss/materialize": "^2.0.4",
     "@nuxt/ui": "^2.18.2",
     "@types/node": "^22.0.0",
     "@vueuse/shared": "^10.11.0",
