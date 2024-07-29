@@ -3,17 +3,19 @@ import { defineEventHandler, createError, getRouterParams, readBody, sendError }
 const requiredBodyKeys = [
     "public",
     "nsfw",
-    "longDesc",
-    "shortDesc",
-    "customurl",
+    "longdesc",
+    "shortdesc",
     "github",
     "website",
     "supportserver",
     "donations",
-    "charts",
-    "defualt",
-    "custom"
+    "commands",
+    "default",
+
+    // "customurl",
+    // "custom"
 ]
+
 
 export default defineEventHandler(async event => {
     const body = await readBody(event)
@@ -66,19 +68,19 @@ export default defineEventHandler(async event => {
     const owner = await event.context.pgPool`SELECT plevel FROM owners WHERE ownerid = ${botExisits[0].ownerid}`.catch(() => {})
     if (owner[0].plevel > 0){
         ["totalRam", "cpuUsage", "ramUsage", "guildCount", "shardCount", "userCount", "members"].forEach(item=>{
-            event.context.pgPool`UPDATE chartsettings SET enabled = ${body.charts.defualt[item]} WHERE botid = ${path.botID} AND chartid = ${item}`.catch(() => {})
+            event.context.pgPool`UPDATE chartsettings SET enabled = ${body.default[item]} WHERE botid = ${path.botID} AND chartid = ${item}`.catch(() => {})
         })
     }
 
-    if (body.charts.custom){
+    if (body.custom){
         Object.keys(body.charts.custom).forEach(async name => {
             const currentChartSettings = await event.context.pgPool`SELECT label, name FROM chartsettings WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
-            event.context.pgPool`UPDATE chartsettings SET enabled = ${body.charts.custom[name].enabled}, type = ${body.charts.custom[name].type}, name = ${body.charts.custom[name].name === '' ? currentChartSettings[0].name : body.charts.custom[name].name}, label = ${body.charts.custom[name].label === '' ? currentChartSettings[0].label : body.charts.custom[name].label} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
+            event.context.pgPool`UPDATE chartsettings SET enabled = ${body.custom[name].enabled}, type = ${body.custom[name].type}, name = ${body.custom[name].name === '' ? currentChartSettings[0].name : body.custom[name].name}, label = ${body.custom[name].label === '' ? currentChartSettings[0].label : body.custom[name].label} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
         })
     }
 
-    Object.keys(body.charts.commands).forEach(async name => {
-        event.context.pgPool`UPDATE chartsettings SET enabled = ${body.charts.commands[name]} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
+    Object.keys(body.commands).forEach(async name => {
+        event.context.pgPool`UPDATE chartsettings SET enabled = ${body.commands[name]} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
     })
 })
 

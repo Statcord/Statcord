@@ -1,172 +1,80 @@
 <template>
     <UContainer>
-        <form action="#">
-            <div class="section">
-                <h6>Access control</h6>
-                <div class="row">
-                  <div class="col s12 m12">
-                    <label>
-                      <input type="checkbox" ref="setting:public" name="public" :checked="currentSettings.mainSettings.public" :placeholder="currentSettings.mainSettings.public">
-                      <span>Public</span>
-                    </label>
-                  </div>
+        <UForm :state="state" class="space-y-4" @submit="save">
+            <h6>Access control</h6>
+            <UFormGroup label="Public" name="public">
+                <UToggle v-model="state.public" icon="i-heroicons-eye" />
+            </UFormGroup>
+            <UFormGroup label="NSFW" name="nsfw">
+                <UToggle v-model="state.nsfw" icon="i-heroicons-eye" />
+            </UFormGroup>
+            <UFormGroup label="Custom URL" name="customurl">
+                <UInput v-model="state.customurl" :placeholder="domain+'/bots/'+botid" type="url" disabled />
+            </UFormGroup>
+            <UButton label="Check" disabled></UButton>
+            <UDivider />
 
-                  <div class="col s12 m12">
-                    <label>
-                      <input type="checkbox" ref="setting:nsfw" name="nsfw" :checked="currentSettings.mainSettings.nsfw" :placeholder="currentSettings.mainSettings.nsfw">
-                      <span>NSFW</span>
-                    </label>
-                  </div>
-                </div>
+            <h6>Bot Description</h6>
+            <UFormGroup label="Short description" name="shortDesc">
+                <UInput v-model="state.shortdesc" type="text"/>
+            </UFormGroup>
+            <UFormGroup label="Long description (Markdown ONLY)" name="longDesc">
+                <UTextarea v-model="state.longdesc"/>
+            </UFormGroup>
+            <UDivider />
 
-                <div class="row">
-                  <div class="col s12 m11">
-                    <label for="customurl">Custom URL</label>
-                    <input disabled type="url" :placeholder="host + '/bots/' + route.params.id" ref="setting:customurl">
-                  </div>
-                  <div class="col s12 m1">
-                    <div class="waves-effect waves-light btn-large right disabled">Check</div>
-                  </div>
-                </div>
+            <h6>Add additional links (optional)</h6>
+            <UFormGroup label="GitHub" name="github">
+                <UInput v-model="state.github" type="url" />
+            </UFormGroup>
+            <UFormGroup label="Website" name="website">
+                <UInput v-model="state.website" type="url" />
+            </UFormGroup>
+            <UFormGroup label="Support server" name="supportserver">
+                <UInput v-model="state.supportserver" type="url" />
+            </UFormGroup>
+            <UFormGroup label="Donation link" name="donations">
+                <UInput v-model="state.donations" type="url" />
+            </UFormGroup>
+            <UDivider />
+
+            <h6>Defualt charts</h6>
+            <UFormGroup v-for="chart in state.default" :label="chart.name" :name="chart.chartid">
+                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
+            </UFormGroup>
+            <UDivider />
+
+            <h6>Command charts</h6>
+            <UFormGroup v-for="chart in state.commands" :label="chart.name" name="donations">
+                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
+            </UFormGroup>
+            <UDivider />
+
+            <h6>Custom charts</h6>
+            <div v-for="chart in state.custom">
+                <h6>{{ chart.name }}</h6>
+                <UFormGroup v-for="chart in state.commands" :label="chart.name" name="donations">
+                    <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
+                </UFormGroup>
+                <UInputMenu v-model="chart.type" :options="['Pie', 'Line']" />
+
+                <UFormGroup :label="chart.name" name="Label">
+                    <UInput v-model="chart.label" type="text"/>
+                </UFormGroup>
+
+                <UFormGroup  :label="chart.name" name="Name">
+                    <UInput v-model="chart.name" type="text"/>
+                </UFormGroup>
+                <DeleteCustomChart :chartName="chart.name" :chartid="chart.chartid"></DeleteCustomChart>
             </div>
 
             <UDivider />
-            <div class="section">
-                <h6>Bot Description</h6>
-                <div class="row">
-                    <div class="col s12 m12">
-                        <label for="shortDesc">Short description</label>
-                        <input type="text" ref="setting:shortDesc" :placeholder="currentSettings.mainSettings.shortdesc">
-                    </div>
-
-                    <div class="col s12 m12">
-                        <label for="longDesc">Long description (Markdown ONLY)</label>
-                        <textarea ref="setting:longDesc" :placeholder="currentSettings.mainSettings.longdesc"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <UDivider />
-            <div class="section">
-                <h6>Add additional links (optional)</h6>
-                <div class="row" style="gap: 10px;">
-                    <div class="col s12 m6">
-                        <label for="github">GitHub</label>
-                        <input type="url" :placeholder="currentSettings.links.github" ref="setting:github">
-                    </div>
-                    <div class="col s12 m6">
-                        <label for="website">Website</label>
-                        <input type="url" :placeholder="currentSettings.links.website" ref="setting:website">
-                    </div>
-                </div>
-
-                <div class="row" style="gap: 10px;">
-                    <div class="col s12 m6">
-                        <label for="supportserver">Support server</label>
-                        <input type="url" :placeholder="currentSettings.links.supportserver" ref="setting:supportserver">
-                    </div>
-                    <div class="col s12 m6">
-                        <label for="donations">Donation link</label>
-                        <input type="url" :placeholder="currentSettings.links.donations" ref="setting:donations">
-                    </div>
-                </div>
-            </div>
-
-            <UDivider />
-            <div class="section">
-                <h6>Defualt charts</h6>
-                <div class="row">
-                    <div v-for="chart in currentSettings.default" class="col s4 m3">
-                        <div>
-                            <h6>{{ chart.name }}</h6>
-                        </div>
-                        <label>
-                            <input type="checkbox" :ref="'setting:charts:defualt:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <UDivider />
-            <div class="section">
-                <h6>Command charts</h6>
-                <div class="row">
-                    <div v-for="chart in currentSettings.commands" class="col s4 m3">
-                        <div>
-                            <h6>{{ chart.name }}</h6>
-                        </div>
-                        <label>
-                            <input type="checkbox" :ref="'setting:charts:commands:'+chart.chartid" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
-                            <span>Enabled</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <UDivider />
-            <div class="section">
-                <h6>Custom charts</h6>
-                <div>
-                    <div v-for="chart in currentSettings.custom" class="row">
-                        <div class="col s12 m12">
-                            <div class="row">
-                                <h6>{{ chart.name }}</h6>
-                            </div>
-    
-                            <div class="row" style="gap: 10px;">
-                                <div class="col s12 m1">
-                                    <label>
-                                        <input type="checkbox" :ref="'setting:charts:custom:'+chart.chartid+':enabled'" :name="chart.chartid+':enabled'" :checked="chart.enabled" :placeholder="chart.enabled" :disabled="plevel>0">
-                                        <span>Enabled</span>
-                                    </label>
-                                </div>
-                                <div class="col s12 m1">
-                                    <label for="website">Type</label>
-                                    <select class="browser-default" :ref="'setting:charts:custom:'+chart.chartid+':type'">
-                                        <option value="pie" :selected="chart.type==='pie'">Pie</option>
-                                        <option value="line" :selected="chart.type==='line'">Line</option>
-                                    </select>
-                                </div>                                
-                                <div class="col s12 m3">
-                                    <label for="website">Label</label>
-                                    <input type="url" :placeholder="chart.label" :ref="'setting:charts:custom:'+chart.chartid+':label'">
-                                </div>
-                                <div class="col s12 m6">
-                                    <label for="website">Name</label>
-                                    <input type="url" :placeholder="chart.name" :ref="'setting:charts:custom:'+chart.chartid+':name'">
-                                </div>
-
-                                <div class="col s12 m6">
-                                    <DeleteCustomChart :chartName="chart.name" :chartid="chart.chartid"></DeleteCustomChart>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <UDivider />
-            <div class="section">
-                <div class="row" style="gap: 10px;">
-                    <div class="col s6 m2">
-                        <UButton label="Export data" icon="i-heroicons-arrows-up-down" @click="exportIsOpen = true" />
-                    </div>
-                    <div class="col s6 m2">
-                        <UButton label="API key" icon="i-heroicons-key" @click="keyIsOpen = true" />
-                    </div>
-                    <div class="col s3 m2">
-                        <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />
-                    </div>
-                    <div class="col s3 m2">
-                        <UButton label="Save" icon="i-heroicons-check" @click="save" />
-                    </div>
-                    <div class="col s6 m2">
-                        <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteIsOpen = true" />
-                    </div>
-                </div>
-            </div>
-        </form>
+            <UButton type="submit" icon="i-heroicons-check">Save</UButton>
+            <UButton label="Export data" icon="i-heroicons-arrows-up-down" @click="exportIsOpen = true" />
+            <UButton label="API key" icon="i-heroicons-key" @click="keyIsOpen = true" />
+            <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />                 
+            <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteIsOpen = true" />
+        </UForm>
     </UContainer>
 
     <UModal v-model="exportIsOpen">
@@ -234,14 +142,15 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router';
+
 const exportIsOpen = ref(false)
 const keyIsOpen = ref(false)
 const deleteIsOpen = ref(false)
 
-
-import { useRoute } from 'vue-router';
 const { $authRequest } = useNuxtApp()
 const route = useRoute()
+const domain = useRuntimeConfig().public.domain
 
 const bot = await $authRequest(`/api/bots/${route.params.id}`)
 if (bot === "404") throw createError({
@@ -284,6 +193,8 @@ useHead({
     }
   ]
 })
+
+const state = reactive(currentSettings)
 </script>
 
 <script>
@@ -292,10 +203,10 @@ export default {
     data() {
         const config = useRuntimeConfig()
         return {
-            host: config.public.domain,
             apiKey: undefined,
             plevel: 0,
-            userID: ""
+            userID: "",
+            botid: this.$route.params.id
         }
     },
     async mounted() {        
@@ -345,54 +256,16 @@ export default {
                 await navigateTo(`/users/${this.userID}`)
             }
         },
-        async save(){
+        async save(data){
             this.$toast.add({title: 'Saving'})
-
-            const settings = {}
-            Object.keys(this.$refs).filter(a=>a.startsWith("setting:")).forEach(a=>{
-                const thisRef = Array.isArray(this.$refs[a]) ? this.$refs[a][0] : this.$refs[a]
-
-                const settingName = a.replace("setting:", "")
-                const settingNameParts = settingName.split(":")
-
-                switch(settingNameParts.length-1){
-                    case 0: {
-                        settings[settingName] = this.inputTypeToValue(thisRef, thisRef.type)
-                    }
-                    break;
-                    case 2: {
-                        if (!settings[settingNameParts[0]]) settings[settingNameParts[0]] = {}
-                        if (!settings[settingNameParts[0]][settingNameParts[1]]) settings[settingNameParts[0]][settingNameParts[1]] = {}
-                        settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]] = this.inputTypeToValue(thisRef, thisRef.type)
-                    }
-                    break;
-                    case 3: {
-                        if (!settings[settingNameParts[0]]) settings[settingNameParts[0]] = {}
-                        if (!settings[settingNameParts[0]][settingNameParts[1]]) settings[settingNameParts[0]][settingNameParts[1]] = {}
-                        if (!settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]]) settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]] = {}
-                        settings[settingNameParts[0]][settingNameParts[1]][settingNameParts[2]][settingNameParts[3]] = this.inputTypeToValue(thisRef, thisRef.type)
-                    }
-                    break;
-                }            
-            })
+            console.log(data.data)
 
             const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/set`, {
                 method: 'post',
-                body: settings
+                body: data.data
             })
 
             this.$toast.add({title: error.value? 'Error saving' : 'Saved'})
-        },
-        inputTypeToValue(input, type){
-            switch (type) {
-                case "checkbox": {
-                    return input.checked
-                }
-                break;
-                default: {
-                    return input.value
-                }
-            }
         }
     }
 }
