@@ -38,10 +38,6 @@ export default defineNuxtConfig({
     },
     configFile: settings
   },
-
-  // css: [
-  //   '@materializecss/materialize/dist/css/materialize.min.css'
-  // ],
   
   modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxt/image"],
 
@@ -65,11 +61,7 @@ export default defineNuxtConfig({
   "seo": {
     "redirectToCanonicalSiteUrl": true
   },
-
-  ui: {
-    "disableGlobalStyles": true
-  },
-
+  
   routeRules: {
     '/support': {
       redirect: {
