@@ -139,7 +139,7 @@ export default defineEventHandler(async event => {
 			labels: mainStatsLabels
 		},
 		custom: tempOBJ.custom,
-		commands: tempOBJ.commands,
+		commands: tempOBJ.commands ?? [],
 		cards: [
 			{
 				name: "Guilds",

@@ -29,13 +29,13 @@ export default defineEventHandler(async event => {
     if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
     
     const bodyKeys = Object.keys(body)
-    if (!bodyKeys.every(bodyKey=>requiredBodyKeys.includes(bodyKey))) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-
+    if (!requiredBodyKeys.every(requiredBodyKey=>bodyKeys.includes(requiredBodyKey))) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+            
     const saveObject = {
         public: body.public,
         nsfw: body.nsfw,
-        longdesc: body.longDesc === "" ? botExisits[0].longdesc : body.longDesc,
-        shortdesc: body.shortDesc === "" ? botExisits[0].shortdesc : body.shortDesc
+        longdesc: body.longdesc === "" ? botExisits[0].longdesc : body.longdesc,
+        shortdesc: body.shortdesc === "" ? botExisits[0].shortdesc : body.shortdesc
     }
     event.context.pgPool`UPDATE bots SET public = ${saveObject.public}, nsfw = ${saveObject.nsfw}, longdesc = ${saveObject.longdesc}, shortdesc = ${saveObject.shortdesc} WHERE botid = ${path.botID}`.catch(() => {})
 
@@ -73,7 +73,7 @@ export default defineEventHandler(async event => {
     }
 
     if (body.custom){
-        Object.keys(body.charts.custom).forEach(async name => {
+        Object.keys(body.custom).forEach(async name => {
             const currentChartSettings = await event.context.pgPool`SELECT label, name FROM chartsettings WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
             event.context.pgPool`UPDATE chartsettings SET enabled = ${body.custom[name].enabled}, type = ${body.custom[name].type}, name = ${body.custom[name].name === '' ? currentChartSettings[0].name : body.custom[name].name}, label = ${body.custom[name].label === '' ? currentChartSettings[0].label : body.custom[name].label} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
         })
