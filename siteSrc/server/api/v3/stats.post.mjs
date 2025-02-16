@@ -16,6 +16,7 @@ const isNanOrInfinity = number => {
 	if (number === NaN || number === Infinity) return 0
 	return number
 }
+const average = array => array.reduce((a, b) => a + b) / array.length;
 
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
@@ -133,6 +134,18 @@ export default defineEventHandler(async event => {
 	writeClient.flush()
 
 	sendError(event, createError({statusCode: 500, statusMessage: `/logan/stats endpoint has been EOL since 2021. Switching to the slightly newer, (but EOL) /v3/stats would require no code changes. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
+
+	// keep track of when the last 10 posts occurred and the average time betwen them
+	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {
+		dates: [],
+		times:[]
+	}
+	posts.dates.push(new Date().getTime())
+	if (posts.dates.length >= 2) posts.times = posts.dates.slice(1).map((value, index) => value - posts.dates[index]);
+	while (posts.dates.length > 10) posts.dates.shift()
+	while (posts.times.length > 10) posts.times.shift()
+	if (posts.times.length >= 2) posts.average = average(posts.times)
+	await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
 })
 
 export const schema = {
