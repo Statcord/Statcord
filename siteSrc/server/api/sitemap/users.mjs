@@ -5,7 +5,8 @@ export default defineEventHandler(async event => {
 
     return users.map(a => {
         return {
-            loc: `/users/${a.ownerid}`
+            loc: `/users/${a.ownerid}`,
+			_sitemap: 'users',
         }
     })
 })

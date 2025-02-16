@@ -2,8 +2,6 @@
 import settings from "./config/settings.mjs"
 
 export default defineNuxtConfig({
-  extends: ['nuxt-umami'],
-
   devtools: {
     enabled: true,
     timeline: {
@@ -11,16 +9,12 @@ export default defineNuxtConfig({
     }
   },
 
-  appConfig: {
-    umami: {
-      id: 'f1a7b62f-bcde-4dbf-9fbc-b04b1af2fb48',
-      host: 'https://insights.numselli.xyz/',
-      version: 2,
-      ignoreDnt: true,
-      useDirective: true,
-      customEndpoint: '/',
-      ignoreLocalhost: true
-    }
+  umami: {
+    id: 'f1a7b62f-bcde-4dbf-9fbc-b04b1af2fb48',
+    host: 'https://insights.numselli.xyz/',
+    useDirective: true,
+    customEndpoint: '/',
+    ignoreLocalhost: true
   },
 
   runtimeConfig: {
@@ -38,19 +32,47 @@ export default defineNuxtConfig({
     },
     configFile: settings
   },
-  
-  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxt/image"],
+
+  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxtjs/sitemap", "@nuxt/image", "nuxt-umami"],
 
   site: {
     url: 'https://statcord.com',
+    trailingSlash: true,
+    indexable: true
   },
 
   sitemap: {
-    sources: [
+    sitemaps: {
+      bots:{
+        sitemapName: "bots",
+        // includeAppSources: true,
+        // filter the URLs to only include pages
+        // include: ['/bots/**'],
+        sources:[
+          '/api/sitemap/bots'
+        ]
+      },
+      users:{
+        sitemapName: "users",
+        // includeAppSources: true,
+        // filter the URLs to only include pages
+        // include: ['/users/**'],
+        sources:[
+          '/api/sitemap/users'
+        ]
+      },
+      default:{
+        sitemapName: "default",
+        "includeAppSources": true,
+      }
+    },
+    sources:[
       '/api/sitemap/bots',
-      '/api/sitemap/users',
-    ],
+      '/api/sitemap/users'
+    ]
   },
+  // old working version     "@nuxtjs/sitemap": "^5.3.5",
+
 
   robots: {
     "disallow": [
@@ -78,5 +100,5 @@ export default defineNuxtConfig({
     "host": "0.0.0.0"
   },
 
-  compatibilityDate: '2024-07-18'
+  compatibilityDate: "2025-02-10"
 })
