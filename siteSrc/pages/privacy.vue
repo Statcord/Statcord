@@ -1,35 +1,36 @@
 <template>
   <UContainer>
     <!-- Privacy Policy -->
-    <div class="section">
-      <div class="center-align">
-        <h2>Privacy Policy</h2>
-      </div>
+    <div>
+      <h1 class="mt-2 text-3xl font-medium tracking-tight">Privacy Policy</h1>
 
       <p class="flow-text">
         We only store data you (the user) provide to us, for example by logging in, adding your bot(s) or posting data from your bots.
-        <br>
         You are free to delete this data at any time by visiting your user settings and clicking "Delete all data".
-        <br>
         We do not track you or sell or otherwise use your data, the data is only stored for the purpose it's intended for and deleted after that.
-        You can have a look at our <NuxtLink to="https://github.com/statcord/DisStat">GitHub repository</NuxtLink> to check for yourself.
+        All of the code is open source in our <NuxtLink to="https://github.com/statcord/statcord">GitHub repository</NuxtLink> if you would like look at how the data is used.
       </p>
     </div>
 
     <!-- Terms of Service -->
-    <UDivider />
-    <div class="section flow-text">
-      <div class="center-align">
-        <h2>Terms of Service</h2>
-      </div>
+    <UDivider class="pt-6 pb-4"/>
 
-      <p>You <b>must</b>:</p>
-      <ol>
+    <div>
+      <h1 class="mt-2 text-3xl font-medium tracking-tight">Terms of Service</h1>
+
+      <span class="mt-2 text-xl font-medium tracking-tight">You </span>
+      <span class="mt-2 text-xl font-bold tracking-tight"><b>MUST</b></span>
+      <span class="mt-2 text-xl font-medium tracking-tight">:</span>
+
+      <!-- <span class="list-dissc">Mark bots as NSFW if they have a NSFW avatar</span> -->
+      <ol class="list-disc list-inside">
         <li>Mark bots as NSFW if they have a NSFW avatar</li>
       </ol>
 
-      <p>You <b>must not</b>:</p>
-      <ol>
+      <span class="mt-2 text-xl font-medium tracking-tight">You </span>
+      <span class="mt-2 text-xl font-bold tracking-tight"><b>MUST NOT</b></span>
+      <span class="mt-2 text-xl font-medium tracking-tight">:</span>
+      <ol class="list-disc list-inside">
         <li>Spam our API with unnecessary/garbage data</li>
         <li>Post your bot stats more than once per minute, you might get ratelimited or temporarily banned otherwise</li>
       </ol>

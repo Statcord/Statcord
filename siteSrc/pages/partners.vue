@@ -1,8 +1,8 @@
 <template>
   <UContainer>
-    <div class="grid md:grid-cols-2 sm:grid-cols-1 justify-evenly">
-      <div class="max-w-sm overflow-hidden shadow-md rounded-xl">
-        <nuxt-img class="w-full" alt="" src="/img/partners/SafeGuard/logo_-_text_under.svg" />
+    <div class="grid md:grid-cols-1 sm:grid-cols-1 justify-items-center">
+      <div class="max-w-sm overflow-hidden shadow-md rounded-xl ">
+        <nuxt-img class="w-full" alt="SafeGuard Hosting's logo" src="/img/partners/SafeGuard/logo_-_text_under.svg" />
         <div class="px-4 py-4">
           <UContainer>
             <div>

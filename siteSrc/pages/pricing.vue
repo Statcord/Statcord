@@ -1,6 +1,6 @@
 <template>
     <UContainer>
-        <div class="grid md:grid-cols-2 sm:grid-cols-1 justify-evenly">
+        <div class="grid md:grid-cols-2 sm:grid-cols-1 justify-items-center">
             <div class="max-w-sm overflow-hidden shadow-md rounded-xl">
                 <nuxt-img class="w-full" alt="" src="/img/icon.png" />
                 <div class="px-4 py-4">

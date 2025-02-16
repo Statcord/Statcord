@@ -36,7 +36,7 @@ export default {
     methods: {
         async confirmedCustomDelete() {
             this.$toast.add({title: 'Deleting'})
-            const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/deleteCustomChart`, {
+            const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/deleteCustomChart/`, {
                 method: 'delete',
                 body: {
                     chartid: this.$props.chartid

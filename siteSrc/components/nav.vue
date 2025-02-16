@@ -67,19 +67,19 @@
 
   const route = useRoute()
   const navigation = [
-    { name: 'Docs', href: '/docs' },
-    { name: 'Support', href: '/support' },
-    { name: 'Privacy', href: '/privacy' },
-    { name: 'Setup guide', href: '/guide' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'Partners', href: '/partners' }
+    { name: 'Docs', href: '/docs/' },
+    { name: 'Support', href: '/support/' },
+    { name: 'Privacy', href: '/privacy/' },
+    { name: 'Setup guide', href: '/guide/' },
+    { name: 'Pricing', href: '/pricing/' },
+    { name: 'Partners', href: '/partners/' }
   ]
 
   const headers = useRequestHeaders(['cookie'])
 
   const { data: userFetch } = await useAsyncData(async () => {
     const [user] = await Promise.all([
-        $fetch(`/api/oauth/user`, { headers })
+        $fetch(`/api/oauth/user/`, { headers })
     ])
     return user
   })
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async logout(){
-      this.$authRequest('/api/session', {
+      this.$authRequest('/api/session/', {
         method: "DELETE"
       })
       await navigateTo("/", {"external": true})

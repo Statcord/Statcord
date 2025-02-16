@@ -46,10 +46,10 @@
   const route = useRoute()
   const oauthUrl = $genOauthUrl(route.fullPath)
 
-  const {accessToken} = await $authRequest("/api/session")
+  const {accessToken} = await $authRequest("/api/session/")
   if (!accessToken) await navigateTo(oauthUrl, {external: true});
 
-  const profileInfo = await $authRequest(`/api/user/${route.params.userID}`)
+  const profileInfo = await $authRequest(`/api/user/${route.params.userID}/`)
   if (profileInfo === "404") throw createError({
     statusCode: 404,
     message: 'User not found'
@@ -88,18 +88,18 @@ export default {
   },
   methods: {
     async confirmedDelete() {
-      const { error } = await useFetch(() => `/api/oauth/user/delete`, {
+      const { error } = await useFetch(() => `/api/oauth/user/delete/`, {
         method: 'delete',
       })
       if (!error.value) {
-        this.$authRequest('/api/session', {
+        this.$authRequest('/api/session/', {
           method: "DELETE"
         })
         await navigateTo("/", {"external": true})
       }
     },
     async onSubmit(a){
-      const {error} = await useFetch(() => `/api/user/${this.$route.params.userID}/settings/set`, {
+      const {error} = await useFetch(() => `/api/user/${this.$route.params.userID}/settings/set/`, {
         method: 'post',
         body: a.data
       })

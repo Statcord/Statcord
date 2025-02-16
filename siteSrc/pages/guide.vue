@@ -1,39 +1,26 @@
 <template>
   <UContainer>
-    <div class="section">
-      <div class="center-align">
-        <h2>How to setup statistics tracking</h2>
-      </div>
-      <UDivider />
-
+    <div>
+      <h1 class="mt-2 text-3xl font-medium tracking-tight">How to setup statistics tracking</h1>
+      <UDivider/>
 
       <p class="flow-text">
         While we are still in development you can already post your data. You can either implement the endpoints yourself using our 
         <router-link to="/docs" class="blue-text text-darken-2 underline">API documentation</router-link> or you use one of our API wrappers.
-        <br>
-        You should post your bots general data at most once a minute.
-        <br>
-        Commands, events etc. may be posted when they occur or combined with the general bot data posting.
+        Your bot should post all data you wish to track once a minute at the most.
       </p>
+    </div>
 
+    <UDivider class="pt-6 pb-4"/>
 
-      <UDivider />
-      <div class="section">
-        <h3>API wrappers</h3>
-        <ul class="flow-text">
-          <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">disstat</NuxtLink> by TomatoCake</li>
-          <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/statcord-npm" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">statcord-npm</NuxtLink> by numselli</li>
-          <li><b>Python</b>: <NuxtLink to="https://pypi.org/project/disstat/" class="blue-text text-darken-2 underline">disstat</NuxtLink> by The Untraceable</li>
-        </ul>
-      </div>
-
-      <UDivider />
-      <div class="section">
-        <h3>Importing data from Statcord</h3>
-        <p class="flow-text">
-          We're already tracking Statcord data from a few bots, but yours might not be included in that list. You can import your bots data from Statcord when setting it up.
-        </p>
-      </div>
+    <div>
+      <h1 class="mt-2 text-3xl font-medium tracking-tight">API wrappers</h1>
+      <UDivider/>
+      <ul class="list-disc list-inside">
+        <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">disstat</NuxtLink> by TomatoCake</li>
+        <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/statcord-npm" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">statcord-npm</NuxtLink> by numselli</li>
+        <li><b>Python</b>: <NuxtLink to="https://pypi.org/project/disstat/" class="blue-text text-darken-2 underline">disstat</NuxtLink> by The Untraceable</li>
+      </ul>
     </div>
   </UContainer>
 </template>

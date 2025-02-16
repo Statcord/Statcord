@@ -1,6 +1,6 @@
 <template>
   <UContainer>
-    <h1>Statcord - Track statistics of your Discord bot</h1>
+    <h1 class="mt-2 text-3xl font-medium tracking-tight">Statcord - Track statistics of your Discord bot</h1>
 
     <p class="flow-text">
       This site allows tracking of Discord bot statistics like: guild, user, member counts, and command usage. It's a fully
@@ -8,11 +8,11 @@
     </p>
 
     <p class="flow-text">
-      <router-link to="/bots/add" class="blue-text text-darken-2 underline">Add your bot now</router-link> or <router-link to="/bots/685166801394335819" class="blue-text text-darken-2 underline">View a demo</router-link>!
+      <router-link to="/bots/add" class="blue-text text-darken-2 underline">Add your bot now</router-link> or <router-link to="/bots/685166801394335819/" class="blue-text text-darken-2 underline">View a demo</router-link>!
     </p>
    
-    <h2>All currently tracked, public bots</h2>
-    <botlist botListRoute="/api/bots"></botlist>
+    <h2 class="mt-2 text-2xl font-medium tracking-tight text-gray-950 dark:text-white">All currently tracked bots</h2>
+    <botlist botListRoute="/api/bots/"></botlist>
   </UContainer>
 </template>
 

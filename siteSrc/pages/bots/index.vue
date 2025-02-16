@@ -1,10 +1,10 @@
 <template>
   <UContainer>
-    <botlist botListRoute="/api/bots"></botlist>  
-
+    <botlist botListRoute="/api/bots/"></botlist>  
   </UContainer>
 </template>
-  <script setup>
+
+<script setup>
   useSeoMeta({
     themeColor: "#0080F0",
     description: "View bots listed on Statcord.",

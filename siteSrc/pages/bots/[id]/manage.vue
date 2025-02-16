@@ -9,9 +9,9 @@
                 <UToggle v-model="state.nsfw" icon="i-heroicons-eye" />
             </UFormGroup>
             <UFormGroup label="Custom URL" name="customurl">
-                <UInput v-model="state.customurl" :placeholder="domain+'/bots/'+botid" type="url" disabled />
+                <UInput v-model="state.customurl" @up="cusURLChanged" :placeholder="domain+'/bots/'+route.params.id" type="url" :disabled="plevel==0" />
             </UFormGroup>
-            <UButton label="Check" disabled></UButton>
+            <UButton label="Check" :disabled="plevel==0" @click="checkCusUrl"></UButton>
             <UDivider />
 
             <h6>Bot Description</h6>
@@ -40,13 +40,13 @@
 
             <h6>Defualt charts</h6>
             <UFormGroup v-for="chart in state.default" :label="chart.name" :name="chart.chartid">
-                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
+                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
             </UFormGroup>
             <UDivider />
 
             <h6>Command charts</h6>
             <UFormGroup v-for="chart in state.commands" :label="chart.name" name="donations">
-                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
+                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
             </UFormGroup>
             <UDivider />
 
@@ -54,7 +54,7 @@
             <div v-for="chart in state.custom">
                 <h6>{{ chart.name }}</h6>
                 <UFormGroup v-for="chart in state.commands" :label="chart.name" name="donations">
-                    <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
+                    <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
                 </UFormGroup>
                 <UInputMenu v-model="chart.type" :options="['Pie', 'Line']" />
 
@@ -148,11 +148,11 @@ const exportIsOpen = ref(false)
 const keyIsOpen = ref(false)
 const deleteIsOpen = ref(false)
 
-const { $authRequest } = useNuxtApp()
+const { $authRequest, $toast } = useNuxtApp()
 const route = useRoute()
 const domain = useRuntimeConfig().public.domain
 
-const bot = await $authRequest(`/api/bots/${route.params.id}`)
+const bot = await $authRequest(`/api/bots/${route.params.id}/`)
 if (bot === "404") throw createError({
     statusCode: 404,
     message: 'Bot not found'
@@ -162,11 +162,13 @@ if (bot === "401") throw createError({
     message: 'You do not have permission to access this bot'
 })
 
-const currentSettings = await $authRequest(`/api/bots/${route.params.id}/settings/get`)
+const currentSettings = await $authRequest(`/api/bots/${route.params.id}/settings/get/`)
 if (currentSettings === "401") throw createError({
     statusCode: 401,
     message: 'You do not have permission to access this bot'
 })
+
+const {plevel} = await $authRequest(`/api/user/${bot.ownerid}/`)
 
 useSeoMeta({
     themeColor: "#0080F0",
@@ -195,32 +197,44 @@ useHead({
 })
 
 const state = reactive(currentSettings)
+
+async function confirmedDelete(){
+    const {error} = await useFetch(() => `/api/bots/delete/`, {
+        method: 'delete',
+        body: {id: route.params.id}
+    })
+    if (!error.value) {
+        await navigateTo(`/users/${bot.ownerid}`)
+    }
+}
+
+async function checkCusUrl(){
+    if (!state.customurl) return $toast.add({title: 'Enter A URL'})
+
+    const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/checkCustomURL/`, {
+        method: 'post',
+        body: state.customurl
+    })
+
+// this.$toast.add({title: error.value? 'Error saving' : 'Saved'})
+}
 </script>
 
 <script>
 export default {
     name: 'manageBot',
     data() {
-        const config = useRuntimeConfig()
         return {
-            apiKey: undefined,
-            plevel: 0,
-            userID: "",
-            botid: this.$route.params.id
+            apiKey: undefined
         }
     },
     async mounted() {        
-        const {userInfo} = await this.$authRequest("/api/session")
+        const {userInfo} = await this.$authRequest("/api/session/")
         if (!userInfo) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
-
-        this.userID = userInfo.id
-
-        const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
-        this.plevel=plevel
     },
     methods: {
         async downloadData(){
-            const {data} = await useFetch(`/api/bots/${this.$route.params.id}/stats/export`)
+            const {data} = await useFetch(`/api/bots/${this.$route.params.id}/stats/export/`)
 
             const a = document.createElement("a");
             a.href = `data:text/plain;base64,${data.value}`;
@@ -229,7 +243,7 @@ export default {
             a.remove();
         },
         async reGenKey() {
-            const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey`, {
+            const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey/`, {
                 method: 'post'
             })
             if (data.value?.key) {
@@ -241,26 +255,16 @@ export default {
         },
         async sync() {
             this.$toast.add({ title: 'Syncing' })
-            const ajaxdata = await $fetch(`/api/bots/${this.$route.params.id}/settings/sync`, {
+            const ajaxdata = await $fetch(`/api/bots/${this.$route.params.id}/settings/sync/`, {
                 method: 'post',
             }).catch(console.error);
             if (ajaxdata) this.$toast.add({ title: 'Synced' })
             else this.$toast.add({title: 'An error has occurred'})
         },
-        async confirmedDelete() {
-            const {error} = await useFetch(() => `/api/bots/delete`, {
-                method: 'delete',
-                body: {id: this.$route.params.id}
-            })
-            if (!error.value) {
-                await navigateTo(`/users/${this.userID}`)
-            }
-        },
         async save(data){
             this.$toast.add({title: 'Saving'})
-            console.log(data.data)
 
-            const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/set`, {
+            const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/set/`, {
                 method: 'post',
                 body: data.data
             })

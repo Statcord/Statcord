@@ -71,7 +71,7 @@
 
   const domain = useRuntimeConfig().public.domain
 
-  const sessionFetch = await $authRequest(`/api/session`)
+  const sessionFetch = await $authRequest(`/api/session/`)
   if (!sessionFetch.accessToken) await navigateTo($genOauthUrl(route.fullPath), {external: true});
 
   const state = reactive({
@@ -126,7 +126,7 @@
     },
     methods: {
       async submitBot(a) {
-        const { error } = await useFetch(() => `/api/bots/add`, {
+        const { error } = await useFetch(() => `/api/bots/add/`, {
           method: 'post',
           body: a.data
         })
