@@ -46,6 +46,28 @@ services:
       - cache
       - influxdb
 
+  bot:
+    restart: unless-stopped
+    build: 
+      context: ./bot
+      dockerfile: Dockerfile
+    container_name: bot
+    depends_on:
+      - postgres
+      - cache
+      - influxdb
+
+  tasks:
+    restart: unless-stopped
+    build: 
+      context: ./tasks
+      dockerfile: Dockerfile
+    container_name: tasks
+    depends_on:
+      - postgres
+      # - cache
+      # - influxdb
+
   influxdb:
     image: influxdb:2.7.1-alpine
     ports:
