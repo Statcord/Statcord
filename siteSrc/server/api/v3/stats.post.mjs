@@ -136,7 +136,7 @@ export default defineEventHandler(async event => {
 	sendError(event, createError({statusCode: 500, statusMessage: `/logan/stats endpoint has been EOL since 2021. Switching to the slightly newer, (but EOL) /v3/stats would require no code changes. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
-	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {
+	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${body.id}`)) ?? {
 		dates: [],
 		times:[]
 	}
@@ -145,7 +145,7 @@ export default defineEventHandler(async event => {
 	while (posts.dates.length > 10) posts.dates.shift()
 	while (posts.times.length > 10) posts.times.shift()
 	if (posts.times.length >= 2) posts.average = average(posts.times)
-	await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
+	await event.context.redis.set(`botPostingIntervals:${body.id}`, JSON.stringify(posts))
 })
 
 export const schema = {
