@@ -45,34 +45,25 @@ export default defineNuxtConfig({
     sitemaps: {
       bots:{
         sitemapName: "bots",
-        // includeAppSources: true,
-        // filter the URLs to only include pages
-        // include: ['/bots/**'],
         sources:[
-          '/api/sitemap/bots'
+          `${settings.domain}/api/sitemap/bots`
         ]
       },
       users:{
         sitemapName: "users",
-        // includeAppSources: true,
-        // filter the URLs to only include pages
-        // include: ['/users/**'],
         sources:[
-          '/api/sitemap/users'
+          `${settings.domain}/api/sitemap/users`
         ]
       },
       default:{
         sitemapName: "default",
-        "includeAppSources": true,
+        "includeAppSources": true
       }
-    },
-    sources:[
-      '/api/sitemap/bots',
-      '/api/sitemap/users'
-    ]
+    }
   },
   // old working version     "@nuxtjs/sitemap": "^5.3.5",
-
+  // tested working on 6.1.0
+  // broken at 6.1.1
 
   robots: {
     "disallow": [
