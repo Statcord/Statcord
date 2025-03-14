@@ -1,5 +1,4 @@
 import { Client } from "oceanic.js"
-import postgres from "postgres";
 import { schedule } from 'node-cron';
 
 import commandsList from "./commands/commandsList.mjs";
@@ -17,24 +16,6 @@ const client = new Client({
 });
 
 const commandMap = new Map()
-
-client.pgPool = postgres({
-    ...config.postgres,
-    types: {
-        // bigint: postgres.BigInt,
-        rect: {
-            to: 1700,
-            from: [1700],
-            serialize: x => '' + x,
-            parse: parseFloat
-        }
-    },
-    // debug: function(connection, query, params, types){
-        // console.log(connection)
-    //     console.log(query)
-    //     console.log(params)
-    // }
-})
 
 // every time the bot turns ready
 client.on("ready", () => {
