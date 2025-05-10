@@ -81,9 +81,3 @@
     twitterCard: 'summary'
   })
 </script>
-<script>
-  export default {
-    name: 'pricing'
-  }
-</script>
-  

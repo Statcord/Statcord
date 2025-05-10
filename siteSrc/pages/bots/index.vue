@@ -16,17 +16,3 @@
     twitterCard: 'summary'
   })
 </script>
-<script>
-  import botlist from '../../../components/botlist.vue'
-  
-  export default {
-    name: 'bots',
-    components: {
-      botlist
-    },
-    data() {
-      return {
-      };
-    }
-  }
-</script>

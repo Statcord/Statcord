@@ -16,13 +16,13 @@
     </div>
 
     <div v-if="user.website">
-      <safeLinkPopUp icon="link" name="Website" :url="user.website"></safeLinkPopUp>
+      <openLink icon="link" name="Website" :url="user.website"/>
     </div>
 
-    <UDivider class="pt-2 pb-4"/>
+    <USeparator class="pt-2 pb-4"/>
 
     <h1 class="mt-2 text-3xl font-medium tracking-tight">Bots</h1>
-    <UDivider class="pb-2"/>
+    <USeparator class="pb-2"/>
     <botlist :botsProvided="botListBots"></botlist>
   </UContainer>
 </template>
@@ -71,21 +71,4 @@
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
-</script>
-<script>
-import botlist from '../../../components/botlist.vue'
-import safeLinkPopUp from '../../../components/openLink.vue'
-
-export default {
-  name: 'userPage',
-  components: {
-    botlist,
-    safeLinkPopUp
-  },
-  data() {
-    return {
-      userID: this.$route.params.userID
-    };
-  }
-}
 </script>

@@ -13,7 +13,7 @@
     </div>
 
     <!-- Terms of Service -->
-    <UDivider class="pt-6 pb-4"/>
+    <USeparator class="pt-6 pb-4"/>
 
     <div>
       <h1 class="mt-2 text-3xl font-medium tracking-tight">Terms of Service</h1>
@@ -49,9 +49,4 @@
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
-</script>
-<script>
-  export default {
-    name: 'privacy'
-  }
 </script>

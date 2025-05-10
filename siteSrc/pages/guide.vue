@@ -2,7 +2,7 @@
   <UContainer>
     <div>
       <h1 class="mt-2 text-3xl font-medium tracking-tight">How to setup statistics tracking</h1>
-      <UDivider/>
+      <USeparator/>
 
       <p class="flow-text">
         While we are still in development you can already post your data. You can either implement the endpoints yourself using our 
@@ -11,11 +11,11 @@
       </p>
     </div>
 
-    <UDivider class="pt-6 pb-4"/>
+    <USeparator class="pt-6 pb-4"/>
 
     <div>
       <h1 class="mt-2 text-3xl font-medium tracking-tight">API wrappers</h1>
-      <UDivider/>
+      <USeparator/>
       <ul class="list-disc list-inside">
         <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/disstat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">disstat</NuxtLink> by TomatoCake</li>
         <li><b>Node.js</b>: <NuxtLink to="https://www.npmjs.com/package/statcord-npm" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">statcord-npm</NuxtLink> by numselli</li>
@@ -39,9 +39,4 @@ useSeoMeta({
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })
-</script>
-<script>
-export default {
-  name: 'guide'
-}
 </script>

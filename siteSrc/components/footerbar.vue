@@ -13,13 +13,6 @@
   </footer>
 </template>
 
-<script>
-  export default {
-    name: 'footerbar',
-    data(){
-      return {
-        year: new Date().getFullYear()
-      }
-    }
-  }
+<script setup>
+  const year = new Date().getFullYear()
 </script>

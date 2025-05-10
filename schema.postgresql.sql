@@ -42,7 +42,6 @@ CREATE TABLE public.bots (
     addedon timestamp without time zone,
     nsfw boolean NOT NULL DEFAULT false,
     shortdesc character varying NOT NULL,
-    longdesc character varying NOT NULL,
     invite character varying NOT NULL
 );
 ALTER TABLE public.bots OWNER TO disstat;
@@ -71,4 +70,14 @@ CREATE TABLE public.botlinks (
     icon character varying
 );
 ALTER TABLE IF EXISTS public.botlinks
+    OWNER to disstat;
+
+
+CREATE TABLE public.cards (
+    botid character varying,
+    name character varying,
+    icon character varying,
+    datapath character varying
+);
+ALTER TABLE IF EXISTS public.cards
     OWNER to disstat;

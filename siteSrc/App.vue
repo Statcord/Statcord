@@ -1,24 +1,12 @@
 <template>
-  <navbar/>
-  <NuxtPage/>
-  <UNotifications />
-  <footerbar/>
+  <UApp>
+    <navbar/>
+    <NuxtPage/>
+    <footerbar/>
+  </UApp>
 </template>
 
-<script>
-import navbar from './components/nav.vue'
-import footerbar from './components/footer.vue'
-
-export default {
-  name: 'App',
-  components: {
-    navbar,
-    footerbar
-  }
-}
-</script>
-
-<script setup>
+<script setup>  
   useHead({
     htmlAttrs: {
       lang: 'en'

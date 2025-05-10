@@ -15,7 +15,6 @@ export default defineEventHandler(async event => {
         "public": botExisits[0].public,
         "nsfw": botExisits[0].nsfw,
         "shortdesc": botExisits[0].shortdesc,
-        "longdesc": botExisits[0].longdesc,
         ...Object.assign({}, ...(await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})).map(l=>{return {[l.name]: l.url}})),
     }
     

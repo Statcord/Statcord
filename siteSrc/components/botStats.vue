@@ -2,13 +2,13 @@
     <div>
         <div>
             <div>
-                <USelect v-model="allTimeOrDateRangeSelection" name="allTimeOrDateRangeSelection" :options="allTimeOrDateRange" @change="dateOrAllTimeChanged"/>
-                <label for="allTimeOrDateRangeSelection">Select date range</label>
+                <USelect v-model="allTimeOrDateRangeSelection" name="allTimeOrDateRangeSelection" :items="allTimeOrDateRange" @change="dateOrAllTimeChanged"/>
+                <label for="allTimeOrDateRangeSelection">Date range</label>
             </div>
 
             <div>
-                <USelect v-model="groupBySelection" name="groupBySelection" :options="groupBySelections"  @change="groupBySelectorChanged"/>
-                <label for=groupBySelection>Select group by range</label>
+                <USelect v-model="groupBySelection" name="groupBySelection" :items="groupBySelections"  @change="groupBySelectorChanged"/>
+                <label for=groupBySelection>Group by range</label>
             </div>
 
             <div v-if="showDateRange">
@@ -54,9 +54,6 @@
 </template>
 
 <script setup>
-    import chart from './chart.vue'
-
-    import { useRoute } from 'vue-router';
     const route = useRoute()
     const props = defineProps({botJson: Object})
 

@@ -2,6 +2,8 @@
 import settings from "./config/settings.mjs"
 
 export default defineNuxtConfig({
+  css: ['~/assets/css/main.css'],
+
   devtools: {
     enabled: true,
     timeline: {
@@ -33,7 +35,7 @@ export default defineNuxtConfig({
     configFile: settings
   },
 
-  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxtjs/sitemap", "@nuxt/image", "nuxt-umami"],
+  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxtjs/sitemap", "@nuxt/image", "nuxt-umami", 'nuxt-headlessui'],
 
   site: {
     url: 'https://statcord.com',
@@ -61,9 +63,6 @@ export default defineNuxtConfig({
       }
     }
   },
-  // old working version     "@nuxtjs/sitemap": "^5.3.5",
-  // tested working on 6.1.0
-  // broken at 6.1.1
 
   robots: {
     "disallow": [

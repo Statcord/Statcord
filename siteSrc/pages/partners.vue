@@ -30,8 +30,3 @@
     twitterCard: 'summary'
   })
 </script>
-<script>
-  export default {
-    name: 'partners'
-  }
-</script>

@@ -4,11 +4,11 @@
 
     <p class="flow-text">
       This site allows tracking of Discord bot statistics like: guild, user, member counts, and command usage. It's a fully
-      <NuxtLink to="https://github.com/statcord/DisStat" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">open source</NuxtLink>.
+      <NuxtLink to="https://github.com/Statcord/Statcord" target="_blank" rel="noopener" class="blue-text text-darken-2 underline">open source</NuxtLink>.
     </p>
 
     <p class="flow-text">
-      <router-link to="/bots/add" class="blue-text text-darken-2 underline">Add your bot now</router-link> or <router-link to="/bots/685166801394335819/" class="blue-text text-darken-2 underline">View a demo</router-link>!
+      <router-link to="/bots/add/" class="blue-text text-darken-2 underline">Add your bot now</router-link> or <router-link to="/bots/685166801394335819/" class="blue-text text-darken-2 underline">View a demo</router-link>!
     </p>
    
     <h2 class="mt-2 text-2xl font-medium tracking-tight text-gray-950 dark:text-white">All currently tracked bots</h2>
@@ -27,14 +27,4 @@ useSeoMeta({
   twitterImage: '/img/icon.png',
   twitterCard: 'summary'
 })
-</script>
-<script>
-import botlist from '../components/botlist.vue'
-
-export default {
-  name: 'home',
-  components: {
-    botlist
-  }
-}
 </script>
