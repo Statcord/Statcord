@@ -5,4 +5,4 @@ package-lock.json
 /siteSrc/.output/
 /siteSrc/config.mjs
 /siteSrc/swaggerRoutes.mjs
-/siteSrc/config/settings.mjs
+config/

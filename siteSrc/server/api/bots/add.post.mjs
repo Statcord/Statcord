@@ -8,7 +8,6 @@ const zodSchema = z.object({
 	public: z.boolean(),
 	customurl: z.string().url().optional(),
 	shortDesc: z.string(),
-	longDesc: z.string(),
 	github: z.string().url().optional(),
 	website: z.string().url().optional(),
 	supportserver: z.string().url().optional(),
@@ -32,7 +31,7 @@ export default defineEventHandler(async event => {
 	const bot = await event.context.oauth.rest.users.get(body.botid).catch(e=>{})
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc, longdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc}, ${body.longDesc})`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
 
 	const botLinks = [
 		{

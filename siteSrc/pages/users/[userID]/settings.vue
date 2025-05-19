@@ -1,39 +1,27 @@
 <template>
   <UContainer>
     <UForm :state="state" class="space-y-4" @submit="onSubmit">
-      <UFormGroup label="Public">
-        <UToggle v-model="state.public" icon="i-heroicons-eye" />
-      </UFormGroup>
+      <UFormField label="Public">
+        <USwitch v-model="state.public" icon="i-heroicons-eye" />
+      </UFormField>
 
-      <UFormGroup label="About Me">
+      <UFormField label="About Me">
         <UInput v-model="state.aboutme" icon="i-heroicons-book-open" />
-      </UFormGroup>
+      </UFormField>
 
-      <UFormGroup label="Website">
+      <UFormField label="Website">
         <UInput v-model="state.website" icon="i-heroicons-link" />
-      </UFormGroup>
+      </UFormField>
 
       <UButton type="submit" label="Save" icon="i-heroicons-check"/>
 
       <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteAllModalOpen = true" />
     </UForm>
     
-    <UModal v-model="deleteAllModalOpen">
-      <div class="p-4 bg-gray-800 text-gray-300 font-medium">
-        <div>
-          <h4>Confirm data deletion</h4>
-        </div>
-        <div>
-          <div class="grid grid-cols-6 gap-4">
-            <div class="col-start-1 col-end-3">
-              <UButton label="Cancel" @click="deleteAllModalOpen = false" />
-            </div>
-            <div class="col-end-7 col-span-2">
-              <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
-            </div>
-          </div>
-        </div>
-      </div>
+    <UModal v-model:open="deleteAllModalOpen" title="Confirm data deletion">
+      <template #footer>
+        <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
+      </template>
     </UModal>
   </UContainer>
 </template>
@@ -41,15 +29,16 @@
 <script setup>
   const deleteAllModalOpen = ref(false)
 
-  import { useRoute } from 'vue-router';
   const { $authRequest, $genOauthUrl } = useNuxtApp()
   const route = useRoute()
+  const toast = useToast()
+
   const oauthUrl = $genOauthUrl(route.fullPath)
 
-  const {accessToken} = await $authRequest("/api/session")
+  const {accessToken} = await $authRequest("/api/session/")
   if (!accessToken) await navigateTo(oauthUrl, {external: true});
 
-  const profileInfo = await $authRequest(`/api/user/${route.params.userID}`)
+  const profileInfo = await $authRequest(`/api/user/${route.params.userID}/`)
   if (profileInfo === "404") throw createError({
     statusCode: 404,
     message: 'User not found'
@@ -77,35 +66,24 @@
     twitterImage: '/img/icon.png',
     twitterCard: 'summary'
   })
-</script>
 
-<script>
-export default {
-  name: 'userSettings',
-  data() {
-    return {
-    };
-  },
-  methods: {
-    async confirmedDelete() {
-      const { error } = await useFetch(() => `/api/oauth/user/delete`, {
-        method: 'delete',
-      })
-      if (!error.value) {
-        this.$authRequest('/api/session', {
-          method: "DELETE"
-        })
-        await navigateTo("/", {"external": true})
-      }
-    },
-    async onSubmit(a){
-      const {error} = await useFetch(() => `/api/user/${this.$route.params.userID}/settings/set`, {
-        method: 'post',
-        body: a.data
-      })
+  async function onSubmit(a){
+    const {error} = await useFetch(() => `/api/user/${route.params.userID}/settings/set/`, {
+      method: 'post',
+      body: a.data
+    })
+    toast.add({title: error.value ? 'Error saving' : 'Saved'})
+  }
 
-      this.$toast.add({title: error.value ? 'Error saving' : 'Saved'})
+  async function confirmedDelete() {
+    const { error } = await useFetch(() => `/api/oauth/user/delete/`, {
+      method: 'delete',
+    })
+    if (!error.value) {
+      $authRequest('/api/session/', {
+        method: "DELETE"
+      })
+      await navigateTo("/", {"external": true})
     }
   }
-}
 </script>

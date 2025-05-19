@@ -5,7 +5,8 @@ export default defineEventHandler(async event => {
 
     return bots.map(a => {
         return {
-            loc: `/bots/${a.botid}`
+            loc: `/bots/${a.botid}`,
+			_sitemap: 'bots',
         }
     })
 })

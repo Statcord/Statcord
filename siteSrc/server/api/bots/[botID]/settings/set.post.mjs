@@ -3,7 +3,6 @@ import { defineEventHandler, createError, getRouterParams, readBody, sendError }
 const requiredBodyKeys = [
     "public",
     "nsfw",
-    "longdesc",
     "shortdesc",
     "github",
     "website",
@@ -24,20 +23,19 @@ export default defineEventHandler(async event => {
     if (!path.botID) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
     if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-    const botExisits = await event.context.pgPool`SELECT ownerid, longDesc, shortDesc from bots WHERE botid = ${path.botID}`.catch(() => {})
+    const botExisits = await event.context.pgPool`SELECT ownerid, shortDesc from bots WHERE botid = ${path.botID}`.catch(() => {})
     if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
     if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
     
     const bodyKeys = Object.keys(body)
-    if (!bodyKeys.every(bodyKey=>requiredBodyKeys.includes(bodyKey))) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-
+    if (!requiredBodyKeys.every(requiredBodyKey=>bodyKeys.includes(requiredBodyKey))) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+            
     const saveObject = {
         public: body.public,
         nsfw: body.nsfw,
-        longdesc: body.longDesc === "" ? botExisits[0].longdesc : body.longDesc,
-        shortdesc: body.shortDesc === "" ? botExisits[0].shortdesc : body.shortDesc
+        shortdesc: body.shortdesc === "" ? botExisits[0].shortdesc : body.shortdesc
     }
-    event.context.pgPool`UPDATE bots SET public = ${saveObject.public}, nsfw = ${saveObject.nsfw}, longdesc = ${saveObject.longdesc}, shortdesc = ${saveObject.shortdesc} WHERE botid = ${path.botID}`.catch(() => {})
+    event.context.pgPool`UPDATE bots SET public = ${saveObject.public}, nsfw = ${saveObject.nsfw}, shortdesc = ${saveObject.shortdesc} WHERE botid = ${path.botID}`.catch(() => {})
 
     const botDBLinks = await event.context.pgPool`SELECT name, url from botlinks WHERE botid = ${path.botID}`.catch(() => {})
     const botLinks = [
@@ -73,7 +71,7 @@ export default defineEventHandler(async event => {
     }
 
     if (body.custom){
-        Object.keys(body.charts.custom).forEach(async name => {
+        Object.keys(body.custom).forEach(async name => {
             const currentChartSettings = await event.context.pgPool`SELECT label, name FROM chartsettings WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
             event.context.pgPool`UPDATE chartsettings SET enabled = ${body.custom[name].enabled}, type = ${body.custom[name].type}, name = ${body.custom[name].name === '' ? currentChartSettings[0].name : body.custom[name].name}, label = ${body.custom[name].label === '' ? currentChartSettings[0].label : body.custom[name].label} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
         })

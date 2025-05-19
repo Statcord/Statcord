@@ -11,8 +11,8 @@
           </DisclosureButton>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <router-link to="/" class="flex flex-shrink-0 items-center">
-            <nuxt-img class="h-8 w-auto" alt="Statcord logo" src="img/logo.png" />
+          <router-link to="/" aria-label="home" class="flex flex-shrink-0 items-center">
+            <nuxt-img class="h-8 w-auto" alt="Statcord logo" src="/img/logo.png" />
           </router-link>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <DisclosurePanel class="sm:hidden">
+    <DisclosurePanel class="sm:hidden"> 
       <div class="space-y-1 px-2 pb-3 pt-2">
         <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.href===route.path ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']" :aria-current="item.href===route.path ? 'page' : undefined">{{ item.name }}</DisclosureButton>
       </div>
@@ -63,51 +63,38 @@
 
 <script setup>
   import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-  import { useRoute } from 'vue-router';
+  const { $genOauthUrl, $authRequest } = useNuxtApp()
 
   const route = useRoute()
   const navigation = [
-    { name: 'Docs', href: '/docs' },
-    { name: 'Support', href: '/support' },
-    { name: 'Privacy', href: '/privacy' },
-    { name: 'Setup guide', href: '/guide' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'Partners', href: '/partners' }
+    { name: 'Docs', href: '/docs/' },
+    { name: 'Support', href: '/support/' },
+    { name: 'Privacy', href: '/privacy/' },
+    { name: 'Setup guide', href: '/guide/' },
+    { name: 'Pricing', href: '/pricing/' },
+    { name: 'Partners', href: '/partners/' }
   ]
 
   const headers = useRequestHeaders(['cookie'])
 
   const { data: userFetch } = await useAsyncData(async () => {
     const [user] = await Promise.all([
-        $fetch(`/api/oauth/user`, { headers })
+        $fetch(`/api/oauth/user/`, { headers })
     ])
     return user
   })
 
   const user = userFetch.value
-</script>
 
+  const oauthUrl = ref($genOauthUrl(route.fullPath))
+  watch(() => route.fullPath, () => {
+    oauthUrl.value = $genOauthUrl(route.fullPath)
+  })
 
-<script>
-export default {
-  name: 'navbar',
-  data() {
-    return {
-      oauthUrl: this.$genOauthUrl(this.$route.fullPath),
-    }
-  },
-  methods: {
-    async logout(){
-      this.$authRequest('/api/session', {
-        method: "DELETE"
-      })
-      await navigateTo("/", {"external": true})
-    }
-  },
-  watch: {
-    $route(route){
-      this.oauthUrl = this.$genOauthUrl(route.fullPath)
-    }
+  async function logout(){
+    $authRequest('/api/session/', {
+      method: "DELETE"
+    })
+    await navigateTo("/", {"external": true})
   }
-}
 </script>

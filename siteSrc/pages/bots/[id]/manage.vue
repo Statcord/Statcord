@@ -2,106 +2,81 @@
     <UContainer>
         <UForm :state="state" class="space-y-4" @submit="save">
             <h6>Access control</h6>
-            <UFormGroup label="Public" name="public">
-                <UToggle v-model="state.public" icon="i-heroicons-eye" />
-            </UFormGroup>
-            <UFormGroup label="NSFW" name="nsfw">
-                <UToggle v-model="state.nsfw" icon="i-heroicons-eye" />
-            </UFormGroup>
-            <UFormGroup label="Custom URL" name="customurl">
-                <UInput v-model="state.customurl" :placeholder="domain+'/bots/'+botid" type="url" disabled />
-            </UFormGroup>
-            <UButton label="Check" disabled></UButton>
-            <UDivider />
+            <UFormField label="Public" name="public">
+                <USwitch v-model="state.public" icon="i-heroicons-eye" />
+            </UFormField>
+            <UFormField label="NSFW" name="nsfw">
+                <USwitch v-model="state.nsfw" icon="i-heroicons-eye" />
+            </UFormField>
+            <UFormField label="Custom URL" name="customurl">
+                <UInput v-model="state.customurl" @up="cusURLChanged" :placeholder="domain+'/bots/'+route.params.id" type="url" :disabled="plevel==0" />
+            </UFormField>
+            <UButton label="Check" :disabled="plevel==0" @click="checkCusUrl"></UButton>
+            <USeparator />
 
             <h6>Bot Description</h6>
-            <UFormGroup label="Short description" name="shortDesc">
+            <UFormField label="Short description" name="shortDesc">
                 <UInput v-model="state.shortdesc" type="text"/>
-            </UFormGroup>
-            <UFormGroup label="Long description (Markdown ONLY)" name="longDesc">
-                <UTextarea v-model="state.longdesc"/>
-            </UFormGroup>
-            <UDivider />
+            </UFormField>
+            <USeparator />
 
             <h6>Add additional links (optional)</h6>
-            <UFormGroup label="GitHub" name="github">
+            <UFormField label="GitHub" name="github">
                 <UInput v-model="state.github" type="url" />
-            </UFormGroup>
-            <UFormGroup label="Website" name="website">
+            </UFormField>
+            <UFormField label="Website" name="website">
                 <UInput v-model="state.website" type="url" />
-            </UFormGroup>
-            <UFormGroup label="Support server" name="supportserver">
+            </UFormField>
+            <UFormField label="Support server" name="supportserver">
                 <UInput v-model="state.supportserver" type="url" />
-            </UFormGroup>
-            <UFormGroup label="Donation link" name="donations">
+            </UFormField>
+            <UFormField label="Donation link" name="donations">
                 <UInput v-model="state.donations" type="url" />
-            </UFormGroup>
-            <UDivider />
+            </UFormField>
+            <USeparator />
 
             <h6>Defualt charts</h6>
-            <UFormGroup v-for="chart in state.default" :label="chart.name" :name="chart.chartid">
-                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
-            </UFormGroup>
-            <UDivider />
+            <UFormField v-for="chart in state.default" :label="chart.name" :name="chart.chartid">
+                <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
+            </UFormField>
+            <USeparator />
 
             <h6>Command charts</h6>
-            <UFormGroup v-for="chart in state.commands" :label="chart.name" name="donations">
-                <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
-            </UFormGroup>
-            <UDivider />
+            <UFormField v-for="chart in state.commands" :label="chart.name" name="donations">
+                <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
+            </UFormField>
+            <USeparator />
 
             <h6>Custom charts</h6>
             <div v-for="chart in state.custom">
                 <h6>{{ chart.name }}</h6>
-                <UFormGroup v-for="chart in state.commands" :label="chart.name" name="donations">
-                    <UToggle v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel>0"/>
-                </UFormGroup>
+                <UFormField v-for="chart in state.commands" :label="chart.name" name="donations">
+                    <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
+                </UFormField>
                 <UInputMenu v-model="chart.type" :options="['Pie', 'Line']" />
 
-                <UFormGroup :label="chart.name" name="Label">
+                <UFormField :label="chart.name" name="Label">
                     <UInput v-model="chart.label" type="text"/>
-                </UFormGroup>
+                </UFormField>
 
-                <UFormGroup  :label="chart.name" name="Name">
+                <UFormField  :label="chart.name" name="Name">
                     <UInput v-model="chart.name" type="text"/>
-                </UFormGroup>
+                </UFormField>
                 <DeleteCustomChart :chartName="chart.name" :chartid="chart.chartid"></DeleteCustomChart>
             </div>
 
-            <UDivider />
+            <USeparator />
             <UButton type="submit" icon="i-heroicons-check">Save</UButton>
-            <UButton label="Export data" icon="i-heroicons-arrows-up-down" @click="exportIsOpen = true" />
             <UButton label="API key" icon="i-heroicons-key" @click="keyIsOpen = true" />
             <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />                 
             <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteIsOpen = true" />
         </UForm>
     </UContainer>
 
-    <UModal v-model="exportIsOpen">
-        <div class="p-4 bg-gray-800 text-gray-300 font-medium">
-            <div class="modal-content">
-                <h4>Export</h4>
-                <span>Download a copy of your data</span>
-            </div>
-
-            <div>
-                <div class="grid grid-cols-6 gap-4">
-                    <div class="col-start-1 col-end-3">
-                        <UButton label="Close" @click="exportIsOpen = false" />
-                    </div>
-                    <div class="col-end-7 col-span-2">
-                        <UButton label="Download" icon="i-heroicons-arrow-down-tray" @click="downloadData" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </UModal>
-
     <UModal v-model="keyIsOpen">
         <div class="p-4 bg-gray-800 text-gray-300 font-medium">
             <div class="modal-content">
                 <h4>API key</h4>
-                <span>Download a copy of your data</span>
             </div>
 
             <div v-if="apiKey">
@@ -142,17 +117,18 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-
-const exportIsOpen = ref(false)
 const keyIsOpen = ref(false)
 const deleteIsOpen = ref(false)
 
 const { $authRequest } = useNuxtApp()
 const route = useRoute()
+const toast = useToast()
 const domain = useRuntimeConfig().public.domain
 
-const bot = await $authRequest(`/api/bots/${route.params.id}`)
+const {userInfo} = await $authRequest("/api/session/")
+if (!userInfo) await navigateTo($genOauthUrl(route.fullPath), {external: true});
+
+const bot = await $authRequest(`/api/bots/${route.params.id}/`)
 if (bot === "404") throw createError({
     statusCode: 404,
     message: 'Bot not found'
@@ -162,11 +138,13 @@ if (bot === "401") throw createError({
     message: 'You do not have permission to access this bot'
 })
 
-const currentSettings = await $authRequest(`/api/bots/${route.params.id}/settings/get`)
+const currentSettings = await $authRequest(`/api/bots/${route.params.id}/settings/get/`)
 if (currentSettings === "401") throw createError({
     statusCode: 401,
     message: 'You do not have permission to access this bot'
 })
+
+const {plevel} = await $authRequest(`/api/user/${bot.ownerid}/`)
 
 useSeoMeta({
     themeColor: "#0080F0",
@@ -195,41 +173,57 @@ useHead({
 })
 
 const state = reactive(currentSettings)
+
+async function confirmedDelete(){
+    const {error} = await useFetch(() => `/api/bots/delete/`, {
+        method: 'delete',
+        body: {id: route.params.id}
+    })
+    if (!error.value) {
+        await navigateTo(`/users/${bot.ownerid}`)
+    }
+}
+
+async function checkCusUrl(){
+    if (!state.customurl) return toast.add({title: 'Enter A URL'})
+
+    const {error} = await useFetch(() => `/api/bots/${route.params.id}/settings/checkCustomURL/`, {
+        method: 'post',
+        body: state.customurl
+    })
+
+// toast.add({title: error.value? 'Error saving' : 'Saved'})
+}
+
+async function save(data){
+    const {error} = await useFetch(() => `/api/bots/${route.params.id}/settings/set/`, {
+        method: 'post',
+        body: data.data
+    })
+
+    toast.add({title: error.value? 'Error saving' : 'Saved'})
+}
+
+async function sync() {
+    const ajaxdata = await $fetch(`/api/bots/${route.params.id}/settings/sync/`, {
+        method: 'post',
+    }).catch(console.error);
+
+    toast.add({title: ajaxdata ? 'Synced' : 'An error has occurred'})
+}
 </script>
 
 <script>
 export default {
     name: 'manageBot',
     data() {
-        const config = useRuntimeConfig()
         return {
-            apiKey: undefined,
-            plevel: 0,
-            userID: "",
-            botid: this.$route.params.id
+            apiKey: undefined
         }
     },
-    async mounted() {        
-        const {userInfo} = await this.$authRequest("/api/session")
-        if (!userInfo) await navigateTo(this.$genOauthUrl(this.$route.fullPath), {external: true});
-
-        this.userID = userInfo.id
-
-        const {plevel} = await this.$authRequest(`/api/user/${userInfo.id}`)
-        this.plevel=plevel
-    },
     methods: {
-        async downloadData(){
-            const {data} = await useFetch(`/api/bots/${this.$route.params.id}/stats/export`)
-
-            const a = document.createElement("a");
-            a.href = `data:text/plain;base64,${data.value}`;
-            a.download = `Statcord_data_export_bot_${this.$route.params.id}.json`;
-            a.click();
-            a.remove();
-        },
         async reGenKey() {
-            const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey`, {
+            const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey/`, {
                 method: 'post'
             })
             if (data.value?.key) {
@@ -238,34 +232,6 @@ export default {
         },
         copyKey() {
             navigator.clipboard.writeText(this.apiKey)
-        },
-        async sync() {
-            this.$toast.add({ title: 'Syncing' })
-            const ajaxdata = await $fetch(`/api/bots/${this.$route.params.id}/settings/sync`, {
-                method: 'post',
-            }).catch(console.error);
-            if (ajaxdata) this.$toast.add({ title: 'Synced' })
-            else this.$toast.add({title: 'An error has occurred'})
-        },
-        async confirmedDelete() {
-            const {error} = await useFetch(() => `/api/bots/delete`, {
-                method: 'delete',
-                body: {id: this.$route.params.id}
-            })
-            if (!error.value) {
-                await navigateTo(`/users/${this.userID}`)
-            }
-        },
-        async save(data){
-            this.$toast.add({title: 'Saving'})
-            console.log(data.data)
-
-            const {error} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/set`, {
-                method: 'post',
-                body: data.data
-            })
-
-            this.$toast.add({title: error.value? 'Error saving' : 'Saved'})
         }
     }
 }

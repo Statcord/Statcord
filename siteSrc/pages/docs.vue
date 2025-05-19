@@ -20,7 +20,7 @@
   export default {
     name: 'docs',
     async mounted(){
-        const apiDefinition = await $fetch('/api/docs/json')
+        const apiDefinition = await $fetch('/api/docs/json/')
 
         SwaggerUIBundle({
             "dom_id": "#test",
@@ -31,10 +31,5 @@
 </script>
   
 <style>
-@import url(https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.0/swagger-ui.css);
-/* @import "swagger-ui-dist/swagger-ui.css"; */
-select {
-  opacity: 1;
-  color: var(--font-color-main);
-}
+@import "~/assets/css/swagger-ui.css"
 </style>
