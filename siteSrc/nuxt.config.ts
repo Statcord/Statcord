@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     configFile: settings
   },
 
-  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxtjs/sitemap", "@nuxt/image", "nuxt-umami", 'nuxt-headlessui'],
+  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxtjs/sitemap", "@nuxt/image", "nuxt-umami"],
 
   site: {
     url: 'https://statcord.com',
