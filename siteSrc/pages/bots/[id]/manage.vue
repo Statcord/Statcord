@@ -73,52 +73,34 @@
         </UForm>
     </UContainer>
 
-    <UModal v-model="keyIsOpen">
-        <div class="p-4 bg-gray-800 text-gray-300 font-medium">
-            <div class="modal-content">
-                <h4>API key</h4>
-            </div>
-
+    <UModal v-model:open="keyIsOpen" title="API key" close-icon="i-heroicons-x-mark">
+        <template #body>
             <div v-if="apiKey">
                 <input type="text" disabled :value="apiKey">
                 <UButton label="Copy" icon="i-heroicons-document-duplicate" @click="copyKey" />
             </div>
-
+    
             <div>
-                <div class="grid grid-cols-6 gap-4">
-                    <div class="col-start-1 col-end-3">
-                        <UButton label="Close" @click="keyIsOpen = false" />
-                    </div>
-                    <div class="col-end-7 col-span-2">
-                        <UButton label="Regenerate API key" icon="i-heroicons-arrow-path" @click="reGenKey" />
-                    </div>
+                <div class="col-end-7 col-span-2">
+                    <UButton label="Regenerate API key" icon="i-heroicons-arrow-path" @click="reGenKey" />
                 </div>
             </div>
-        </div>
+        </template>
     </UModal>
 
-    <UModal v-model="deleteIsOpen">
-        <div class="p-4 bg-gray-800 text-gray-300 font-medium">
-            <div class="modal-content">
-                <h4>Confirm data deletion</h4>
+    <UModal v-model:open="deleteIsOpen" title="Confirm data deletion" close-icon="i-heroicons-x-mark">
+        <template #body>
+            <div class="col-end-7 col-span-2">
+                <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
             </div>
-            <div>
-                <div class="grid grid-cols-6 gap-4">
-                    <div class="col-start-1 col-end-3">
-                        <UButton label="Close" @click="deleteIsOpen = false" />
-                    </div>
-                    <div class="col-end-7 col-span-2">
-                        <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
-                    </div>
-                </div>
-            </div>
-        </div>
+        </template>
     </UModal>
 </template>
 
 <script setup>
 const keyIsOpen = ref(false)
 const deleteIsOpen = ref(false)
+const apiKey = ref()
 
 const { $authRequest } = useNuxtApp()
 const route = useRoute()
@@ -192,7 +174,7 @@ async function checkCusUrl(){
         body: state.customurl
     })
 
-// toast.add({title: error.value? 'Error saving' : 'Saved'})
+    toast.add({title: error.value ? 'Error saving' : 'Saved'})
 }
 
 async function save(data){
@@ -211,28 +193,17 @@ async function sync() {
 
     toast.add({title: ajaxdata ? 'Synced' : 'An error has occurred'})
 }
-</script>
 
-<script>
-export default {
-    name: 'manageBot',
-    data() {
-        return {
-            apiKey: undefined
-        }
-    },
-    methods: {
-        async reGenKey() {
-            const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey/`, {
-                method: 'post'
-            })
-            if (data.value?.key) {
-                this.apiKey = data.value.key
-            }
-        },
-        copyKey() {
-            navigator.clipboard.writeText(this.apiKey)
-        }
+async function reGenKey() {
+    const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey/`, {
+        method: 'post'
+    })
+    if (data.value?.key) {
+        apiKey.value = data.value.key
     }
+}
+
+async function copyKey() {
+    navigator.clipboard.writeText(apiKey.value)
 }
 </script>
