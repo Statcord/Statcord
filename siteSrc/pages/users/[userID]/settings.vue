@@ -50,7 +50,8 @@
 
   const state = reactive({
     public: profileInfo.public,
-    aboutme: profileInfo.aboutme
+    aboutme: profileInfo.aboutme,
+    website: profileInfo.website
   })
 
   useSeoMeta({
