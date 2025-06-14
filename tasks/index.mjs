@@ -1,8 +1,17 @@
 import { Client } from "oceanic.js"
-import postgres from "postgres";
 import { schedule } from 'node-cron';
-
+import postgres from "postgres";
+import Redis from "ioredis";
+import { InfluxDB } from '@influxdata/influxdb-client'
+import { DeleteAPI } from '@influxdata/influxdb-client-apis'
 import config from './config/settings.mjs'
+
+
+const influx = new InfluxDB(config.influx)
+const deleteAPI = new DeleteAPI(influx)
+const redis = new Redis(config.redisURL);
+
+const redisDelKeys = ['legacyRouteTracking', 'botPostingIntervals', 'botDubbleNotifCheck']
 
 // create the discord client
 const client = new Client({
@@ -26,17 +35,12 @@ const pgPool = postgres({
             serialize: x => '' + x,
             parse: parseFloat
         }
-    },
-    // debug: function(connection, query, params, types){
-    //     console.log(query)
-    //     console.log(params)
-    // }
+    }
 })
 
 
 
 // Every sunday at midnight get sync username and avatar from Discord. If the bot or user has been deleted from Discord it gets marked for deletion from our service 
-// change this to every even sunday
 schedule('0 0 * * Sun', async () => {
     const allBots = await pgPool`SELECT * FROM bots WHERE flags != 1`
     
@@ -59,7 +63,8 @@ schedule('0 0 * * Sun', async () => {
         const discordUser = await client.rest.users.get(user.ownerid)
         
         if (discordUser.username.startsWith("deleted_user_")) {
-            await pgPool`UPDATE bots SET flags = 1 WHERE botid = ${user.ownerid}`.catch(e=>{});
+            await pgPool`UPDATE bots SET flags = 1 WHERE ownerid = ${user.ownerid}`.catch(e=>{});
+            await pgPool`UPDATE owners SET flags = 1 WHERE ownerid = ${user.ownerid}`.catch(e=>{});
             return;
         }
         
@@ -70,15 +75,25 @@ schedule('0 0 * * Sun', async () => {
 })
 
 // On the first of each month go though all bots marked for deletion and delete all data from our service
-// schedule("0 0 1 * *", async () => {
-    // const allBots = await pgPool`SELECT * FROM bots WHERE flags = 1`
+schedule("0 0 1 * *", async () => {
+    const allBots = await pgPool`SELECT botid FROM bots WHERE flags = 1`
 
-    // allBots.forEach(async bot => {
-        // delete postgres data from:
-        // bots
-        // botlinks
-        // chartsettings
+    allBots.forEach(async bot => {
+        deleteAPI.postDelete({
+            org: "disstat",
+            bucket:"defaultBucket",
+            body: {
+                start: new Date(0),
+                stop: new Date(),
+                predicate: `botid="${bot.botid}"`,
+            }
+        })
 
-        // delete data from influxDB
-    // })
-// })
+        event.context.pgPool`DELETE FROM chartsettings WHERE botid = ${botID.id}`.catch(() => {})
+        event.context.pgPool`DELETE FROM botlinks WHERE botid = ${botID.id}`.catch(() => {})
+        event.context.pgPool`DELETE FROM bots WHERE botid = ${botID.id}`.catch(() => {})
+        event.context.pgPool`DELETE FROM newst WHERE botid = ${botID.id}`.catch(() => {})
+
+        redisDelKeys.forEach(e=>redis.del(`${e}:${botID.id}`))
+    })
+})

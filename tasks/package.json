@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.35.0",
+    "@influxdata/influxdb-client-apis": "^1.35.0",
+    "ioredis": "^5.6.1",
     "node-cron": "github:counting-bot/node-cron",
     "oceanic.js": "^1.12.0",
     "postgres": "^3.4.7"
