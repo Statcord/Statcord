@@ -31,7 +31,7 @@ export default {
 
 		const botID = interaction.data.options.raw[0].value
 
-		const data = await genBotStat(botID).catch(err => {
+		const data = await genBotStat({botID}).catch(err => {
 			interaction.createFollowup({
 				flags: 64,
 				embeds: [
@@ -49,7 +49,7 @@ export default {
 			embeds: [
 				{
 					title: `Bot Info for ${data.username}`,
-					description: `[View ${data.username} on Statcord](https://statcord.com/bots/${botID})`,
+					description: `[View ${data.username} on Statcord](https://statcord.com/bots/${botID}/)`,
 					"fields": [
 						{
 						  "name": "Guilds",

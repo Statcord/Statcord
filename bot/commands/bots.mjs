@@ -75,12 +75,12 @@ export default {
 			embeds: [
 				{
 					title: `${userFromDB[0].username}'s Bots`,
-					description: `[View ${userFromDB[0].username} on Statcord](https://statcord.com/users/${userID})`,
+					description: `[View ${userFromDB[0].username} on Statcord](https://statcord.com/users/${userID}/)`,
 					"fields": await Promise.all(bots.map(async bot => {
-						const data = await genBotStat(bot.botid).catch(e=>{return {error: e}})
+						const data = await genBotStat({botID: bot.botid}).catch(e=>{return {error: e}})
 						return {
 							"name": bot.username,
-							"value": `${data.error ? `Error: ${data.error}` : `Guilds: ${data.guilds}\nMembers: ${data.members}\nUsers${data.users}`}\n[View Here](https://statcord.com/bots/${bot.botid})`,
+							"value": `${data.error ? `Error: ${data.error}` : `Guilds: ${data.guilds}\nMembers: ${data.members}\nUsers${data.users}`}\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})`,
 							inline: true
 						}
 					})),

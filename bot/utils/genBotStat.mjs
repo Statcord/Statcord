@@ -11,7 +11,7 @@ export default async (botID) => {
     if (bot.length === 0) throw "Bot not found."
     if (!bot[0].public) throw "Bot is marked as private."
 
-    const runInfluxQuery = new influxRun(botID)
+    const runInfluxQuery = new influxRun({botID})
     const returnedData = await runInfluxQuery.getData()
 
     if (returnedData[0].value.length === 0) throw "No stats posted in the last 48 hours."
