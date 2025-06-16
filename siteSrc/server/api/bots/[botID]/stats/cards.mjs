@@ -25,96 +25,24 @@ export default defineEventHandler(async event => {
 
 	const returnedData = await runInfluxQuery.getData()
 	const data = {
-		custom: returnedData[0].value,
 		default: returnedData[1].value,
-		commands: returnedData[2].value
 	}
 
 
-	const mainStatsLabels = [...new Set(data.default.map(({_time})=>_time))]
-	const commandUsageCounts = data.commands.reduce((acc, curr) => {
-		return acc[curr._field] ? ++acc[curr._field] : acc[curr._field] = 1, acc
-	}, {});
-
-	const sdafsdf = await event.context.pgPool`SELECT chartid, enabled, name, label, type, category FROM chartsettings WHERE botid = ${path.botID} AND enabled = true`.catch(() => {})
-	
-	const tempOBJ = {}
-
-	for (const type of sdafsdf){
-		if (!tempOBJ[type.category]) tempOBJ[type.category] = []
-		switch (type.category){
-			case "default": {
-				tempOBJ[type.category].push({
-					name: type.name,
-					type: type.type,
-					data: {
-						datasets: [
-							{
-								label: type.label,
-								data:  data[type.category].filter(stat=>stat._field===type.chartid).map(({_value})=>_value.toFixed(2))
-							}
-						]
-					}
-				})
-			}
-			break;
-			case "custom":{
-				tempOBJ[type.category].push({
-					name: type.name,
-					type: type.type,
-					data: {
-						datasets: [
-							{
-								label: type.label,
-								data:  data[type.category].filter(stat=>stat.customChartID===type.chartid).map(({_value})=>_value.toFixed(2))
-							}
-						]
-					}
-				})
-			}
-			break;
-			case "commands": {
-				const chartOBJ = {
-					name: type.name,
-					type: type.type,
-					data: {
-						datasets: [
-							{
-								label: type.label
-							}
-						]
-					}
-				}
-				if (type.chartid === "cmdTotalUse"){
-					const cmdData = data.commands.reduce((acc, cur, i) => {
-						const item = i > 0 && acc.find(({_time}) => _time === cur._time)
-						if (item) item._value += cur._value;
-						else acc.push({ _time: cur._time, _value: cur._value });
-						return acc;
-					}, [])
-					chartOBJ.data.datasets[0].data = cmdData.map(a=>a._value)
-					chartOBJ.labels = cmdData.map(i => i._time)
-				} else if (type.chartid === "topCmds"){
-					chartOBJ.data.labels = Object.keys(commandUsageCounts)
-					chartOBJ.data.datasets[0].data = Object.values(commandUsageCounts)
-				}
-				tempOBJ[type.category].push(chartOBJ)
-			}
-			break;
-		}
-	}
-	
-	if (sdafsdf.filter(t=>t.name.toLowerCase().includes("ram")).length === 2) delete tempOBJ.default[tempOBJ.default.findIndex(a=>a.name==="Total Ram")]
-
-	appendCorsPreflightHeaders(event, {"allowHeaders": "*"})
-	return {
-		mainStats: {
-			stats: tempOBJ.default.filter(a=>a !== void 0),
-			labels: mainStatsLabels
-		},
-		custom: tempOBJ.custom,
-		commands: tempOBJ.commands ?? []
-	}
+	return [
+        {
+            name: "Guilds",
+            value: getLastStat(data.default, "guildCount")
+        },
+        {
+            name: "Members",
+            value: getLastStat(data.default, "members")
+        },
+        {
+            name: "Users",
+            value: getLastStat(data.default, "userCount")
+        }
+    ]
 })
 
 export const schema = {
@@ -243,28 +171,14 @@ export const schema = {
 			"content": {
 				"application/json": {
 					"schema": {
-						type: "object",
-						properties: {
-							mainStats: {
-								type: "array",
-								contains: { type: "object" }
-							},
-							commands: {
-								type: "array",
-								contains: { type: "object" }
-							},
-							custom: {
-								type: "array",
-								contains: { type: "object" }
-							}
-						}
+						type: "array",
+                        contains: { type: "object" }
 					}
 				}
 			}
 		}
 	}
 }
-
 
 const formatTime = (t)=>{
 	const range = t[t.length-1].toLowerCase();
@@ -325,7 +239,6 @@ const formatTime = (t)=>{
 	}
 }
 
-
 const influxRun = class{
 	#queryApi
 	#botID
@@ -362,4 +275,9 @@ const influxRun = class{
 			this.runQuery("topCommands")
 		])
 	}
+}
+
+const getLastStat = (mainStats, stat) => {
+	const relatedStats = mainStats.filter(stats=>stats._field===stat)
+	return relatedStats[relatedStats.length-1]?._value
 }

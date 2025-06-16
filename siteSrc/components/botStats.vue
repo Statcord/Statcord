@@ -1,23 +1,7 @@
 <template>
     <div>
         <div>
-            <div>
-                <USelect v-model="allTimeOrDateRangeSelection" name="allTimeOrDateRangeSelection" :items="allTimeOrDateRange" @change="dateOrAllTimeChanged"/>
-                <label for="allTimeOrDateRangeSelection">Date range</label>
-            </div>
-
-            <div>
-                <USelect v-model="groupBySelection" name="groupBySelection" :items="groupBySelections"  @change="groupBySelectorChanged"/>
-                <label for=groupBySelection>Group by range</label>
-            </div>
-
-            <div v-if="showDateRange">
-                <label>Start date:</label>
-                <input type="date" @change="updateStartDate" :min="datePickerMin.toISOString().substring(0, 10)" :max="datePickerMax.toISOString().substring(0, 10)" :value="startDate.toISOString().substring(0, 10)">
-
-                <label>End date:</label>
-                <input type="date" @change="updateEndDate" :min="datePickerMin.toISOString().substring(0, 10)" :max="datePickerMax.toISOString().substring(0, 10)" :value="endDate.toISOString().substring(0, 10)">
-            </div>
+            <USelect v-model="timeChoiceSelection" class="w-48" :items="timeChoices" @change="timeChoiceUpdate"/>
         </div>
 
         <div class="pt-8 pb-8">
@@ -57,26 +41,33 @@
     const route = useRoute()
     const props = defineProps({botJson: Object})
 
+    const timeChoices = [
+        '6H',
+        '12H',
+        '1D',
+        '3D',
+        '7D',
+        '1MO',
+        '3MO',
+        '6MO',
+        '9MO',
+        '1Y',
+        '3Y',
+        '5Y',
+        'All Time' 
+    ]
+    const timeChoiceSelection = ref(timeChoices[4])
 
-    const allTimeOrDateRange = ['All Time', 'Date Range']
-    const allTimeOrDateRangeSelection = ref(allTimeOrDateRange[0])
-
-    const groupBySelections = ['Day', 'Month', 'Year']
-    const groupBySelection = ref(groupBySelections[0])
+    const timeChoiceUpdate = ()=>{
+        getData()
+    }
 
     const stats = ref()
     const commandStats = ref()
     const customStats = ref()
     const cards = ref()
 
-    const datePickerMin = new Date(props.botJson.addedon);
-    const datePickerMax = new Date();
-
-    let showDateRange = false;
-    let startDate = datePickerMin;
-    let endDate = datePickerMax;
-    let groupByTimeFrame = 'd';
-    let refreshKey = datePickerMax;
+    let refreshKey = new Date();
 
     
     const formatDate = (timeStamp) => {
@@ -90,9 +81,11 @@
     }
 
 
-    const getData = async(firstLoad) =>{
-        const defaultStatsJson = await $fetch(`/api/bots/${route.params.id}/stats?groupBy=1${groupByTimeFrame}${firstLoad ? '': `&start=${startDate.getTime()}&end=${endDate.getTime()}`}`)
+    const getData = async() =>{
+        const cardsFetch = await $fetch(`/api/bots/${route.params.id}/stats/cards?t=${timeChoiceSelection.value}`)
+        cards.value = cardsFetch;
 
+        const defaultStatsJson = await $fetch(`/api/bots/${route.params.id}/stats?t=${timeChoiceSelection.value}`)
         stats.value = defaultStatsJson.mainStats.stats.map(t=>{
             t.data.labels = defaultStatsJson.mainStats.labels.map(d=>formatDate(d))
             switch(t.name){
@@ -147,31 +140,8 @@
             return t
         })
 
-        cards.value = defaultStatsJson.cards;
         refreshKey = new Date()
     }
-    
-    const dateOrAllTimeChanged = (event) => {
-        showDateRange = event === "Date Range"
-        if (event === "All Time") {
-            startDate = null
-            endDate = null
-        }
-        getData()
-    }
-    const updateStartDate = (event) => {
-        startDate = new Date(event.target.value)
-        getData()
-    }
-    const updateEndDate = (event) => {
-        endDate = new Date(event.target.value)
-        getData()
-    }
 
-    const groupBySelectorChanged = (event) => {
-        groupByTimeFrame=event.target.value
-        getData()
-    }
-
-    getData(true)
+    getData()
 </script>
