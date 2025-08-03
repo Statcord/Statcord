@@ -10,22 +10,22 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.6.2",
-    "@nuxt/image": "^1.10.0",
+    "@nuxt/image": "^1.11.0",
     "@nuxtjs/seo": "^3.1.0",
     "chart.js": "^4.5.0",
-    "nuxt": "^3.17.6"
+    "nuxt": "^4.0.2"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.35.0",
     "@influxdata/influxdb-client-apis": "^1.35.0",
-    "@nuxt/ui": "^3.2.0",
-    "@types/node": "^24.0.10",
-    "ioredis": "^5.6.1",
+    "@nuxt/ui": "^3.3.0",
+    "@types/node": "^24.1.0",
+    "ioredis": "^5.7.0",
     "nuxt-umami": "^3.2.0",
     "oceanic.js": "github:counting-bot/Oceanic#build",
     "postgres": "^3.4.7",
-    "swagger-ui-dist": "^5.26.0",
+    "swagger-ui-dist": "^5.27.1",
     "tailwindcss": "^4.1.11",
-    "zod": "^3.25.74"
+    "zod": "^4.0.14"
   }
 }

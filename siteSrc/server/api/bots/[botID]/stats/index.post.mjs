@@ -12,7 +12,10 @@ const mainStats = {
 }
 const mainStatsKeys = Object.keys(mainStats)
 const average = array => array.reduce((a, b) => a + b) / array.length;
-
+const isNanOrInfinity = number => {
+	if (number === NaN || number === Infinity) return 0
+	return number
+}
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
 	const path = getRouterParams(event)
@@ -41,29 +44,28 @@ export default defineEventHandler(async event => {
 			writeClient.flush()
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 		}
-
-		event.context.pgPool.begin(async sql => {
-			return body.customCharts.map(async customChart => {
-				const [chartsettingsInsert] = await sql`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
-	
-				const customChartsPoint = new Point("customCharts")
-					.tag("botid",  path.botID)
-					.tag("customChartID",  customChart.id)
-	
-				Object.keys(customChart.data).forEach(key => {
-					const value = customChart.data[key]
-					if (value.toString().includes(".")) customChartsPoint.floatField(key, isNaN(value) ? 0 : value)
-					else customChartsPoint.intField(key, isNaN(value) ? 0 : value)
-				})
-	
-				writeClient.writePoint(customChartsPoint)
-
-				return chartsettingsInsert
-			})
-		})
 	}
+	body.customCharts.forEach(async customChart => {
+		const keys = Object.keys(customChart.data)
+		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value) VALUES (${path.botID}, ${customChart.id}, ${isNanOrInfinity(Number(customChart.data[keys[0]]))})`.catch(() => {})
 
-    if (hasMainStats){
+		const customChartsPoint = new Point("customCharts")
+			.tag("botid",  path.botID)
+			.tag("customChartID",  customChart.id)
+
+		keys.forEach(key => {
+			const value = customChart.data[key]
+			if (value.toString().includes(".")) customChartsPoint.floatField(key, isNaN(value) ? 0 : value)
+			else customChartsPoint.intField(key, isNaN(value) ? 0 : value)
+		})
+
+		writeClient.writePoint(customChartsPoint)
+	})
+
+	event.context.pgPool`INSERT INTO mainStats(botid, guildCount, userCount, members, ramUsage, totalRam, cpuUsage, shardCount) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))})`.catch(() => {})
+    
+	if (hasMainStats){
         const mainStatsPoint = new Point("botStats")
         .tag("botid",  path.botID)
 
@@ -78,6 +80,7 @@ export default defineEventHandler(async event => {
 			.tag("botid",  path.botID)
 
 		body.topCommands.map(item => {
+			event.context.pgPool`INSERT INTO commandsrun(botid, command, amount) VALUES (${path.botID}, ${item.name}, ${isNanOrInfinity(Number(item.count))})`.catch(() => {})
 			topCommandsPoint.intField(item.name, item.count)
 		})
 

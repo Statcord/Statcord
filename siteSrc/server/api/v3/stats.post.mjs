@@ -64,6 +64,9 @@ export default defineEventHandler(async event => {
 
 	event.context.redis.set(`legacyRouteTracking:${body.id}`, "v3")  
 
+	event.context.pgPool`INSERT INTO mainStats(botid, guildCount, userCount, members, ramUsage, totalRam, cpuUsage) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))})`.catch(() => {})
+
+	
 	const convertedBody = {
 		"guildCount": isNanOrInfinity(Number(body.servers ?? 0)),
 		"userCount": isNanOrInfinity(Number(body.active.length ?? 0)),
@@ -99,6 +102,7 @@ export default defineEventHandler(async event => {
 
 	convertedBody.customCharts.map(customChart => {
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value) VALUES (${body.id}, ${customChart.id}, ${customChart.data.itemOne})`.catch(() => {})
 
 		const customChartsPoint = new Point("customCharts")
 			.tag("botid",  body.id)
@@ -126,6 +130,7 @@ export default defineEventHandler(async event => {
 
 		convertedBody.topCommands.map(item => {
 			topCommandsPoint.intField(item.name, Number(item.count))
+			event.context.pgPool`INSERT INTO commandsrun(botid, command, amount) VALUES (${body.id}, ${item.name}, ${isNanOrInfinity(Number(item.count))})`.catch(() => {})
 		})
 
 		writeClient.writePoint(topCommandsPoint)
