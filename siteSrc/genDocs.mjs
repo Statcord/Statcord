@@ -25,9 +25,9 @@ const apiDir = await readdir("./server/api", { recursive: true, "withFileTypes":
 for (const file of apiDir) {
     if (!file.isFile()) continue;
     
-    const {schema} = await import(`./${file.path}/${file.name}`);
+    const {schema} = await import(`./${file.parentPath}/${file.name}`);
     
-    const fileName = `${file.path}/${file.name}`.replace(".mjs", "").split("server").pop().split(".")
+    const fileName = `${file.parentPath}/${file.name}`.replace(".mjs", "").split("server").pop().split(".")
     const method = fileName[1] ?? "get"
     
     let routeString = fileName[0].replace(".post", "").replace(".delete", "").replace('[', "{").replace(']', "}")
