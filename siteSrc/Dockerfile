@@ -1,6 +1,4 @@
-FROM node:20.5.0-alpine3.17 as build-stage
-# FROM node:22.13.0-bookworm-slim as build-stage
-
+FROM node:24.4.1-alpine3.22 as build-stage
 
 # setup working dir
 WORKDIR /preApp
@@ -10,8 +8,6 @@ COPY . /preApp
 RUN apk update && \
     apk add --update git && \
     apk add --update openssh 
-# RUN apt -y update && \
-#     apt -y install git
     
 # install npm pacages
 RUN npm install
@@ -25,8 +21,7 @@ ENV NODE_ENV production
 RUN npm run build
 
 
-FROM node:20.5.0-alpine3.17 as production-stage
-# FROM node:22.13.0-bookworm-slim as production-stage
+FROM node:24.4.1-alpine3.22 as production-stage
 
 RUN mkdir /app
 COPY --from=build-stage /preApp/.output /app/.output
