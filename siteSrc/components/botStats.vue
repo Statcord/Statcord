@@ -5,7 +5,7 @@
         </div>
 
         <div class="pt-8 pb-8">
-            <div v-if="stats" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div v-if="cards" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <UCard v-for="card in cards" class="text-center">
                     <template #header>
                         <span class="h-1 align-middle text-gray-300">{{ card.name }}</span>
@@ -17,18 +17,18 @@
         </div>
 
         <div>
-            <div v-if="stats" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div v-for="stat in stats" :key="refreshKey">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div v-if="stats" v-for="stat in stats" :key="refreshKey">
                     <h1>{{ stat.name }}</h1>
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
                 
-                <div v-for="stat in commandStats" :key="refreshKey">
+                <div v-if="commandStats" v-for="stat in commandStats" :key="refreshKey">
                     <h1>{{ stat.name }}</h1>
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
 
-                <div v-for="stat in customStats" :key="refreshKey">
+                <div v-if="customStats" v-for="stat in customStats" :key="refreshKey">
                     <h1>{{ stat.name }}</h1>
                     <chart :chartData="stat.data" :chartType="stat.type" :chartOptions="stat.options"></chart>
                 </div>
@@ -42,8 +42,8 @@
     const props = defineProps({botJson: Object})
 
     const timeChoices = [
-        '6H',
-        '12H',
+        // '6H',
+        // '12H',
         '1D',
         '3D',
         '7D',
@@ -56,7 +56,8 @@
         '5Y',
         'All Time' 
     ]
-    const timeChoiceSelection = ref(timeChoices[4])
+    // const timeChoiceSelection = ref(timeChoices[4])
+    const timeChoiceSelection = ref(timeChoices[2])
 
     const timeChoiceUpdate = ()=>{
         getData()
@@ -70,13 +71,11 @@
     let refreshKey = new Date();
 
     
-    const formatDate = (timeStamp) => {
-        const date = new Date(timeStamp)
-        return `${date.toLocaleDateString()}, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-    }
+    const formatDate = (timeStamp) => new Date(timeStamp).toLocaleDateString();
+    const units = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"];
     const bytesToSize = (bytes) => {
-        const units = ["byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"];
         const unit = Math.floor(Math.log(bytes) / Math.log(1024));
+        if (unit < 0) return bytes
         return new Intl.NumberFormat("en", {style: "unit", unit: units[unit]}).format(bytes / 1024 ** unit);
     }
 
@@ -86,8 +85,8 @@
         cards.value = cardsFetch;
 
         const defaultStatsJson = await $fetch(`/api/bots/${route.params.id}/stats?t=${timeChoiceSelection.value}`)
-        stats.value = defaultStatsJson.mainStats.stats.map(t=>{
-            t.data.labels = defaultStatsJson.mainStats.labels.map(d=>formatDate(d))
+        stats.value = defaultStatsJson.mainStats.map(t=>{
+            t.data.labels = t.labels.map(d=>formatDate(d))
             switch(t.name){
                 case "CPU Usage":{
                     t.options = {
@@ -114,7 +113,8 @@
                             y: {
                                 ticks: {
                                     callback: value => bytesToSize(value) 
-                                }
+                                },
+                                beginAtZero: true
                             }
                         },
                         plugins: {
@@ -136,7 +136,7 @@
         })
 
         customStats.value = defaultStatsJson.custom?.map(t=>{
-            if (t.type === "line") t.data.labels = defaultStatsJson.mainStats.labels.map(d=>formatDate(d))
+            t.data.labels = t.labels.map(d=>formatDate(d))
             return t
         })
 

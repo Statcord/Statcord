@@ -1,16 +1,4 @@
 import { defineEventHandler, createError, sendError, readBody } from "h3"
-import { Point } from "@influxdata/influxdb-client"
-
-const mainStats = {
-    "guildCount": "intField",
-	"shardCount": "intField",
-	"userCount": "intField",
-	"members": "intField",
-	"ramUsage": "floatField",
-	"totalRam": "floatField",
-	"cpuUsage": "floatField"
-}
-const mainStatsKeys = Object.keys(mainStats)
 
 const isNanOrInfinity = number => {
 	if (number === NaN || number === Infinity) return 0
@@ -64,7 +52,9 @@ export default defineEventHandler(async event => {
 
 	event.context.redis.set(`legacyRouteTracking:${body.id}`, "v3")  
 
-	event.context.pgPool`INSERT INTO mainStats(botid, guildCount, userCount, members, ramUsage, totalRam, cpuUsage) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))})`.catch(() => {})
+	const date = new Date().toISOString().replace("T", " ")
+
+	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, timestamp) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))}, ${date})`.catch(() => {})
 
 	
 	const convertedBody = {
@@ -98,45 +88,16 @@ export default defineEventHandler(async event => {
 		"topCommands": body.popular ?? []
 	}
 
-	const writeClient = event.context.influx.influxClient.getWriteApi("disstat", "defaultBucket")
-
 	convertedBody.customCharts.map(customChart => {
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
-		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value) VALUES (${body.id}, ${customChart.id}, ${customChart.data.itemOne})`.catch(() => {})
-
-		const customChartsPoint = new Point("customCharts")
-			.tag("botid",  body.id)
-			.tag("customChartID",  customChart.id)
-
-		Object.keys(customChart.data).forEach(key => {
-			const value = customChart.data[key]
-			if (value.toString().includes(".")) customChartsPoint.floatField(key, isNaN(value) ? 0 : value)
-			else customChartsPoint.intField(key, isNaN(value) ? 0 : value)
-		})
-
-		writeClient.writePoint(customChartsPoint)
+		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value, timestamp) VALUES (${body.id}, ${customChart.id}, ${customChart.data.itemOne}, ${date})`.catch(() => {})
 	})
-
-	const mainStatsPoint = new Point("botStats")
-	.tag("botid",  body.id)
-	mainStatsKeys.forEach(key=>{		
-		mainStatsPoint[mainStats[key]](key, isNaN(convertedBody[key])?0:convertedBody[key])
-	})
-	writeClient.writePoint(mainStatsPoint)
 
 	if (convertedBody.topCommands.length > 0) {
-		const topCommandsPoint = new Point("topCommands")
-			.tag("botid",  body.id)
-
 		convertedBody.topCommands.map(item => {
-			topCommandsPoint.intField(item.name, Number(item.count))
-			event.context.pgPool`INSERT INTO commandsrun(botid, command, amount) VALUES (${body.id}, ${item.name}, ${isNanOrInfinity(Number(item.count))})`.catch(() => {})
+			event.context.pgPool`INSERT INTO commandsrun(botid, command, amount, timestamp) VALUES (${body.id}, ${item.name}, ${isNanOrInfinity(Number(item.count))}, ${date})`.catch(() => {})
 		})
-
-		writeClient.writePoint(topCommandsPoint)
 	}
-
-	writeClient.flush()
 
 	sendError(event, createError({statusCode: 500, statusMessage: `/logan/stats endpoint has been EOL since 2021. Switching to the slightly newer, (but EOL) /v3/stats would require no code changes. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
 

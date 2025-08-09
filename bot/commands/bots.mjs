@@ -1,4 +1,3 @@
-import genBotStat from "../utils/genBotStat.mjs";
 import pg from "../utils/pg.mjs";
 
 export default {
@@ -77,10 +76,10 @@ export default {
 					title: `${userFromDB[0].username}'s Bots`,
 					description: `[View ${userFromDB[0].username} on Statcord](https://statcord.com/users/${userID}/)`,
 					"fields": await Promise.all(bots.map(async bot => {
-						const data = await genBotStat({botID: bot.botid}).catch(e=>{return {error: e}})
+						const botStats = (await pg`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${bot.botid} ORDER by timestamp desc limit 1`.catch(() => {}))
 						return {
 							"name": bot.username,
-							"value": `${data.error ? `Error: ${data.error}` : `Guilds: ${data.guilds}\nMembers: ${data.members}\nUsers${data.users}`}\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})`,
+							"value": `Guilds: ${botStats[0].guildcount}\nMembers: ${botStats[0].members}\nUsers: ${botStats[0].usercount}\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})`,
 							inline: true
 						}
 					})),

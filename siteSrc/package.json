@@ -16,8 +16,6 @@
     "nuxt": "^4.0.2"
   },
   "dependencies": {
-    "@influxdata/influxdb-client": "^1.35.0",
-    "@influxdata/influxdb-client-apis": "^1.35.0",
     "@nuxt/ui": "^3.3.0",
     "@types/node": "^24.1.0",
     "ioredis": "^5.7.0",

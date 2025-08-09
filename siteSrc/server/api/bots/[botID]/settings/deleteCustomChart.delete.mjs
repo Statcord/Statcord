@@ -14,17 +14,7 @@ export default defineEventHandler(async event => {
 	const body = await readBody(event)
 
 	event.context.pgPool`DELETE FROM chartsettings WHERE botid = ${path.botID} AND chartid = ${body.chartid}`.catch(() => {})
-
-	event.context.influx.influxDelete.postDelete({
-		org: "disstat",
-		bucket:"defaultBucket",
-		body: {
-			start: new Date(0),
-			stop: new Date(),
-			// see https://docs.influxdata.com/influxdb/latest/reference/syntax/delete-predicate/
-			predicate: `botid="${path.botID}" AND customChartID="${body.chartid}"`,
-		}
-	})
+	event.context.pgPool`DELETE FROM customcharts WHERE botid = ${path.botID} AND chartid = ${body.chartid}`.catch(() => {})
 
 	sendNoContent(event, 200)
 })

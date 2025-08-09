@@ -1,4 +1,4 @@
-import genBotStat from '../utils/genBotStat.mjs'
+import pg from "../utils/pg.mjs";
 
 export default {
 	name: "botinfo",
@@ -31,39 +31,53 @@ export default {
 
 		const botID = interaction.data.options.raw[0].value
 
-		const data = await genBotStat({botID}).catch(err => {
-			interaction.createFollowup({
-				flags: 64,
-				embeds: [
-					{
-						title: "Error",
-						description: err,
-						color: 0x97c227
-					}
-				]
-			}).catch(console.log)
+		const bot = await pg`SELECT username, public FROM bots WHERE botid = ${botID}`.catch(() => {})
+		if (bot.length === 0) return interaction.createFollowup({
+			flags: 64,
+			embeds: [
+				{
+					title: "Error",
+					description: "Bot does not exist.",
+					color: 0x97c227
+				}
+			]
+		}).catch(e=>{
+			console.log(e)
 		})
-		if (!data) return;
+		if (!bot[0].public) return interaction.createFollowup({
+			flags: 64,
+			embeds: [
+				{
+					title: "Error",
+					description: "Bot is not public",
+					color: 0x97c227
+				}
+			]
+		}).catch(e=>{
+			console.log(e)
+		})
+
+		const botStats = (await pg`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${botID} ORDER by timestamp desc limit 1`.catch(() => {}))
 
 		interaction.createFollowup({
 			embeds: [
 				{
-					title: `Bot Info for ${data.username}`,
-					description: `[View ${data.username} on Statcord](https://statcord.com/bots/${botID}/)`,
+					title: `Bot Info for ${bot[0].username}`,
+					description: `[View ${bot[0].username} on Statcord](https://statcord.com/bots/${botID}/)`,
 					"fields": [
 						{
 						  "name": "Guilds",
-						  "value": data.guilds,
+						  "value": botStats[0].guildcount,
 						  inline: true
 						},
 						{
 							"name": "Members",
-							"value": data.members,
+							"value": botStats[0].members,
 							inline: true
 						},
 						{
 							"name": "Users",
-							"value": data.users,
+							"value": botStats[0].usercount,
 							inline: true
 						}
 					],

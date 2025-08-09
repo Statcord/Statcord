@@ -1,4 +1,6 @@
-import { defineEventHandler, getQuery, createError, getRouterParams, sendError, appendCorsPreflightHeaders } from "h3"
+import { defineEventHandler, 
+	// getQuery, 
+createError, getRouterParams, sendError } from "h3"
 
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
@@ -10,31 +12,21 @@ export default defineEventHandler(async event => {
 	const isOwner = !!event.context.session?.accessToken && bot[0].ownerid === event.context.session?.userInfo.id
 	if ((!bot[0].public && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	const query = getQuery(event)
-	const runInfluxQuery = new event.context.influx.influxRun(
-		{
-			time: query.t,
-			botID: path.botID
-		}
-	)
-	runInfluxQuery.formatTime(query.t)
-	const returnedData = await runInfluxQuery.getData()
-	const data = {
-		default: returnedData[1].value,
-	}
+	// const query = getQuery(event)
+	const botStats = (await event.context.pgPool`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${path.botID} ORDER by timestamp desc limit 1`.catch(() => {}))
 
 	return [
 		{
             name: "Guilds",
-            value: getLastStat(data.default, "guildCount")
+			value: botStats[0]?.guildcount ?? 0
         },
         {
             name: "Members",
-            value: getLastStat(data.default, "members")
+			value: botStats[0]?.members ?? 0
         },
         {
             name: "Users",
-            value: getLastStat(data.default, "userCount")
+			value: botStats[0]?.usercount ?? 0
         }
     ]
 })
@@ -172,9 +164,4 @@ export const schema = {
 			}
 		}
 	}
-}
-
-const getLastStat = (mainStats, stat) => {
-	const relatedStats = mainStats.filter(stats=>stats._field===stat)
-	return relatedStats[relatedStats.length-1]?._value
 }

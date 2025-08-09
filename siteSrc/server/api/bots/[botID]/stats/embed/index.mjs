@@ -1,7 +1,4 @@
 import { defineEventHandler, createError, getRouterParams, sendError, appendCorsPreflightHeaders } from "h3"
-import { flux } from "@influxdata/influxdb-client"
-
-const fluxStart = new Date(0).toISOString()
 
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
@@ -11,15 +8,25 @@ export default defineEventHandler(async event => {
 	if (!bot[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (!bot[0].public) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	const queryApi = event.context.influx.influxClient.getQueryApi("disstat")
-	const fluxQuery = flux`from(bucket: "defaultBucket")
-	|> range(start: time(v: ${fluxStart}), stop: time(v: ${new Date().toISOString()}))
-	|> filter(fn: (r) => r["botid"] == ${path.botID})
-	|> last()`
+	const botStats = (await event.context.pgPool`SELECT guildcount, usercount, shardcount FROM mainstats WHERE botid = ${path.botID} ORDER by timestamp desc limit 1`.catch(() => {}))[0]
+	const topCommands = (await event.context.pgPool`select command, sum(amount) from commandsrun where botid = ${path.botID} group by command`.catch(() => {})).map(a=>{
+		let b = {}
+		b[command] = a.sum
+		return b
+	})
+	const customcharts = (await event.context.pgPool`select chartid, value from (select max(timestamp) from customcharts where botid = ${path.botID})  a, customcharts where botid = ${path.botID} and timestamp = a.max`).map(a=>{
+		let b = {}
+		b[chartid] = a.value
+		return b
+	})
 
 	appendCorsPreflightHeaders(event, {"allowHeaders": "*"})
 
-	return await formatFluxQueryResult(queryApi, fluxQuery)
+	return {
+		botStats,
+		topCommands,
+		customcharts
+	}
 })
 
 export const schema = {
@@ -166,9 +173,17 @@ export const schema = {
 								}
 							},
 							customCharts:{
-								type: "object",
-								"description": "Object with the latest custom charts and their values",
-								properties: {}
+								type: "array",
+								"description": "Array with the latest custom charts and their values",
+								contains: {
+									type: "object"
+								},
+								example: [
+									{
+										"itemOne": 213,
+										"itemTwo": 2.13
+									}
+								]
 							},
 							topCommands: {
 								type: "object",
@@ -181,20 +196,4 @@ export const schema = {
 			}
 		}
 	}
-}
-
-const formatFluxQueryResult = async (queryApi, fluxQuery) => {
-	const outObject = {}
-
-	for await (const { values, tableMeta } of queryApi.iterateRows(fluxQuery)) {
-		const tableObject = tableMeta.toObject(values)
-
-		if (!outObject[tableObject._measurement]) outObject[tableObject._measurement] = {}
-		if (tableObject._measurement === "customCharts") {
-			outObject[tableObject._measurement][tableObject.customChartID]={}
-			outObject[tableObject._measurement][tableObject.customChartID][tableObject._field] = tableObject._value
-		} else outObject[tableObject._measurement][tableObject._field] = tableObject._value
-	}
-	
-	return outObject
 }
