@@ -195,7 +195,7 @@ async function sync() {
 }
 
 async function reGenKey() {
-    const {data} = await useFetch(() => `/api/bots/${this.$route.params.id}/settings/genKey/`, {
+    const {data} = await useFetch(() => `/api/bots/${route.params.id}/settings/genKey/`, {
         method: 'post'
     })
     if (data.value?.key) {
