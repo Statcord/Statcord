@@ -2,13 +2,8 @@ import { Client } from "oceanic.js"
 import { schedule } from 'node-cron';
 import postgres from "postgres";
 import Redis from "ioredis";
-import { InfluxDB } from '@influxdata/influxdb-client'
-import { DeleteAPI } from '@influxdata/influxdb-client-apis'
 import config from './config/settings.mjs'
 
-
-const influx = new InfluxDB(config.influx)
-const deleteAPI = new DeleteAPI(influx)
 const redis = new Redis(config.redisURL);
 
 const redisDelKeys = ['legacyRouteTracking', 'botPostingIntervals', 'botDubbleNotifCheck']
@@ -79,21 +74,15 @@ schedule("0 0 1 * *", async () => {
     const allBots = await pgPool`SELECT botid FROM bots WHERE flags = 1`
 
     allBots.forEach(async bot => {
-        deleteAPI.postDelete({
-            org: "disstat",
-            bucket:"defaultBucket",
-            body: {
-                start: new Date(0),
-                stop: new Date(),
-                predicate: `botid="${bot.botid}"`,
-            }
-        })
+        pgPool`DELETE FROM chartsettings WHERE botid = ${bot.botid}`.catch(() => {})
+        pgPool`DELETE FROM botlinks WHERE botid = ${bot.botid}`.catch(() => {})
+        pgPool`DELETE FROM bots WHERE botid = ${bot.botid}`.catch(() => {})
+        pgPool`DELETE FROM newst WHERE botid = ${bot.botid}`.catch(() => {})
 
-        event.context.pgPool`DELETE FROM chartsettings WHERE botid = ${botID.id}`.catch(() => {})
-        event.context.pgPool`DELETE FROM botlinks WHERE botid = ${botID.id}`.catch(() => {})
-        event.context.pgPool`DELETE FROM bots WHERE botid = ${botID.id}`.catch(() => {})
-        event.context.pgPool`DELETE FROM newst WHERE botid = ${botID.id}`.catch(() => {})
+        pgPool`DELETE FROM mainstats WHERE botid = ${bot.botid}`.catch(() => {})
+        pgPool`DELETE FROM customcharts WHERE botid = ${bot.botid}`.catch(() => {})
+        pgPool`DELETE FROM commandsrun WHERE botid = ${bot.botid}`.catch(() => {})
 
-        redisDelKeys.forEach(e=>redis.del(`${e}:${botID.id}`))
+        redisDelKeys.forEach(e=>redis.del(`${e}:${bot.botid}`))
     })
 })
