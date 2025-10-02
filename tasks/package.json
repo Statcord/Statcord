@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "ioredis": "^5.7.0",
+    "ioredis": "^5.8.0",
     "node-cron": "github:counting-bot/node-cron",
     "oceanic.js": "^1.12.0",
     "postgres": "^3.4.7"
