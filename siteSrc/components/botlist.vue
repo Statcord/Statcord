@@ -1,12 +1,18 @@
 <template>
-    <div class="grid md:grid-cols-6 sm:grid-cols-1 gap-4">
-        <router-link :to="'/bots/' + bot.botid+'/'" v-for="bot in bots" v-bind:key="bot.id">
-            <div class="max-w-sm overflow-hidden shadow-md rounded-xl">
-                <nuxt-img :class="bot.nsfw? 'blur-lg w-full':'w-full'" :alt="bot.username+`'s profile picture`" :src="'https://cdn.discordapp.com/avatars/' + bot.botid + '/' + bot.avatar + (bot.avatar?.startsWith('a_')?'.gif':'.webp')+'?size=512'" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+(bot.botid >>> 22) % 5+'.png?size=512'" />
-                <div class="px-4 py-4">
-                    <div class="text-2xl">{{ bot.username }}</div>
-                </div>
-            </div>
+    <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4">
+        <router-link :to="'/bots/' + bot.botid+'/'" v-for="bot in bots" v-bind:key="bot.botid">
+            <UCard >
+                <UUser :name="bot.username" :description="bot.shortdesc" orientation="horizontal" :avatar="{src: `https://cdn.discordapp.com/avatars/${bot.botid}/${bot.avatar}.${bot.avatar?.startsWith('a_')?'gif':'webp'}?size=512`, chip: {color: bot.la ? 'error' : 'primary'}, ui:{image:bot.nsfw?'blur':''}}" size="3xl">
+                    <template #description>
+                        <div>
+                            {{ bot.shortdesc }}
+                        </div>
+                        <div class="text-right">
+                            {{ bot.gl?.toLocaleString()??"Unknowen"}} Guilds
+                        </div>
+                    </template>
+                </UUser>
+            </UCard>
         </router-link>
     </div>
 

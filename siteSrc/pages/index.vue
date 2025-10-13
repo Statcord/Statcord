@@ -11,7 +11,7 @@
       <router-link to="/bots/add/" class="blue-text text-darken-2 underline">Add your bot now</router-link> or <router-link to="/bots/685166801394335819/" class="blue-text text-darken-2 underline">View a demo</router-link>!
     </p>
    
-    <h2 class="mt-2 text-2xl font-medium tracking-tight text-gray-950 dark:text-white">All currently tracked bots</h2>
+    <h2 class="mt-2 text-2xl font-medium tracking-tight text-gray-950 dark:text-white">All active bots</h2>
     <botlist botListRoute="/api/bots/"></botlist>
   </UContainer>
 </template>

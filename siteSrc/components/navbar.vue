@@ -1,19 +1,21 @@
 <template>
-  <UNavigationMenu :items="horizontalItems" class="w-full" content-orientation="vertical">
-    <template #icon>
-      <nuxt-img class="h-8 w-auto rounded-full" alt="Statcord logo" src="/img/logo.png" />
+  <UHeader>
+    <template #left>
+      <ULink to="/">
+        <nuxt-img class="h-8 w-auto rounded-full" alt="Statcord logo" src="/img/logo.png" />
+      </ULink>
     </template>
 
-    <template #user>
-      <nuxt-img class="h-8 w-8 rounded-full" :alt="user.username" :src="`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${(user.avatar?.startsWith('a_')?'gif':'webp')}`" :placeholder="'https://cdn.discordapp.com/embed/avatars/'+((user.id??0) >>> 22) % 5+'.png?size=512'" />
+    <UNavigationMenu :items="items" />
+
+    <template #right>
+      <UNavigationMenu :items="userItems" contentOrientation="vertical" />
     </template>
-  </UNavigationMenu>
-    
-  <USlideover v-model:open="open" side="left">
+
     <template #body>
-      <UNavigationMenu :items="items" orientation="vertical"  />
+      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
     </template>
-  </USlideover>
+  </UHeader>
 </template>
 
 
@@ -31,71 +33,48 @@
     return user
   })
 
-  const user = userFetch.value
+  const oauthUrl = ref($genOauthUrl(route.fullPath))
 
-  const mainItems = [
+  const items = computed(() => [
     { label: 'Docs', to: '/docs/' },
     { label: 'Support', to: '/support/' },
     { label: 'Privacy', to: '/privacy/' },
     { label: 'Setup guide', to: '/guide/' },
     { label: 'Pricing', to: '/pricing/' },
     { label: 'Partners', to: '/partners/' }
-  ]
-
-  const oauthUrl = ref($genOauthUrl(route.fullPath))
-  const open = ref(false)
-  const items = ref(mainItems)
-
-  const horizontalItems = ref([
-    [
-      {
-        icon: 'i-heroicons-bars-3',
-        onSelect(){
-          open.value=true
-        },
-        class: "md:hidden"
-      }
-    ],
-    [
-      {
-        slot: "icon",
-        to: '/'
-      }
-    ],
-    [
-      ...mainItems.map(i=>{return {
-        ...i,
-        class: "hidden md:inline"
-      }})
-    ],
-    [
-      user ? {
-        label: 'User',
-        slot: "user",
-        children: [
-          {
-            label: 'User',
-            to: `/users/${user.id}/`
-          },
-          {
-            label: 'Add your bot',
-            to: '/bots/add/'
-          },
-          {
-            label: 'User Settings',
-            to: `/users/${user.id}/settings/`
-          },
-          {
-            label: 'Logout',
-            class: "bg-red-500"
-          },
-        ]
-      } : {
-        label: "login",
-        to: oauthUrl
-      }
-    ]
   ])
+
+  const userItems = [
+    userFetch.value ? {
+      label: userFetch.value.username,
+      avatar: {
+        src: `https://cdn.discordapp.com/avatars/${userFetch.value.id}/${userFetch.value.avatar}.${(userFetch.value.avatar?.startsWith('a_')?'gif':'webp')}?size=512`,
+        alt: `${userFetch.value.username}'s profile picture`
+      },
+      children: [
+        {
+          label: 'Profile',
+          to: `/users/${userFetch.value.id}/`
+        },
+        {
+          label: 'Add bot',
+          to: '/bots/add/'
+        },
+        {
+          label: 'Settings',
+          to: `/users/${userFetch.value.id}/settings/`
+        },
+        {
+          label: 'Logout',
+          class: "bg-red-500",
+          onSelect: logout
+        },
+      ]
+    } : {
+      label: "login",
+      to: oauthUrl
+    }
+  ]
 
   watch(route, ()=>{
     oauthUrl.value = $genOauthUrl(route.fullPath)
