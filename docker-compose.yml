@@ -5,8 +5,6 @@ volumes:
     external: true
   dbData:
     external: true
-  influxdbData:
-    external: true
 
 services:
   cache:
@@ -44,7 +42,6 @@ services:
     depends_on:
       - postgres
       - cache
-      - influxdb
 
   bot:
     restart: unless-stopped
@@ -55,7 +52,6 @@ services:
     depends_on:
       - postgres
       - cache
-      - influxdb
 
   tasks:
     restart: unless-stopped
@@ -65,20 +61,4 @@ services:
     container_name: tasks
     depends_on:
       - postgres
-      # - cache
-      # - influxdb
-
-  influxdb:
-    image: influxdb:2.7.1-alpine
-    ports:
-      - '8086:8086'
-    container_name: influxdb
-    volumes:
-      - influxdbData:/var/lib/influxdb2
-    environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_ORG=disstat
-      - DOCKER_INFLUXDB_INIT_BUCKET=defaultBucket
-      - DOCKER_INFLUXDB_INIT_USERNAME=disStatAdmin
-      - 'DOCKER_INFLUXDB_INIT_PASSWORD=6#Le0zTjR0Q2'
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=yh3dMn8sXX09umUdz!ykW3m&d2PN9s
+      - cache
