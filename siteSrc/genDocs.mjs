@@ -26,6 +26,7 @@ for (const file of apiDir) {
     if (!file.isFile()) continue;
     
     const {schema} = await import(`./${file.parentPath}/${file.name}`);
+    if (schema.hidden) continue;
     
     const fileName = `${file.parentPath}/${file.name}`.replace(".mjs", "").split("server").pop().split(".")
     const method = fileName[1] ?? "get"
@@ -33,9 +34,7 @@ for (const file of apiDir) {
     let routeString = fileName[0].replace(".post", "").replace(".delete", "").replace('[', "{").replace(']', "}")
     if (routeString.endsWith("/index")) routeString = routeString.split("/index").shift()
     if (routeString === "") routeString = '/'
-    
-    if (schema.hidden) continue;
-    
+        
     if (openapiJSON.paths[routeString] === void 0) {
         openapiJSON.paths[routeString] = {
             [method]: schema
