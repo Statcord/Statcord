@@ -10,7 +10,6 @@ const mainStats = {
 	"cpuUsage": "floatField"
 }
 const mainStatsKeys = Object.keys(mainStats)
-const average = array => array.reduce((a, b) => a + b) / array.length;
 const isNanOrInfinity = number => {
 	if (number === NaN || number === Infinity) return 0
 	return number
@@ -63,16 +62,12 @@ export default defineEventHandler(async event => {
 	if (await event.context.redis.exists(`legacyRouteTracking:${path.botID}`)) event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
-	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {
-		dates: [],
-		times:[]
-	}
+	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {dates: []}
 	posts.dates.push(new Date().getTime())
-    if (posts.dates.length >= 2) posts.times = posts.dates.slice(1).map((value, index) => value - posts.dates[index]);
 	while (posts.dates.length > 10) posts.dates.shift()
-	while (posts.times.length > 10) posts.times.shift()
-	if (posts.times.length >= 2) posts.average = average(posts.times)
 	await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
+	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
+
 })
 
 export const schema = {

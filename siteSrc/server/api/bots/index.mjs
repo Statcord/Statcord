@@ -1,14 +1,12 @@
 import { defineEventHandler, getQuery } from "h3"
 
 export default defineEventHandler(async event => {
-    const active = await event.context.pgPool`select distinct botid, max(timestamp) from mainstats where timestamp >= NOW() - INTERVAL '3 days' group by botid`.catch(() => {})
-    const activeIds = active.map(a=>a.botid)
-    const bo = await event.context.pgPool`SELECT username, avatar, botid, nsfw, shortdesc FROM bots WHERE public = true AND flags != 1 and botid in ${event.context.pgPool(activeIds)} LIMIT 40 OFFSET 40*${Number(getQuery(event).page ?? 0)}`.catch(()=>{})
+    const bo = await event.context.pgPool`SELECT username, avatar, botid, nsfw, shortdesc, lastact FROM bots WHERE public = true AND flags != 1 and lastact >= NOW() - INTERVAL '3 days' LIMIT 40 OFFSET 40*${Number(getQuery(event).page ?? 0)}`.catch(()=>{})
     return Promise.all(bo.map(async b=>{
         const g = await event.context.pgPool`select guildcount from mainstats WHERE botid = ${b.botid} order by timestamp desc limit 1`.catch(()=>{})
         return {
             ...b,
-            la: typeof active.find(a=>a.botid==b.botid) == 'undefined',
+            lat: new Date(b.lastact).toDateString()==new Date().toDateString(), 
             gl:g[0]?.guildcount
         }
     }))

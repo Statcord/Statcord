@@ -4,7 +4,6 @@ const isNanOrInfinity = number => {
 	if (number === NaN || number === Infinity) return 0
 	return number
 }
-const average = array => array.reduce((a, b) => a + b) / array.length;
 
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
@@ -25,7 +24,6 @@ export default defineEventHandler(async event => {
 				"embeds": [
 				  {
 					"title": "New statcord bot found",
-					"description": `[top.gg](https://top.gg/bot/${body.id})\n[ondiscord](https://bots.ondiscord.xyz/bots/${body.id})\n[bots.gg](https://discord.bots.gg/bots/${body.id})\n[infinity](https://infinitybots.gg/bot/${body.id})\n[discordextremelist](https://discordextremelist.xyz/en-US/bots/${body.id})\n[voidbots](https://voidbots.net/bot/${body.id})\n[discords](https://discords.com/bots/bot/${body.id})\n[wumpus](https://wumpus.store/bot/${body.id})\n[discordlist](https://discordlist.gg/bot/${body.id})`,
 					"color": 5814783,
 					"fields": [
 						{
@@ -50,51 +48,41 @@ export default defineEventHandler(async event => {
 	}
 	if (body.key !== botExisits[0].token) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	event.context.redis.set(`legacyRouteTracking:${body.id}`, "v3")  
+	event.context.redis.set(`legacyRouteTracking:${body.id}`, "v3")
 
 	const date = new Date().toISOString().replace("T", " ")
 
 	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, timestamp) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))}, ${date})`.catch(() => {})
 
 	
-	const convertedBody = {
-		"guildCount": isNanOrInfinity(Number(body.servers ?? 0)),
-		"userCount": isNanOrInfinity(Number(body.active.length ?? 0)),
-		"members": isNanOrInfinity(Number(body.users ?? 0)),
-		"ramUsage": isNanOrInfinity(Number(body.memactive ?? 0)),
-		"totalRam": isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100)),
-		"cpuUsage": isNanOrInfinity(Number(body.cpuload ?? 0)),
-		"shardCount": 0,
-		"customCharts": [
-			{
-				"id": "custom1",
-				"data": {
-					"itemOne": isNanOrInfinity(Number(body.custom1 ?? 0)),
-				}
-			},
-			{
-				"id": "custom2",
-				"data": {
-					"itemOne": isNanOrInfinity(Number(body.custom2 ?? 0)),
-				}
-			},
-			{
-				"id": "bandwidth",
-				"data": {
-					"itemOne": isNanOrInfinity(Number(body.bandwidth ?? 0)),
-				}
+	const customCharts = [
+		{
+			"id": "custom1",
+			"data": {
+				"itemOne": isNanOrInfinity(Number(body.custom1 ?? 0)),
 			}
-		],
-		"topCommands": body.popular ?? []
-	}
+		},
+		{
+			"id": "custom2",
+			"data": {
+				"itemOne": isNanOrInfinity(Number(body.custom2 ?? 0)),
+			}
+		},
+		{
+			"id": "bandwidth",
+			"data": {
+				"itemOne": isNanOrInfinity(Number(body.bandwidth ?? 0)),
+			}
+		}
+	]
 
-	convertedBody.customCharts.map(customChart => {
+	customCharts.map(customChart => {
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value, timestamp) VALUES (${body.id}, ${customChart.id}, ${customChart.data.itemOne}, ${date})`.catch(() => {})
 	})
 
-	if (convertedBody.topCommands.length > 0) {
-		convertedBody.topCommands.map(item => {
+	if (body.popular?.length > 0) {
+		body.popular.map(item => {
 			event.context.pgPool`INSERT INTO commandsrun(botid, command, amount, timestamp) VALUES (${body.id}, ${item.name}, ${isNanOrInfinity(Number(item.count))}, ${date})`.catch(() => {})
 		})
 	}
@@ -102,16 +90,11 @@ export default defineEventHandler(async event => {
 	sendError(event, createError({statusCode: 500, statusMessage: `/logan/stats endpoint has been EOL since 2021. Switching to the slightly newer, (but EOL) /v3/stats would require no code changes. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
-	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${body.id}`)) ?? {
-		dates: [],
-		times:[]
-	}
+	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${body.id}`)) ?? {dates: []}
 	posts.dates.push(new Date().getTime())
-	if (posts.dates.length >= 2) posts.times = posts.dates.slice(1).map((value, index) => value - posts.dates[index]);
 	while (posts.dates.length > 10) posts.dates.shift()
-	while (posts.times.length > 10) posts.times.shift()
-	if (posts.times.length >= 2) posts.average = average(posts.times)
 	await event.context.redis.set(`botPostingIntervals:${body.id}`, JSON.stringify(posts))
+	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${body.id}`.catch(() => {})
 })
 
 export const schema = {

@@ -2,7 +2,7 @@
     <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4">
         <router-link :to="'/bots/' + bot.botid+'/'" v-for="bot in bots" v-bind:key="bot.botid">
             <UCard >
-                <UUser :name="bot.username" :description="bot.shortdesc" orientation="horizontal" :avatar="{src: `https://cdn.discordapp.com/avatars/${bot.botid}/${bot.avatar}.${bot.avatar?.startsWith('a_')?'gif':'webp'}?size=512`, chip: {color: bot.la ? 'error' : 'primary'}, ui:{image:bot.nsfw?'blur':''}}" size="3xl">
+                <UUser :name="bot.username" :description="bot.shortdesc" orientation="horizontal" :avatar="{src: `https://cdn.discordapp.com/avatars/${bot.botid}/${bot.avatar}.${bot.avatar?.startsWith('a_')?'gif':'webp'}?size=512`, chip: {color: bot.lat ? 'primary': 'error'}, ui:{image:bot.nsfw?'blur':''}}" size="3xl">
                     <template #description>
                         <div>
                             {{ bot.shortdesc }}

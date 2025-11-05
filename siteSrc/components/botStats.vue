@@ -84,8 +84,8 @@
         const cardsFetch = await $fetch(`/api/bots/${route.params.id}/stats/cards?t=${timeChoiceSelection.value}`)
         cards.value = cardsFetch;
 
-        const defaultStatsJson = await $fetch(`/api/bots/${route.params.id}/stats?t=${timeChoiceSelection.value}`)
-        stats.value = defaultStatsJson.mainStats.map(t=>{
+        const defaultStatsJson = await $fetch(`/api/bots/${route.params.id}/stats/default?t=${timeChoiceSelection.value}`)
+        stats.value = defaultStatsJson.map(t=>{
             t.data.labels = t.labels.map(d=>formatDate(d))
             switch(t.name){
                 case "CPU Usage":{
@@ -130,12 +130,14 @@
             return t
         })
 
-        commandStats.value = defaultStatsJson.commands.map(t=>{
+        const commandStatsJson = await $fetch(`/api/bots/${route.params.id}/stats/commands?t=${timeChoiceSelection.value}`)
+        commandStats.value = commandStatsJson?.map(t=>{
             if (t.name==="Command usage over time") t.data.labels = t.labels.map(d=>formatDate(d))
             return t
         })
 
-        customStats.value = defaultStatsJson.custom?.map(t=>{
+        const customStatsJson = await $fetch(`/api/bots/${route.params.id}/stats/custom?t=${timeChoiceSelection.value}`)
+        customStats.value = customStatsJson?.map(t=>{
             t.data.labels = t.labels.map(d=>formatDate(d))
             return t
         })
