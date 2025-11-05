@@ -10,10 +10,12 @@
 
     <template #right>
       <UNavigationMenu :items="userItems" contentOrientation="vertical" />
+      <UColorModeSelect class="md:block hidden"/>
     </template>
 
     <template #body>
       <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
+      <UColorModeSelect />
     </template>
   </UHeader>
 </template>
