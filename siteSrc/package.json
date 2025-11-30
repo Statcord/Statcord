@@ -9,21 +9,21 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^3.1.0",
+    "@nuxt/devtools": "^3.1.1",
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/seo": "^3.2.2",
     "chart.js": "^4.5.1",
     "nuxt": "^4.2.1"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.1.0",
+    "@nuxt/ui": "^4.2.1",
     "@types/node": "^24.10.1",
     "ioredis": "^5.8.2",
     "nuxt-umami": "^3.2.1",
     "oceanic.js": "github:counting-bot/Oceanic#build",
     "postgres": "^3.4.7",
-    "swagger-ui-dist": "^5.30.2",
+    "swagger-ui-dist": "^5.30.3",
     "tailwindcss": "^4.1.17",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   }
 }
