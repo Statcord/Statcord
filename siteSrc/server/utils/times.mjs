@@ -1,4 +1,4 @@
-function formatTime(t){
+export function formatTime(t){
     const range = t[t.length-1].toLowerCase();
     const value = range == 'e' ? 1 : Number(t.match(/\d+/)[0]);
 
@@ -66,11 +66,7 @@ const validTimes = [
     '5Y',
     'All Time' 
 ].map(a=>a.toLowerCase())
-function validateTimes(t) {
+
+export function validateTimes(t) {
     return validTimes.includes(t.toLowerCase())
 }
-
-export default defineEventHandler((event) => {
-    event.context.formatTime = formatTime
-    event.context.validateTimes = validateTimes
-})

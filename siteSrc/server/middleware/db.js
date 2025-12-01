@@ -15,7 +15,7 @@ export default defineEventHandler((event) => {
                 serialize: x => '' + x,
                 parse: parseFloat
             }
-        }
+        },
         // debug: function(connection, query, params, types){
         //     console.log(query)
         //     console.log(params)

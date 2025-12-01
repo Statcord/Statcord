@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody, sendNoContent, sendError, createError } from "h3"
 import { z } from 'zod'
+import genKey from "~/server/utils/genKey.mjs"
 
 const zodSchema = z.object({
 	botid: z.string().cuid2(),
@@ -31,30 +32,12 @@ export default defineEventHandler(async event => {
 	const bot = await event.context.oauth.rest.users.get(body.botid).catch(e=>{})
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${event.context.genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
 
 	const botLinks = [
 		{
-			name: "github",
-			url: body.github,
-			icon: "link",
-			botid: body.botid
-		},
-		{
-			name: "website",
-			url: body.website,
-			icon: "link",
-			botid: body.botid
-		},
-		{
 			name: "supportserver",
 			url: body.supportserver,
-			icon: "link",
-			botid: body.botid
-		},
-		{
-			name: "donations",
-			url: body.donations,
 			icon: "link",
 			botid: body.botid
 		}

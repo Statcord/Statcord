@@ -1,4 +1,5 @@
 import { defineEventHandler, createError, getRouterParams, sendError } from "h3"
+import genKey from "~/server/utils/genKey.mjs"
 
 export default defineEventHandler(async event => {
 	if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
@@ -11,7 +12,7 @@ export default defineEventHandler(async event => {
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	const key = event.context.genKey()
+	const key = genKey()
 
 	event.context.pgPool`UPDATE bots SET token = ${key} WHERE botid = ${path.botID}`.catch(() => {})
 

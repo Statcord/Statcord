@@ -1,4 +1,5 @@
 import { defineEventHandler, getQuery, createError, getRouterParams, sendError } from "h3"
+import { formatTime, validateTimes } from "~/server/utils/times.mjs"
 
 const genTemp = (type ,botStats) => {
 	return {
@@ -28,8 +29,8 @@ export default defineEventHandler(async event => {
 	const query = getQuery(event)
 	if (!query.t) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	
-	if (!event.context.validateTimes(query.t)) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	const timeFormated = event.context.formatTime(query.t);
+	if (!validateTimes(query.t)) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	const timeFormated = formatTime(query.t);
 
 	const sdafsdf = await event.context.pgPool`SELECT chartid, name, label, type, category FROM chartsettings WHERE botid = ${path.botID} AND enabled = true and name !='Total Ram' and category = 'default'`.catch(() => {})
 	return await Promise.all(sdafsdf.map(async type => {
