@@ -4,5 +4,4 @@ package-lock.json
 /siteSrc/.nuxt/
 /siteSrc/.output/
 /siteSrc/config.mjs
-/siteSrc/swaggerRoutes.mjs
 config/
