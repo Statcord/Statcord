@@ -1,4 +1,5 @@
 import {Client} from 'oceanic.js'
+import { useRuntimeConfig } from '#imports';
 
 const {configFile} = useRuntimeConfig()
 

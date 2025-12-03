@@ -1,4 +1,5 @@
 import { defineEventHandler, createError, sendError, readBody } from "h3"
+import { useRuntimeConfig } from '#imports';
 
 const isNanOrInfinity = number => {
 	if (number === NaN || number === Infinity) return 0

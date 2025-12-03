@@ -1,6 +1,6 @@
 import postgres from 'postgres'
-// import { useRuntimeConfig } from '#imports';
-const {configFile} = useRuntimeConfig(event)
+import { useRuntimeConfig } from '#imports';
+const {configFile} = useRuntimeConfig()
 
 const pgPool = postgres({
     ...configFile.postgres,
