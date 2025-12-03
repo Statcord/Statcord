@@ -12,7 +12,7 @@ RUN apk update && \
 # install npm pacages
 RUN npm install
 
-RUN node genDocs.mjs 
+# RUN node genDocs.mjs 
 
 # env args
 ENV NODE_ENV production
