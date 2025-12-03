@@ -29,33 +29,24 @@ export default defineEventHandler(async event => {
     if (!hasMainStats && !body.customCharts && !body.topCommands) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	if (statsPostBodyKeys.filter(k=>k.toLowerCase().includes("ram")).length === 1) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
-
 	if (body.customCharts){
-		if (body.customCharts.length > botExisits[0].maxcustomcharts) {
-			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-		}
+		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 		
 		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
-		if ([...existingCustomCharts, ...body.customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) {
-			return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-		}
+		if ([...existingCustomCharts, ...body.customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	}
 
 	const date = new Date().toISOString().replace("T", " ")
 
+	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
 	body.cusdatetomCharts?.forEach(async customChart => {
 		const keys = Object.keys(customChart.data)
 		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value, timestamp) VALUES (${path.botID}, ${customChart.id}, ${isNanOrInfinity(Number(customChart.data[keys[0]]))}, ${date})`.catch(() => {})
 	})
-
-	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
-    
-	if (body.topCommands) {
-		body.topCommands.map(item => {
-			event.context.pgPool`INSERT INTO commandsrun(botid, command, amount, timestamp) VALUES (${path.botID}, ${item.name}, ${isNanOrInfinity(Number(item.count))}, ${date})`.catch(() => {})
-		})
-	}
+	body.topCommands?.forEach(item => {
+		event.context.pgPool`INSERT INTO commandsrun(botid, command, amount, timestamp) VALUES (${path.botID}, ${item.name}, ${isNanOrInfinity(Number(item.count))}, ${date})`.catch(() => {})
+	})
 
 	sendNoContent(event, 200)
 
@@ -67,7 +58,6 @@ export default defineEventHandler(async event => {
 	while (posts.dates.length > 10) posts.dates.shift()
 	await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
 	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
-
 })
 
 export const schema = {
