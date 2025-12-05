@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
 	if (!body.key.startsWith("statcord.com")) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 	if (!body.id) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	
-		const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
+	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${body.id}`.catch(() => {})
 	if (!botExisits[0]) {
 		if (await event.context.redis.exists(`botDubbleNotifCheck:${body.id}`)) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 		fetch(configFile.webhooks.newSt, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"embeds": [{"title": "New statcord bot found", "color": 5814783, "fields": [{"name": "id", "value": body.id, "inline": true}, {"name": "token", "value": body.key, "inline": true}]}]})}).catch(()=>{})
@@ -38,11 +38,11 @@ export default defineEventHandler(async event => {
 	sendError(event, createError({statusCode: 500, statusMessage: `/logan/stats endpoint has been EOL since 2021. Switching to the slightly newer, (but EOL) /v3/stats would require no code changes. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
-	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${body.id}`)) ?? {dates: []}
-	posts.dates.push(new Date().getTime())
-	while (posts.dates.length > 10) posts.dates.shift()
-	await event.context.redis.set(`botPostingIntervals:${body.id}`, JSON.stringify(posts))
-	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${body.id}`.catch(() => {})
+	// const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${body.id}`)) ?? {dates: []}
+	// posts.dates.push(new Date().getTime())
+	// while (posts.dates.length > 10) posts.dates.shift()
+	// await event.context.redis.set(`botPostingIntervals:${body.id}`, JSON.stringify(posts))
+	// event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${body.id}`.catch(() => {})
 
 	event.context.redis.set(`legacyRouteTracking:${body.id}`, "v3")
 })

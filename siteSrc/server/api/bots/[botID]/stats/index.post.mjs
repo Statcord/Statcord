@@ -1,15 +1,14 @@
 import { defineEventHandler, sendNoContent, readBody, getHeader, createError, sendError, getRouterParams } from "h3"
 
-const mainStats = {
-    "guildCount": "intField",
-	"shardCount": "intField",
-	"userCount": "intField",
-	"members": "intField",
-	"ramUsage": "floatField",
-	"totalRam": "floatField",
-	"cpuUsage": "floatField"
-}
-const mainStatsKeys = Object.keys(mainStats)
+const mainStatsKeys = [
+    "guildCount",
+	"shardCount",
+	"userCount",
+	"members",
+	"ramUsage",
+	"totalRam",
+	"cpuUsage"
+]
 const isNanOrInfinity = number => {
 	if (number === NaN || number === Infinity) return 0
 	return number
@@ -53,10 +52,10 @@ export default defineEventHandler(async event => {
 	if (await event.context.redis.exists(`legacyRouteTracking:${path.botID}`)) event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
-	const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {dates: []}
-	posts.dates.push(new Date().getTime())
-	while (posts.dates.length > 10) posts.dates.shift()
-	await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
+	// const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {dates: []}
+	// posts.dates.push(new Date().getTime())
+	// while (posts.dates.length > 10) posts.dates.shift()
+	// await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
 	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
 })
 
