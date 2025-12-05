@@ -25,17 +25,18 @@ export default defineEventHandler(async event => {
 
 	const date = new Date().toISOString().replace("T", " ")
 	
-	const customCharts = [{"id": "custom1", "data": {"itemOne": isNanOrInfinity(Number(body.custom1 ?? 0))}}, {"id": "custom2", "data": {"itemOne": isNanOrInfinity(Number(body.custom2 ?? 0))}}, {"id": "bandwidth", "data": {"itemOne": isNanOrInfinity(Number(body.bandwidth ?? 0))}}]
-	customCharts.forEach(customChart => {
-		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${body.id}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
-		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value, timestamp) VALUES (${body.id}, ${customChart.id}, ${customChart.data.itemOne}, ${date})`.catch(() => {})
-	})
-	body.popular?.forEach(item => {
-		event.context.pgPool`INSERT INTO commandsrun(botid, command, amount, timestamp) VALUES (${body.id}, ${item.name}, ${isNanOrInfinity(Number(item.count))}, ${date})`.catch(() => {})
-	})
+	const customCharts = [{name: "placeholder for custom1", label: "placeholder for custom1", botid: body.id, "chartid": "custom1", "value": isNanOrInfinity(Number(body.custom1 ?? 0)), type: 'line', category: "custom", timestamp: date}, {name: "placeholder for custom2", label: "placeholder for custom2", botid: body.id, "chartid": "custom2", "value": isNanOrInfinity(Number(body.custom2 ?? 0)), type: 'line', category: "custom", timestamp: date}, {name: "placeholder for bandwidth", label: "placeholder for bandwidth", botid: body.id, "chartid": "bandwidth", "value": isNanOrInfinity(Number(body.bandwidth ?? 0)), type: 'line', category: "custom", timestamp: date}]
+	const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
+	const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
+	event.context.pgPool`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
+	event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+
+	const popular = body.popular?.map(item => {return {botid: body.id,command: item.name,amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
+	if (popular.length !==0) event.context.pgPool`INSERT INTO commandsrun ${event.context.pgPool(popular)}`.catch(() => {})
+	
 	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, timestamp) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))}, ${date})`.catch(() => {})
 
-	sendError(event, createError({statusCode: 500, statusMessage: `/logan/stats endpoint has been EOL since 2021. Switching to the slightly newer, (but EOL) /v3/stats would require no code changes. Switching to the currently supported route /api/bots/{botID}/stats would be preferred but would require code changes.`}))
+	sendError(event, createError({statusCode: 400, statusMessage: `/logan/stats and /v3/stats endpoint are EOL. Switch to the currently supported route /api/bots/{botID}/stats`}))
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
 	// const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${body.id}`)) ?? {dates: []}

@@ -26,7 +26,7 @@ export default defineEventHandler(async event => {
     const statsPostBodyKeys = Object.keys(body)
     const hasMainStats = mainStatsKeys.some(key=>statsPostBodyKeys.includes(key))
     if (!hasMainStats && !body.customCharts && !body.topCommands) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	if (statsPostBodyKeys.filter(k=>k.toLowerCase().includes("ram")).length === 1) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	// if (statsPostBodyKeys.filter(k=>k.toLowerCase().includes("ram")).length === 1) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
 	if (body.customCharts){
 		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
@@ -36,27 +36,28 @@ export default defineEventHandler(async event => {
 	}
 
 	const date = new Date().toISOString().replace("T", " ")
+	
+	const customCharts = body.customCharts?.map(i=>{return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
+	const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
+	const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
+	event.context.pgPool`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
+	event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+
+	const topCommands = body.topCommands?.map(item => {return {botid: path.botID, command: item.name, amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
+	if (topCommands.length !==0) event.context.pgPool`INSERT INTO commandsrun ${event.context.pgPool(topCommands)}`.catch(() => {})
 
 	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
-	body.cusdatetomCharts?.forEach(async customChart => {
-		const keys = Object.keys(customChart.data)
-		event.context.pgPool`INSERT INTO chartsettings(botid, chartid, name, label, type, category) VALUES (${path.botID}, ${customChart.id}, ${`placeholder for ${customChart.id}`}, ${`placeholder for ${customChart.id}`}, 'line', 'custom') ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
-		event.context.pgPool`INSERT INTO customcharts(botid, chartid, value, timestamp) VALUES (${path.botID}, ${customChart.id}, ${isNanOrInfinity(Number(customChart.data[keys[0]]))}, ${date})`.catch(() => {})
-	})
-	body.topCommands?.forEach(item => {
-		event.context.pgPool`INSERT INTO commandsrun(botid, command, amount, timestamp) VALUES (${path.botID}, ${item.name}, ${isNanOrInfinity(Number(item.count))}, ${date})`.catch(() => {})
-	})
 
 	sendNoContent(event, 200)
-
-	if (await event.context.redis.exists(`legacyRouteTracking:${path.botID}`)) event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 
 	// keep track of when the last 10 posts occurred and the average time betwen them
 	// const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {dates: []}
 	// posts.dates.push(new Date().getTime())
 	// while (posts.dates.length > 10) posts.dates.shift()
 	// await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
+
 	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
+	event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 })
 
 export const schema = {
