@@ -10,7 +10,7 @@ const mainStatsKeys = [
 	"cpuUsage"
 ]
 const isNanOrInfinity = number => {
-	if (number === NaN || number === Infinity) return 0
+	if (isNaN(number) || number === Infinity) return 0
 	return number
 }
 export default defineEventHandler(async event => {
