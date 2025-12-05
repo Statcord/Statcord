@@ -37,7 +37,7 @@ export default defineEventHandler(async event => {
 
 	const date = new Date().toISOString().replace("T", " ")
 	
-	const customCharts = body.customCharts?.map(i=>{return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
+	const customCharts = body.customCharts?.map(i=>{const keys = Object.keys(customChart.data); return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
 	const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
 	const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
 	event.context.pgPool`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
