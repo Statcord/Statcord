@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (botExisits[0].ownerid !== event.context.session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	const bot = await event.context.oauth.rest.users.get(path.botID)
+	const bot = await event.context.oauth.getUser(path.botID)
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
 	event.context.pgPool`UPDATE bots SET username = ${bot.username}, avatar = ${bot.avatar} WHERE botid = ${path.botID}`.catch(() => {})

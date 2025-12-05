@@ -10,7 +10,7 @@ export default defineEventHandler(async event => {
 
     if (!tokens?.accessToken) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
-    const OAuthHelper = event.context.oauth.rest.oauth.getHelper(`Bearer ${tokens.accessToken}`)
+    const OAuthHelper = event.context.oauth.getHelper(`Bearer ${tokens.accessToken}`)
     const userInfo = (await OAuthHelper.getCurrentAuthorizationInformation()).user;
 
     const session = {
