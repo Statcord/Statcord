@@ -78,7 +78,3 @@ export default defineEventHandler(async event => {
         event.context.pgPool`UPDATE chartsettings SET enabled = ${body.commands[name]} WHERE botid = ${path.botID} AND chartid = ${name}`.catch(() => {})
     })
 })
-
-export const schema = {
-    hidden: true
-}

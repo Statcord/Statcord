@@ -16,7 +16,3 @@ export default defineEventHandler(async event => {
 
     sendNoContent(event, 200)
 })
-
-export const schema = {
-    hidden: true
-}

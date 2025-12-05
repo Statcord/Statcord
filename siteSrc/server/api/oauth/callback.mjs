@@ -25,13 +25,3 @@ export default defineEventHandler(async event => {
 
     return sendRedirect(event, `${redirect}${state}`, 302)
 })
-
-export const schema = {
-    hidden: true,
-	tags: [
-		"Internal"
-	],
-    responses: {
-        302: {}
-    }
-}

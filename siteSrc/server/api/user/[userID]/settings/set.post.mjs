@@ -14,30 +14,3 @@ export default defineEventHandler(async event => {
 
     event.context.pgPool`UPDATE owners SET ${event.context.pgPool(body)} WHERE ownerid = ${path.userID}`.catch(() => {})
 })
-
-export const schema = {
-    hidden: true,
-	tags: [
-		"Internal"
-	],
-    parameters: [
-        {
-          name: 'userID',
-          in: 'path',
-          required: true,
-          content: { media: 'application/json' }
-        }
-    ],      
-    responses: {
-        400: {
-            description: "Bad request"
-        },
-		404: {
-			description: "Bot not found"
-		},
-		401: {
-			description: "Not authorised"
-		},
-        200: {}
-	}
-}

@@ -40,7 +40,3 @@ export default defineEventHandler(async event => {
 		return d
 	}))
 })
-
-export const schema = {
-	hidden: true
-}

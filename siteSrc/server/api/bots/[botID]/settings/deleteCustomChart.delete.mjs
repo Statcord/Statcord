@@ -18,25 +18,3 @@ export default defineEventHandler(async event => {
 
 	sendNoContent(event, 200)
 })
-
-export const schema = {
-	"hidden": true,
-	"tags": [
-		"Internal"
-	],
-	// body: {
-	// 	type: "object",
-	// 	properties: {
-	// 		id: { type: "string" }
-	// 	}
-	// },
-	responses: {
-		401: {
-			description: "You do not have permission to access this bot"
-		},
-		404: {
-			description: "Bot not found"
-		},
-		201: {}
-	}
-}

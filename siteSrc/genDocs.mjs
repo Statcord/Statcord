@@ -26,6 +26,7 @@ for (const file of apiDir) {
     if (!file.isFile()) continue;
     
     const {schema} = await import(`./${file.parentPath}/${file.name}`);
+    if (!schema) continue;
     if (schema.hidden) continue;
     
     const fileName = `${file.parentPath}/${file.name}`.replace(".mjs", "").split("server").pop().split(".")
