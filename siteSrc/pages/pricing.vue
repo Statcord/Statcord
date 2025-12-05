@@ -10,7 +10,6 @@
     const plans = ref([
         {
             title: 'Basic',
-            // description: '',
             price: '$0.00',
             features: [
                 'Basic stats tracking',
@@ -23,7 +22,6 @@
         },
         {
             title: 'Advanced',
-            // description: '',
             price: '$?.??',
             features: [
                 'Basic stats tracking',

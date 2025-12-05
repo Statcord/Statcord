@@ -13,38 +13,5 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	"hidden": true,
-	"tags": [
-		"Internal"
-	],
-    parameters:[
-        {
-            name: "page",
-            in: "query",
-            required: false,
-            content: {
-                media: "application/json"
-            },
-            "description": "The page number of bots to show"
-        }
-    ],
-    responses: {
-        200: {
-            // type: "array",
-            // items: {
-            //     type: "object",
-            //     properties: {
-            //         botid: {
-            //             type: "string",
-            //             // example: "685166801394335819"
-            //         },
-            //         username: {
-            //             type: "string",
-            //             // example: "TomatenKuchen"
-            //         },
-            //         avatar: { type: "string" }
-            //     }
-            // }
-        }
-    }
+	"hidden": true
 }

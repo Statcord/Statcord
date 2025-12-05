@@ -1,6 +1,4 @@
-import { defineEventHandler, 
-	// getQuery, 
-createError, getRouterParams, sendError } from "h3"
+import { defineEventHandler, createError, getRouterParams, sendError } from "h3"
 
 export default defineEventHandler(async event => {
 	const path = getRouterParams(event)
@@ -12,7 +10,6 @@ export default defineEventHandler(async event => {
 	const isOwner = !!event.context.session?.accessToken && bot[0].ownerid === event.context.session?.userInfo.id
 	if ((!bot[0].public && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	// const query = getQuery(event)
 	const botStats = (await event.context.pgPool`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${path.botID} ORDER by timestamp desc limit 1`.catch(() => {}))
 
 	return [

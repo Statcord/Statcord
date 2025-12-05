@@ -10,9 +10,6 @@ const requiredBodyKeys = [
     "donations",
     "commands",
     "default",
-
-    // "customurl",
-    // "custom"
 ]
 
 
@@ -83,28 +80,5 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-    hidden: true,
-	tags: [
-		"Internal"
-	],
-    parameters: [
-		{
-			name: 'botID',
-			in: 'path',
-			required: true,
-			content: { media: 'application/json' }
-		}
-    ],
-    responses: {
-        400: {
-            description: "Bad request"
-        },
-        401: {
-			description: "You do not have permission to access this bot"
-		},
-        404: {
-			description: "Bot not found"
-		},
-        200: {}
-    }
+    hidden: true
 }

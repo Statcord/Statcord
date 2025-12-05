@@ -1,5 +1,4 @@
 <template>
-  {{ botid }}
   <UContainer>
     <h4>Add your bot</h4>
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="submitBot">
@@ -87,15 +86,15 @@
 
   const schema = z.object({
     botid: z.string().cuid2(),
-    invite: z.string().url(),
+    invite: z.url(),
     nsfw: z.boolean(),
     public: z.boolean(),
-    customurl: z.string().url().optional(),
+    customurl: z.url().optional(),
     shortDesc: z.string(),
-    github: z.string().url().optional(),
-    website: z.string().url().optional(),
-    supportserver: z.string().url().optional(),
-    donations: z.string().url().optional()
+    github: z.url().optional(),
+    website: z.url().optional(),
+    supportserver: z.url().optional(),
+    donations: z.url().optional()
   })
 
   useSeoMeta({

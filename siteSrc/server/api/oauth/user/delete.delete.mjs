@@ -18,15 +18,5 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-    // body: {},
-    hidden: true,
-	tags: [
-		"Internal"
-	],
-    responses: {
-        401: {
-			description: "You do not have permission to access this user"
-		},
-        200: {}
-    }
+    hidden: true
 }

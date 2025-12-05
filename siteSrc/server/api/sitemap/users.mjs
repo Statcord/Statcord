@@ -12,19 +12,5 @@ export default defineEventHandler(async event => {
 })
 
 export const schema = {
-	hidden: true,
-	tags: [
-		"Internal"
-	],
-	responses: {
-		200: {
-			// type: "object",
-			// properties: {
-			// 	swagger: { type: "string" },
-			// 	info: { type: "object" },
-			// 	definitions: { type: "object" },
-			// 	paths: { type: "object" }
-			// }
-		}
-	}
+	hidden: true
 }
