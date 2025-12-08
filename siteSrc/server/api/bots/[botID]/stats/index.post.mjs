@@ -1,4 +1,5 @@
 import { defineEventHandler, sendNoContent, readBody, getHeader, createError, sendError, getRouterParams } from "h3"
+import { isNanOrInfinity } from "~/server/utils/isNanOrInfinity.mjs"
 
 const mainStatsKeys = [
     "guildCount",
@@ -9,10 +10,7 @@ const mainStatsKeys = [
 	"totalRam",
 	"cpuUsage"
 ]
-const isNanOrInfinity = number => {
-	if (isNaN(number) || number === Infinity) return 0
-	return number
-}
+
 export default defineEventHandler(async event => {
 	const body = await readBody(event)
 	const path = getRouterParams(event)
@@ -26,13 +24,11 @@ export default defineEventHandler(async event => {
     const statsPostBodyKeys = Object.keys(body)
     const hasMainStats = mainStatsKeys.some(key=>statsPostBodyKeys.includes(key))
     if (!hasMainStats && !body.customCharts && !body.topCommands) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-	// if (statsPostBodyKeys.filter(k=>k.toLowerCase().includes("ram")).length === 1) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 
 	if (body.customCharts){
 		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
-		
 		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
-		if ([...existingCustomCharts, ...body.customCharts].filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i).length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+		if ([...new Set([...existingCustomCharts, ...body.customCharts])].length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
 	}
 
 	const date = new Date().toISOString().replace("T", " ")
@@ -49,12 +45,6 @@ export default defineEventHandler(async event => {
 	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
 
 	sendNoContent(event, 200)
-
-	// keep track of when the last 10 posts occurred and the average time betwen them
-	// const posts = JSON.parse(await event.context.redis.get(`botPostingIntervals:${path.botID}`)) ?? {dates: []}
-	// posts.dates.push(new Date().getTime())
-	// while (posts.dates.length > 10) posts.dates.shift()
-	// await event.context.redis.set(`botPostingIntervals:${path.botID}`, JSON.stringify(posts))
 
 	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
 	event.context.redis.del(`legacyRouteTracking:${path.botID}`);

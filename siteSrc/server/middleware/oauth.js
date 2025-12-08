@@ -7,6 +7,13 @@ const client = new Client({
     auth: configFile.discord.botToken
 });
 
+const oauth = {
+    ...client,
+    exchangeCode,
+    getHelper: client.rest.oauth.getHelper,
+    getUser: client.rest.users.get
+}
+
 async function exchangeCode(options){
     const tokens = await client.rest.oauth.exchangeCode({
         code: options.code,
@@ -22,9 +29,5 @@ async function exchangeCode(options){
 }
 
 export default defineEventHandler((event) => {
-    event.context.oauth = {
-        getUser: client.rest.users.get,
-        getHelper: client.rest.oauth.getHelper,
-        exchangeCode
-    }
+    event.context.oauth = oauth
 })
