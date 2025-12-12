@@ -77,7 +77,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/support': {
       redirect: {
-        to: `https://discord.gg/qsHxVUnXqr`,
+        to: `https://discord.gg/4rBwqK5pUU`,
         statusCode: 308
       }
     }
