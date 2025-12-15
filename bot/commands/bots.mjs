@@ -3,74 +3,18 @@ import pg from "../utils/pg.mjs";
 export default {
 	name: "bots",
 	commandLogic: async interaction => {
-		if (interaction.data.options.raw.length === 0) return interaction.createFollowup({
-			flags: 64,
-			embeds: [
-				{
-					title: "Error",
-					description: "No user supplied. Either mention a user or include an id.",
-					color: 0x97c227
-				}
-			]
-		}).catch(e=>{
-			console.log(e)
-		})
-
-		if (interaction.data.options.raw.length === 2) return interaction.createFollowup({
-			flags: 64,
-			embeds: [
-				{
-					title: "Error",
-					description: "Either mention a user **OR** include an id.",
-					color: 0x97c227
-				}
-			]
-		}).catch(e=>{
-			console.log(e)
-		})
+		if (interaction.data.options.raw.length === 0) return interaction.createFollowup({flags: 64, embeds: [{title: "Error", description: "No user supplied. Either mention a user or include an id.", color: 0x97c227}]}).catch(e=>console.log(e))
+		if (interaction.data.options.raw.length === 2) return interaction.createFollowup({flags: 64, embeds: [{title: "Error", description: "Either mention a user **OR** include an id.", color: 0x97c227}]}).catch(e=>console.log(e))
 
 		const userID = interaction.data.options.raw[0].value
         const userFromDB = await pg`SELECT avatar, username, public FROM owners WHERE ownerid = ${userID}`.catch(() => {})
-		if (userFromDB.length === 0) return interaction.createFollowup({
-			flags: 64,
-			embeds: [
-				{
-					title: "Error",
-					description: "User not found.",
-					color: 0x97c227
-				}
-			]
-		}).catch(e=>{
-			console.log(e)
-		})
-		if (!userFromDB[0].public) return interaction.createFollowup({
-			flags: 64,
-			embeds: [
-				{
-					title: "Error",
-					description: "User is marked as private.",
-					color: 0x97c227
-				}
-			]
-		}).catch(e=>{
-			console.log(e)
-		})
+		if (userFromDB.length === 0) return interaction.createFollowup({flags: 64, embeds: [{title: "Error", description: "User not found.", color: 0x97c227}]}).catch(e=>console.log(e))
+		if (!userFromDB[0].public) return interaction.createFollowup({flags: 64, embeds: [{title: "Error", description: "User is marked as private.", color: 0x97c227}]}).catch(e=>console.log(e))
 
-		const bots = await pg`SELECT username, botid FROM bots WHERE ownerid = ${userID} AND public = true`.catch(() => {})
-		if (bots.length === 0) return interaction.createFollowup({
-			flags: 64,
-			embeds: [
-				{
-					title: "Error",
-					description: "User has no public bots.",
-					color: 0x97c227
-				}
-			]
-		}).catch(e=>{
-			console.log(e)
-		})
-
-		const finalMessage = {
+		const bots = await pg`SELECT lastact, username, botid FROM bots WHERE ownerid = ${userID} AND public = true`.catch(() => {})
+		if (bots.length === 0) return interaction.createFollowup({flags: 64, embeds: [{title: "Error", description: "User has no public bots.", color: 0x97c227}]}).catch(e=>console.log(e))
+		
+		interaction.createFollowup({
 			embeds: [
 				{
 					title: `${userFromDB[0].username}'s Bots`,
@@ -79,18 +23,14 @@ export default {
 						const botStats = (await pg`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${bot.botid} ORDER by timestamp desc limit 1`.catch(() => {}))
 						return {
 							"name": bot.username,
-							"value": `Guilds: ${botStats[0].guildcount}\nMembers: ${botStats[0].members}\nUsers: ${botStats[0].usercount}\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})`,
+							"value": `Guilds: ${botStats[0].guildcount}\nMembers: ${botStats[0].members}\nUsers: ${botStats[0].usercount}\nLast Seen: <t:${(new Date(bot.lastact).getTime()/1000).toFixed()}:R>\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})`,
 							inline: true
 						}
 					})),
 					color: 0x97c227
 				}
 			]
-		}
-
-		interaction.createFollowup(finalMessage).catch(e=>{
-			console.log(e)
-		})
+		}).catch(e=>console.log(e))
 	},
 	description: "Get the bots owned by a specific user",
 	options: [
