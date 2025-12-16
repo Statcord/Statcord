@@ -16,7 +16,8 @@ const zodSchema = z.object({
 })
 
 export default defineEventHandler(async event => {
-	if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	const session = await event.context.session(event);
+	if (!session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const body = await readBody(event)
 	const zodResponse = await zodSchema.safeParseAsync(body)
@@ -25,14 +26,14 @@ export default defineEventHandler(async event => {
 	const botExisits = await event.context.pgPool`SELECT ownerid from bots WHERE botid = ${body.botid}`.catch(() => {})
 	if (botExisits[0]) return sendError(event, createError({statusCode: 409, statusMessage: 'Bot already exists'}))
 
-	const OAuthHelper = event.context.oauth.rest.oauth.getHelper(`Bearer ${event.context.session.accessToken}`)
+	const OAuthHelper = event.context.oauth.rest.oauth.getHelper(`Bearer ${session.accessToken}`)
     const ownsBot = await OAuthHelper.ownsApplication(body.botid);
 	if (!ownsBot) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const bot = await event.context.oauth.rest.users.get(body.botid).catch(e=>{})
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${event.context.session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
+	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
 
 	const botLinks = [
 		{

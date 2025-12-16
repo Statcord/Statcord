@@ -7,7 +7,8 @@ export default defineEventHandler(async event => {
 	const bot = await event.context.pgPool`SELECT public, ownerid FROM bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!bot[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	const isOwner = !!event.context.session?.accessToken && bot[0].ownerid === event.context.session?.userInfo.id
+	const session = await event.context.session(event);
+	const isOwner = !!session?.accessToken && bot[0].ownerid === session?.userInfo.id
 	if ((!bot[0].public && !isOwner)) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 	const botStats = (await event.context.pgPool`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${path.botID} ORDER by timestamp desc limit 1`.catch(() => {}))

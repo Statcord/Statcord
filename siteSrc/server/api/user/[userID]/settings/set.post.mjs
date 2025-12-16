@@ -1,10 +1,11 @@
 import { defineEventHandler, createError, getRouterParams, readBody, sendError} from "h3"
 
 export default defineEventHandler(async event => {
-    if (!event.context.session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+    const session = await event.context.session(event);
+    if (!session?.accessToken) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
     
     const path = getRouterParams(event)
-    if (event.context.session.userInfo.id !== path.userID) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+    if (session.userInfo.id !== path.userID) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
     const body = await readBody(event)
     if (Object.keys(body).length === 0) return;

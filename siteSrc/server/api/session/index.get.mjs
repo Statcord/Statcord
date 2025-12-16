@@ -1,6 +1,7 @@
 import { eventHandler, createError, sendError } from 'h3'
 
-export default eventHandler(event => {
-	if (!event.context.session) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
-	return event.context.session
+export default eventHandler(async event => {
+	const session = await event.context.session(event);
+	if (!session) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+	return session
 })

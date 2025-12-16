@@ -145,22 +145,7 @@ const ensureSession = async (event) => {
 }
 
 export default eventHandler(async (event) => {  
-  // // 1. Ensure that a session is present by either loading or creating one
-  // await ensureSession(event)
-  event.context.session = await getSession(event)
-
-
-  // 2. Setup a hook that saves any changed made to the session by the subsequent endpoints & middlewares
-  // event.node.res.on('finish', async () => {
-  //   // Session id may not exist if session was deleted
-  //   const session = await getSession(event)
-  //   if (!session) {
-  //     return
-  //   }
-
-  //   await setStorageSession(session.id, event.context.session)
-  // })
-  
+  event.context.session = getSession
   event.context.deleteSession = deleteSession
   event.context.ensureSession = ensureSession
   event.context.setStorageSession = setStorageSession
@@ -170,8 +155,7 @@ export default eventHandler(async (event) => {
 // nanoid
 const POOL_SIZE_MULTIPLIER = 128
 let pool, poolOffset
-export const urlAlphabet =
-  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict'
+export const urlAlphabet = 'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict'
 
 function fillPool(bytes) {
   if (!pool || pool.length < bytes) {
