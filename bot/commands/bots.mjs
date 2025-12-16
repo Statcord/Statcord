@@ -23,7 +23,7 @@ export default {
 						const botStats = (await pg`SELECT guildcount, usercount, members FROM mainstats WHERE botid = ${bot.botid} ORDER by timestamp desc limit 1`.catch(() => {}))
 						return {
 							"name": bot.username,
-							"value": `Guilds: ${botStats[0].guildcount}\nMembers: ${botStats[0].members}\nUsers: ${botStats[0].usercount}\nLast Seen: <t:${(new Date(bot.lastact).getTime()/1000).toFixed()}:R>\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})`,
+							"value": botStats[0] ? `Guilds: ${botStats[0].guildcount}\nMembers: ${botStats[0].members}\nUsers: ${botStats[0].usercount}\nLast Seen: <t:${(new Date(bot.lastact).getTime()/1000).toFixed()}:R>\n[View bot on Statcord](https://statcord.com/bots/${bot.botid})` : "No statistics available for this bot.",
 							inline: true
 						}
 					})),
