@@ -14,7 +14,6 @@ const allowedRotes = [
 ]
 
 export default defineEventHandler((event) => {
-    console.log(event.path)
     if (!allowedRotes.some(a=>event.path.includes(a))) return;
 
     event.context.oauth = {
