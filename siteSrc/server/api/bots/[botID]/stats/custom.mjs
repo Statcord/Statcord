@@ -34,10 +34,15 @@ export default defineEventHandler(async event => {
 	const timeFormated = formatTime(query.t);
 
 	const sdafsdf = await event.context.pgPool`SELECT chartid, name, label, type, category FROM chartsettings WHERE botid = ${path.botID} AND enabled = true and name !='Total Ram' and category = 'custom'`.catch(() => {})
-	return await Promise.all(sdafsdf.map(async type => {
-		const customcharts = await event.context.pgPool`select avg(value), DATE_TRUNC(${timeFormated.groupBy}, timestamp)::date AS t from customcharts where botid = ${path.botID} and chartid = ${type.chartid} and timestamp > ${timeFormated.start} group by t`
-		const d = genTemp(type, customcharts)
-		d.data.datasets[0].data = customcharts.map(a=>Number(a.avg.toFixed(2)))
+
+	const a = await event.context.pgPool.begin(async sql => sdafsdf.map(async type => {
+		return sql`select avg(value), DATE_TRUNC(${timeFormated.groupBy}, timestamp)::date AS t from customcharts where botid = ${path.botID} and chartid = ${type.chartid} and timestamp > ${timeFormated.start} group by t`
+	}))
+	
+	return await Promise.all(a.map(async (type, i) => {
+		const waitedType = await type
+		const d = genTemp(sdafsdf[i], waitedType)
+		d.data.datasets[0].data = waitedType.map(a=>Number(a.avg.toFixed(2)))
 		return d
 	}))
 })

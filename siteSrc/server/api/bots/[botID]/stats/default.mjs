@@ -34,10 +34,15 @@ export default defineEventHandler(async event => {
 	const timeFormated = formatTime(query.t);
 
 	const sdafsdf = await event.context.pgPool`SELECT chartid, name, label, type, category FROM chartsettings WHERE botid = ${path.botID} AND enabled = true and name !='Total Ram' and category = 'default'`.catch(() => {})
-	return await Promise.all(sdafsdf.map(async type => {
-		const botStats = await event.context.pgPool`SELECT avg(${event.context.pgPool(type.chartid.toLowerCase())}), DATE_TRUNC(${timeFormated.groupBy}, timestamp)::date AS t FROM mainstats WHERE botid = ${path.botID} and timestamp > ${timeFormated.start} group by t`.catch(a=>console.log(a))
-		const d = genTemp(type, botStats)
-		d.data.datasets[0].data = botStats.map(a=>Number(a.avg.toFixed(0)))
+	
+	const a = await event.context.pgPool.begin(async sql => sdafsdf.map(async type => {
+		return sql`SELECT avg(${event.context.pgPool(type.chartid.toLowerCase())}), DATE_TRUNC(${timeFormated.groupBy}, timestamp)::date AS t FROM mainstats WHERE botid = ${path.botID} and timestamp > ${timeFormated.start} group by t`
+	}))
+	
+	return await Promise.all(a.map(async (type, i) => {
+		const waitedType = await type
+		const d = genTemp(sdafsdf[i], waitedType)
+		d.data.datasets[0].data = waitedType.map(a=>Number(a.avg.toFixed(2)))
 		return d
 	}))
 })
