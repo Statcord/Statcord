@@ -37,7 +37,7 @@ export default defineEventHandler(async event => {
 	const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
 	const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
 
-	event.context.pgPool.begin(sql => [
+	await event.context.pgPool.begin(sql => [
 		sql`INSERT INTO customcharts ${sql(customchartsIN)}`,
 		sql`INSERT INTO chartsettings ${sql(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`,
 		sql`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`,
