@@ -25,13 +25,16 @@ export default defineEventHandler(async event => {
 	const customCharts = [{name: "placeholder for custom1", label: "placeholder for custom1", botid: body.id, "chartid": "custom1", "value": isNanOrInfinity(Number(body.custom1 ?? 0)), type: 'line', category: "custom", timestamp: date}, {name: "placeholder for custom2", label: "placeholder for custom2", botid: body.id, "chartid": "custom2", "value": isNanOrInfinity(Number(body.custom2 ?? 0)), type: 'line', category: "custom", timestamp: date}, {name: "placeholder for bandwidth", label: "placeholder for bandwidth", botid: body.id, "chartid": "bandwidth", "value": isNanOrInfinity(Number(body.bandwidth ?? 0)), type: 'line', category: "custom", timestamp: date}]
 	const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
 	const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
-	event.context.pgPool`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
-	event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+	
+	event.context.pgPool.begin(sql => [
+		sql`INSERT INTO customcharts ${sql(customchartsIN)}`,
+		sql`INSERT INTO chartsettings ${sql(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`,
+		sql`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, timestamp) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))}, ${date})`,
+		sql`UPDATE bots SET lastact = now() where botid = ${body.id}`
+	])
 
 	const popular = body.popular?.map(item => {return {botid: body.id,command: item.name,amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
 	if (popular.length !==0) event.context.pgPool`INSERT INTO commandsrun ${event.context.pgPool(popular)}`.catch(() => {})
-	
-	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, timestamp) VALUES (${body.id}, ${isNanOrInfinity(Number(body.servers ?? 0))}, ${isNanOrInfinity(Number(body.active.length ?? 0))}, ${isNanOrInfinity(Number(body.users ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0))}, ${isNanOrInfinity(Number(body.memactive ?? 0)/(Number(body.memload ?? 0)/100))}, ${isNanOrInfinity(Number(body.cpuload ?? 0))}, ${date})`.catch(() => {})
 
 	sendError(event, createError({statusCode: 400, statusMessage: `/logan/stats and /v3/stats endpoint are EOL. Switch to the currently supported route /api/bots/{botID}/stats`}))
 

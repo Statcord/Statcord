@@ -36,17 +36,19 @@ export default defineEventHandler(async event => {
 	const customCharts = body.customCharts?.map(i=>{const keys = Object.keys(i.data); return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
 	const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
 	const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
-	event.context.pgPool`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
-	event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+
+	event.context.pgPool.begin(sql => [
+		sql`INSERT INTO customcharts ${sql(customchartsIN)}`,
+		sql`INSERT INTO chartsettings ${sql(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`,
+		sql`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`,
+		sql`UPDATE bots SET lastact = now() where botid = ${path.botID}`
+	])
 
 	const topCommands = body.topCommands?.map(item => {return {botid: path.botID, command: item.name, amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
 	if (topCommands.length !==0) event.context.pgPool`INSERT INTO commandsrun ${event.context.pgPool(topCommands)}`.catch(() => {})
 
-	event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
-
 	sendNoContent(event, 200)
 
-	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
 	event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 })
 
