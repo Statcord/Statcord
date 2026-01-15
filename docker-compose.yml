@@ -39,7 +39,15 @@ services:
     depends_on:
       - postgres
       - cache
-
+  oldrewrite:
+    restart: unless-stopped
+    build: 
+      context: ./v3reWrite
+      dockerfile: Dockerfile
+    container_name: app
+    depends_on:
+      - postgres
+      - cache
   nginx:
     restart: unless-stopped
     image: 'nginx:alpine'
@@ -50,6 +58,7 @@ services:
       - 80:80
     depends_on:
       - app
+      - oldrewrite
 
   bot:
     restart: unless-stopped

@@ -47,7 +47,7 @@ export default defineEventHandler(async event => {
 	sendNoContent(event, 200)
 
 	event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
-	event.context.redis.del(`legacyRouteTracking:${path.botID}`);
+	if (typeof getHeader(event, "x-prox-redirect") === 'undefined') event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 })
 
 export const schema = {
