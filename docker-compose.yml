@@ -44,7 +44,9 @@ services:
     build: 
       context: ./v3reWrite
       dockerfile: Dockerfile
-    container_name: app
+    container_name: oldrewrite
+    volumes:
+      - ./tasks/config:/config
     depends_on:
       - postgres
       - cache

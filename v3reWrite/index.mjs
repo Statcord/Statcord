@@ -1,11 +1,10 @@
 import fastify from "fastify";
-import postgresIm from 'postgres'
+import postgres from 'postgres'
 import Redis from "ioredis";
+import config from '/config/settings.mjs'
 
-import {postgres, redisURL, webhooks} from '/config/settings.mjs'
-
-const pgPool = postgresIm(postgres)
-const redis = new Redis(redisURL);
+const pgPool = postgres(config.postgres)
+const redis = new Redis(config.redisURL);
 const API = fastify();
 
 API.post("/", async (req, reply) => {
@@ -17,7 +16,7 @@ API.post("/", async (req, reply) => {
 	if (!botExisits[0]) {
 		reply.status(404).send();
 		if (await redis.exists(`botDubbleNotifCheck:${req.body.id}`)) return;
-		fetch(webhooks.newSt, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"embeds": [{"title": "New statcord bot found", "color": 5814783, "fields": [{"name": "id", "value": req.body.id, "inline": true}, {"name": "token", "value": req.body.key, "inline": true}]}]})}).catch(()=>{})
+		fetch(config.webhooks.newSt, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({"embeds": [{"title": "New statcord bot found", "color": 5814783, "fields": [{"name": "id", "value": req.body.id, "inline": true}, {"name": "token", "value": req.body.key, "inline": true}]}]})}).catch(()=>{})
 		redis.set(`botDubbleNotifCheck:${req.body.id}`, 1)
 		return;
 	}
