@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
 	const body = await readBody(event)
 	const path = getRouterParams(event)
 
-	if (!path.botID) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+	if (!path.botID) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. no botID'}))
 
 	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
@@ -23,12 +23,12 @@ export default defineEventHandler(async event => {
 
     const statsPostBodyKeys = Object.keys(body)
     const hasMainStats = mainStatsKeys.some(key=>statsPostBodyKeys.includes(key))
-    if (!hasMainStats && !body.customCharts && !body.topCommands) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+    if (!hasMainStats && !body.customCharts && !body.topCommands) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. no data'}))
 
 	if (body.customCharts){
-		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over custom charts'}))
 		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
-		if ([...new Set([...existingCustomCharts, ...body.customCharts])].length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request'}))
+		if ([...new Set([...existingCustomCharts, ...body.customCharts])].length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over unique custom charts'}))
 	}
 
 	const date = new Date().toISOString().replace("T", " ")
