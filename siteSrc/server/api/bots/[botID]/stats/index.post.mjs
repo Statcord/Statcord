@@ -29,7 +29,7 @@ export default defineEventHandler(async event => {
 	if (body.customCharts){
 		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over custom charts'}))
 		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
-		if ([...new Set([...existingCustomCharts, ...body.customCharts])].length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over unique custom charts'}))
+		if ([...new Set([...existingCustomCharts, ...body.customCharts.map(a=>a.id)])].length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over unique custom charts'}))
 		
 		const customCharts = body.customCharts?.map(i=>{const keys = Object.keys(i.data); return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
 		const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
