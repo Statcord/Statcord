@@ -39,7 +39,7 @@ export default defineEventHandler(async event => {
 		await event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 	}
 
-	if (body.topCommands.length !==0){
+	if (body.topCommands?.length !==0){
 		const topCommands = body.topCommands?.map(item => {return {botid: path.botID, command: item.name, amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
 		if (topCommands.length !==0) await event.context.pgPool`INSERT INTO commandsrun ${event.context.pgPool(topCommands)}`.catch(() => {})
 	}
