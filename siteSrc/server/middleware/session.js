@@ -8,7 +8,7 @@ const {session: sessionSettings} = useRuntimeConfig()
 
 const redis = new Redis(sessionSettings.redisURL);
 const prefixStorage = (sessionId) => `sessions:${sessionId}`
-const setStorageSession = async(sessionId, session) => redis.set(prefixStorage(sessionId), JSON.stringify(session), "EX", sessionSettings.ttl)
+const setStorageSession = async(sessionId, session) => await redis.set(prefixStorage(sessionId), JSON.stringify(session), "EX", sessionSettings.ttl)
 
 
 

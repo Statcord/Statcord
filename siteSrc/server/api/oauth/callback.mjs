@@ -21,7 +21,7 @@ export default defineEventHandler(async event => {
 
     event.context.setStorageSession(session.id, session)
 
-    event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.global_name}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.global_name}, avatar = ${userInfo.avatar}`.catch(() => {})
+    await event.context.pgPool`INSERT INTO owners(username, ownerid, avatar) VALUES (${userInfo.global_name}, ${userInfo.id}, ${userInfo.avatar}) ON CONFLICT (ownerid) DO UPDATE SET username = ${userInfo.global_name}, avatar = ${userInfo.avatar}`.catch(() => {})
 
     return sendRedirect(event, `${redirect}${state}`, 302)
 })

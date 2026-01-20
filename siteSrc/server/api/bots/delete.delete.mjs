@@ -11,11 +11,11 @@ export default defineEventHandler(async event => {
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (botExisits[0].ownerid !== session.userInfo.id) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
-	event.context.pgPool`DELETE FROM chartsettings WHERE botid = ${botID.id}`.catch(() => {})
-	event.context.pgPool`DELETE FROM bots WHERE botid = ${botID.id}`.catch(() => {})
-	event.context.pgPool`DELETE FROM mainstats WHERE botid = ${botID.id}`.catch(() => {})
-	event.context.pgPool`DELETE FROM customcharts WHERE botid = ${botID.id}`.catch(() => {})
-	event.context.pgPool`DELETE FROM commandsrun WHERE botid = ${botID.id}`.catch(() => {})
+	await event.context.pgPool`DELETE FROM chartsettings WHERE botid = ${botID.id}`.catch(() => {})
+	await event.context.pgPool`DELETE FROM bots WHERE botid = ${botID.id}`.catch(() => {})
+	await event.context.pgPool`DELETE FROM mainstats WHERE botid = ${botID.id}`.catch(() => {})
+	await event.context.pgPool`DELETE FROM customcharts WHERE botid = ${botID.id}`.catch(() => {})
+	await event.context.pgPool`DELETE FROM commandsrun WHERE botid = ${botID.id}`.catch(() => {})
 
 	sendNoContent(event, 200)
 })

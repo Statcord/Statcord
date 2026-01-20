@@ -33,7 +33,7 @@ export default defineEventHandler(async event => {
 	const bot = await event.context.oauth.rest.users.get(body.botid).catch(e=>{})
 	if (!bot) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 
-	event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
+	await event.context.pgPool`INSERT INTO bots(botid, username, avatar, token, ownerid, addedon, public, nsfw, invite, shortdesc) VALUES (${body.botid}, ${bot.username}, ${bot.avatar}, ${genKey()}, ${session.userInfo.id}, now(), ${body.public}, ${body.nsfw}, ${body.invite}, ${body.shortDesc})`.catch(() => {})
 
 	const botLinks = [
 		{
@@ -120,8 +120,8 @@ export default defineEventHandler(async event => {
 		}
 	]
 
-	event.context.pgPool`INSERT INTO botlinks ${event.context.pgPool(botLinks)}`.catch(() => {})
-	event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(defaultChartSettings)}`.catch(() => {})
+	await event.context.pgPool`INSERT INTO botlinks ${event.context.pgPool(botLinks)}`.catch(() => {})
+	await event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(defaultChartSettings)}`.catch(() => {})
 
 	sendNoContent(event, 200)
 })

@@ -13,5 +13,5 @@ export default defineEventHandler(async event => {
     const botExisits = await event.context.pgPool`SELECT ownerid from owners WHERE ownerid = ${path.userID}`.catch(() => {})
     if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'User not found'}))
 
-    event.context.pgPool`UPDATE owners SET ${event.context.pgPool(body)} WHERE ownerid = ${path.userID}`.catch(() => {})
+    await event.context.pgPool`UPDATE owners SET ${event.context.pgPool(body)} WHERE ownerid = ${path.userID}`.catch(() => {})
 })
