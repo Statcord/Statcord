@@ -35,16 +35,16 @@ export default defineEventHandler(async event => {
 		const customCharts = body.customCharts?.map(i=>{const keys = Object.keys(i.data); return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
 		const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
 		const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
-		await event.context.pgPool`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
-		await event.context.pgPool`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+		await event.context.pgPool({ prepare: false })`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
+		await event.context.pgPool({ prepare: false })`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 	}
 
 	if (body.topCommands?.length !==0){
 		const topCommands = body.topCommands?.map(item => {return {botid: path.botID, command: item.name, amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
-		if (topCommands.length !==0) await event.context.pgPool`INSERT INTO commandsrun ${event.context.pgPool(topCommands)}`.catch(() => {})
+		if (topCommands.length !==0) await event.context.pgPool({ prepare: false })`INSERT INTO commandsrun ${event.context.pgPool(topCommands)}`.catch(() => {})
 	}
 
-	await event.context.pgPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
+	await event.context.pgPool({ prepare: false })`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
 
 	sendNoContent(event, 200)
 
