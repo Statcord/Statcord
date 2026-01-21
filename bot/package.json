@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "canvas": "^3.2.1",
+    "echarts": "^6.0.0",
     "node-cron": "github:counting-bot/node-cron",
     "oceanic.js": "^1.13.0",
     "postgres": "^3.4.8"

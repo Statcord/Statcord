@@ -1,9 +1,11 @@
 import botinfo from './botinfo.mjs'
 import bots from './bots.mjs';
+import graph from './graph.mjs';
 
 const files = [
 	botinfo,
-	bots
+	bots,
+	graph
 ];
 
 export default new Map(
