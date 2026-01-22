@@ -1,55 +1,59 @@
 <template>
   <UContainer>
-    <h4>Add your bot</h4>
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="submitBot">
+    <div class="pb-5">
+      <h4 class="text-lg">Add your bot</h4>
+      <USeparator />
+    </div>
 
+    <UForm :schema="schema" :state="state" class="space-y-4" @submit="submitBot">
       <h6>Basic bot info</h6>
-      <UFormField label="Enter the Bot ID" name="botid">
-        <UInput v-model="state.botid" placeholder="961433265879801936" pattern="[0-9]{17,21}" />
-      </UFormField>
-      <UFormField label="Invite" name="invite">
-        <UInput v-model="state.invite" type="url" />
-      </UFormField>
+      <div class="grid md:grid-cols-3 gap-4">
+        <UFormField label="Bot ID" name="botid">
+          <UInput v-model="state.botid" placeholder="961433265879801936" pattern="[0-9]{17,21}" />
+        </UFormField>
+        <UFormField label="Invite" name="invite">
+          <UInput v-model="state.invite" type="url" />
+        </UFormField>
+        <UFormField label="Short description" name="shortDesc">
+          <UInput v-model="state.shortDesc" type="text"/>
+        </UFormField>
+      </div>
 
       <USeparator />
 
       <h6>Access control</h6>
-      <UFormField label="Public" name="public">
-        <USwitch v-model="state.public" icon="i-heroicons-eye" />
-      </UFormField>
-      <UFormField label="NSFW" name="nsfw">
-        <USwitch v-model="state.nsfw" icon="i-heroicons-eye" />
-      </UFormField>
-
-      <USeparator />
-
-      <UFormField label="Custom URL" name="customurl">
-        <UInput v-model="state.customurl" :placeholder="domain+'/bots/'+botid" type="url" disabled />
-      </UFormField>
-      <UButton label="Check" disabled></UButton>
-
-      <USeparator />
-
-      <h6>Bot Description</h6>
-      <UFormField label="Short description" name="shortDesc">
-        <UInput v-model="state.shortDesc" type="text"/>
-      </UFormField>
+      <div class="grid md:grid-cols-3 gap-4">
+        <UFormField label="Public" name="public">
+          <USwitch v-model="state.public" icon="i-heroicons-eye" />
+        </UFormField>
+        <UFormField label="NSFW" name="nsfw">
+          <USwitch v-model="state.nsfw" icon="i-heroicons-eye" />
+        </UFormField>
+        <div>
+          <UFormField label="Custom URL" name="customurl">
+            <UInput v-model="state.customurl" :placeholder="domain+'/bots/'+botid" type="url" disabled />
+            <UButton label="Check" disabled></UButton>
+          </UFormField>
+        </div>
+      </div>
 
       <USeparator />
 
       <h6>Add additional links (optional)</h6>
-      <UFormField label="GitHub" name="github">
-        <UInput v-model="state.github" type="url" />
-      </UFormField>
-      <UFormField label="Website" name="website">
-        <UInput v-model="state.website" type="url" />
-      </UFormField>
-      <UFormField label="Support server" name="supportserver">
-        <UInput v-model="state.supportserver" type="url" />
-      </UFormField>
-      <UFormField label="Donation link" name="donations">
-        <UInput v-model="state.donations" type="url" />
-      </UFormField>
+      <div class="grid md:grid-cols-4 gap-4">
+        <UFormField label="GitHub" name="github">
+          <UInput v-model="state.github" type="url" />
+        </UFormField>
+        <UFormField label="Website" name="website">
+          <UInput v-model="state.website" type="url" />
+        </UFormField>
+        <UFormField label="Support server" name="supportserver">
+          <UInput v-model="state.supportserver" type="url" />
+        </UFormField>
+        <UFormField label="Donation link" name="donations">
+          <UInput v-model="state.donations" type="url" />
+        </UFormField>
+      </div>
 
       <USeparator />
 
