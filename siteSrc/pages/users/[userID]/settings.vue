@@ -5,22 +5,27 @@
         <USwitch v-model="state.public" icon="i-heroicons-eye" />
       </UFormField>
 
-      <UFormField label="About Me">
-        <UInput v-model="state.aboutme" icon="i-heroicons-book-open" />
-      </UFormField>
+      <div class="grid md:grid-cols-2 gap-4">
+        <UFormField label="About Me">
+          <UInput v-model="state.aboutme" icon="i-heroicons-book-open" />
+        </UFormField>
+  
+        <UFormField label="Website">
+          <UInput v-model="state.website" icon="i-heroicons-link" />
+        </UFormField>
+      </div>
 
-      <UFormField label="Website">
-        <UInput v-model="state.website" icon="i-heroicons-link" />
-      </UFormField>
-
-      <UButton type="submit" label="Save" icon="i-heroicons-check"/>
-
-      <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteAllModalOpen = true" />
+      <div class="grid md:grid-cols-2 gap-4">
+        <UFormField>
+          <UButton type="submit" label="Save" icon="i-heroicons-check"/>
+          <UButton label="Delete all data" color="error" icon="i-heroicons-trash" @click="deleteAllModalOpen = true" />
+        </UFormField>
+      </div>
     </UForm>
     
     <UModal v-model:open="deleteAllModalOpen" title="Confirm data deletion">
       <template #footer>
-        <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
+        <UButton label="Delete forever (really!)" color="error" icon="i-heroicons-trash" @click="confirmedDelete" />
       </template>
     </UModal>
   </UContainer>

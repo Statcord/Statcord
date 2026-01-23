@@ -3,7 +3,7 @@
         <UButton label="Delete chart" color="error" icon="i-heroicons-trash"/>
 
         <template #footer>
-            <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedCustomDelete" />
+            <UButton label="Delete forever (really!)" color="error" icon="i-heroicons-trash" @click="confirmedCustomDelete" />
         </template>
     </UModal>
 </template>
