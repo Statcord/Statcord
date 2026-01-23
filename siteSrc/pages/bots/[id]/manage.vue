@@ -2,16 +2,18 @@
     <UContainer>
         <UForm :state="state" class="space-y-4" @submit="save">
             <h6>Access control</h6>
-            <UFormField label="Public" name="public">
-                <USwitch v-model="state.public" icon="i-heroicons-eye" />
-            </UFormField>
-            <UFormField label="NSFW" name="nsfw">
-                <USwitch v-model="state.nsfw" icon="i-heroicons-eye" />
-            </UFormField>
-            <UFormField label="Custom URL" name="customurl">
-                <UInput v-model="state.customurl" @up="cusURLChanged" :placeholder="domain+'/bots/'+route.params.id" type="url" :disabled="plevel==0" />
-            </UFormField>
-            <UButton label="Check" :disabled="plevel==0" @click="checkCusUrl"></UButton>
+            <div class="grid md:grid-cols-3 gap-4">
+                <UFormField label="Public" name="public">
+                    <USwitch v-model="state.public" icon="i-heroicons-eye" />
+                </UFormField>
+                <UFormField label="NSFW" name="nsfw">
+                    <USwitch v-model="state.nsfw" icon="i-heroicons-eye" />
+                </UFormField>
+                <UFormField label="Custom URL" name="customurl">
+                    <UInput v-model="state.customurl" :placeholder="domain+'/bots/'+route.params.id" type="url" :disabled="plevel==0" />
+                    <UButton label="Check" :disabled="plevel==0" @click="checkCusUrl" disabled></UButton>
+                </UFormField>
+            </div>
             <USeparator />
 
             <h6>Bot Description</h6>
@@ -21,55 +23,65 @@
             <USeparator />
 
             <h6>Add additional links (optional)</h6>
-            <UFormField label="GitHub" name="github">
-                <UInput v-model="state.github" type="url" />
-            </UFormField>
-            <UFormField label="Website" name="website">
-                <UInput v-model="state.website" type="url" />
-            </UFormField>
-            <UFormField label="Support server" name="supportserver">
-                <UInput v-model="state.supportserver" type="url" />
-            </UFormField>
-            <UFormField label="Donation link" name="donations">
-                <UInput v-model="state.donations" type="url" />
-            </UFormField>
+            <div class="grid md:grid-cols-4 gap-4">
+                <UFormField label="GitHub" name="github">
+                    <UInput v-model="state.github" type="url" />
+                </UFormField>
+                <UFormField label="Website" name="website">
+                    <UInput v-model="state.website" type="url" />
+                </UFormField>
+                <UFormField label="Support server" name="supportserver">
+                    <UInput v-model="state.supportserver" type="url" />
+                </UFormField>
+                <UFormField label="Donation link" name="donations">
+                    <UInput v-model="state.donations" type="url" />
+                </UFormField>
+            </div>
             <USeparator />
 
             <h6>Defualt charts</h6>
-            <UFormField v-for="chart in state.default" :label="chart.name" :name="chart.chartid">
-                <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
-            </UFormField>
+            <div class="grid md:grid-cols-4 gap-4">
+                <UFormField v-for="chart in state.default" :label="chart.name" :name="chart.chartid">
+                    <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
+                </UFormField>
+            </div>
             <USeparator />
 
             <h6>Command charts</h6>
-            <UFormField v-for="chart in state.commands" :label="chart.name" name="donations">
-                <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
-            </UFormField>
-            <USeparator />
-
-            <h6>Custom charts</h6>
-            <div v-for="chart in state.custom">
-                <h6>{{ chart.name }}</h6>
+            <div class="grid md:grid-cols-4 gap-4">
                 <UFormField v-for="chart in state.commands" :label="chart.name" name="donations">
                     <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
                 </UFormField>
-                <UInputMenu v-model="chart.type" :options="['Pie', 'Line']" />
-
-                <UFormField :label="chart.name" name="Label">
-                    <UInput v-model="chart.label" type="text"/>
-                </UFormField>
-
-                <UFormField  :label="chart.name" name="Name">
-                    <UInput v-model="chart.name" type="text"/>
-                </UFormField>
-                <DeleteCustomChart :chartName="chart.name" :chartid="chart.chartid"></DeleteCustomChart>
             </div>
-
             <USeparator />
-            <UButton type="submit" icon="i-heroicons-check">Save</UButton>
-            <UButton label="API key" icon="i-heroicons-key" @click="keyIsOpen = true" />
-            <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />                 
-            <UButton label="Delete all data" color="red" icon="i-heroicons-trash" @click="deleteIsOpen = true" />
+
+            <h6>Custom charts</h6>
+            <div class="grid md:grid-cols-4 gap-4">
+                <div v-for="chart in state.custom">
+                    <h6>{{ chart.name }}</h6>
+                    <UFormField v-for="chart in state.commands" :label="chart.name" name="donations">
+                        <USwitch v-model="chart.enabled" icon="i-heroicons-eye" :disabled="plevel==0"/>
+                    </UFormField>
+                    <UInputMenu v-model="chart.type" :options="['Pie', 'Line']" />
+    
+                    <UFormField :label="chart.name" name="Label">
+                        <UInput v-model="chart.label" type="text"/>
+                    </UFormField>
+    
+                    <UFormField  :label="chart.name" name="Name">
+                        <UInput v-model="chart.name" type="text"/>
+                    </UFormField>
+                    <DeleteCustomChart :chartName="chart.name" :chartid="chart.chartid"></DeleteCustomChart>
+                </div>
+            </div>
+            <USeparator />
+
+            <div class="grid md:grid-cols-4 gap-4">
+                <UButton type="submit" icon="i-heroicons-check">Save</UButton>
+                <UButton label="API key" icon="i-heroicons-key" @click="keyIsOpen = true" />
+                <UButton label="Sync" icon="i-heroicons-arrow-path" @click="sync" />
+                <UButton label="Delete all data" color="error" icon="i-heroicons-trash" @click="deleteIsOpen = true" />
+            </div>
         </UForm>
     </UContainer>
 
@@ -91,7 +103,7 @@
     <UModal v-model:open="deleteIsOpen" title="Confirm data deletion" close-icon="i-heroicons-x-mark">
         <template #body>
             <div class="col-end-7 col-span-2">
-                <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedDelete" />
+                <UButton label="Delete forever (really!)" color="error" icon="i-heroicons-trash" @click="confirmedDelete" />
             </div>
         </template>
     </UModal>

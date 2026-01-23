@@ -1,6 +1,6 @@
 <template>
     <UModal v-model:open="isOpen" title="Confirm deletion">
-        <UButton label="Delete chart" color="red" icon="i-heroicons-trash"/>
+        <UButton label="Delete chart" color="error" icon="i-heroicons-trash"/>
 
         <template #footer>
             <UButton label="Delete forever (really!)" color="red" icon="i-heroicons-trash" @click="confirmedCustomDelete" />
