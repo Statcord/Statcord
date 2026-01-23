@@ -6,13 +6,15 @@ export default defineEventHandler(async event => {
     const a = await event.context.pgPool.begin(async sql => bo.map(async b => {
         return sql`select guildcount from mainstats WHERE botid = ${b.botid} order by timestamp desc limit 1`
 	}))
+
+    const today = new Date().toDateString()
 	
 	return await Promise.all(a.map(async (b, i) => {
 		const waitedB = await b
 		return {
             ...bo[i],
-            lat: new Date(bo[i].lastact).toDateString()==new Date().toDateString(), 
-            gl:waitedB?.guildcount
+            lat: new Date(bo[i].lastact).toDateString() == today, 
+            gl:waitedB?.guildcount ?? waitedB?.[0]?.guildcount
         }
 	}))
 })
