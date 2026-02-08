@@ -50,7 +50,7 @@
     userFetch.value ? {
       label: userFetch.value.username,
       avatar: {
-        src: `https://cdn.discordapp.com/avatars/${userFetch.value.id}/${userFetch.value.avatar}.${(userFetch.value.avatar?.startsWith('a_')?'gif':'webp')}?size=512`,
+        src: `https://cdn.discordapp.com/avatars/${userFetch.value.id}/${userFetch.value.avatar}.webp?size=512${bot.avatar?.startsWith('a_')?'&animated=true':''}`,
         alt: `${userFetch.value.username}'s profile picture`
       },
       children: [

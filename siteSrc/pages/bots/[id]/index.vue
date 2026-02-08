@@ -7,7 +7,7 @@
     </div>
 
     <UContainer>
-        <UUser :name="bot.username" :description="bot.shortdesc" orientation="horizontal" :avatar="{src: `https://cdn.discordapp.com/avatars/${route.params.id}/${bot.avatar}.${bot.avatar?.startsWith('a_')?'gif':'webp'}?size=128`, ui:{image:bot.nsfw?'blur':''}}" size="3xl">
+        <UUser :name="bot.username" :description="bot.shortdesc" orientation="horizontal" :avatar="{src: `https://cdn.discordapp.com/avatars/${route.params.id}/${bot.avatar}.webp?size=128${bot.avatar?.startsWith('a_')?'&animated=true':''}`, ui:{image:bot.nsfw?'blur':''}}" size="3xl">
             <template #description>
                 <div>
                     {{ bot.shortdesc }}
