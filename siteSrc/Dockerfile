@@ -20,6 +20,10 @@ RUN apk add --no-cache \
     giflib-dev \
     pixman-dev
     
+RUN ln -sf /usr/bin/python3 /usr/bin/python
+ENV PYTHON=/usr/bin/python3
+
+
 # install npm pacages
 RUN npm install
 
