@@ -8,6 +8,17 @@ COPY . /preApp
 RUN apk update && \
     apk add --update git && \
     apk add --update openssh 
+
+# for node-gyp
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    cairo-dev \
+    pango-dev \
+    jpeg-dev \
+    giflib-dev \
+    pixman-dev
     
 # install npm pacages
 RUN npm install
