@@ -12,6 +12,7 @@ RUN apk update && \
 # for node-gyp
 RUN apk add --no-cache \
     python3 \
+    python \
     make \
     g++ \
     cairo-dev \
@@ -19,10 +20,6 @@ RUN apk add --no-cache \
     jpeg-dev \
     giflib-dev \
     pixman-dev
-    
-RUN ln -sf /usr/bin/python3 /usr/bin/python
-ENV PYTHON=/usr/bin/python3
-
 
 # install npm pacages
 RUN npm install
