@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
 	const auth = getHeader(event, "authorization")
 	const prox = getHeader(event, "xproxredirect")
 
-	const botExisits = await event.context.pgPool`SELECT token, maxcustomcharts from bots WHERE botid = ${path.botID}`.catch(() => {})
+	const botExisits = await event.context.pgPostPool`SELECT token, maxcustomcharts from bots WHERE botid = ${path.botID}`.catch(() => {})
 	if (!botExisits[0]) return sendError(event, createError({statusCode: 404, statusMessage: 'Bot not found'}))
 	if (auth !== botExisits[0].token) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
@@ -29,26 +29,26 @@ export default defineEventHandler(async event => {
 	const date = new Date().toISOString().replace("T", " ")
 	if (body.customCharts){
 		if (body.customCharts.length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over custom charts'}))
-		const existingCustomCharts = await event.context.pgPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
+		const existingCustomCharts = await event.context.pgPostPool`SELECT chartid AS id from chartsettings WHERE botid = ${path.botID} AND category = 'custom'`.catch(() => {})
 		if ([...new Set([...existingCustomCharts.map(a=>a.id), ...body.customCharts.map(a=>a.id)])].length > botExisits[0].maxcustomcharts) return sendError(event, createError({statusCode: 400, statusMessage: 'Bad Request. over unique custom charts'}))
 		
 		const customCharts = body.customCharts?.map(i=>{const keys = Object.keys(i.data); return {botid: path.botID, timestamp: date, chartid: i.id, name: `placeholder for ${i.id}`, label: `placeholder for ${i.id}`,type: 'line', category: 'custom', value: isNanOrInfinity(Number(i.data[keys[0]]))}}) ?? []
 		const customchartsIN = customCharts.map(({botid, chartid, value})=>{return {botid, chartid, value}})
 		const chartsettingsIN = customCharts.map(({botid, chartid, name, label, type, category})=>{return {botid, chartid, name, label, type, category}})
-		await event.context.pgPool()`INSERT INTO customcharts ${event.context.pgPool(customchartsIN)}`.catch(() => {})
-		await event.context.pgPool()`INSERT INTO chartsettings ${event.context.pgPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
+		await event.context.pgPostPool`INSERT INTO customcharts ${event.context.pgPostPool(customchartsIN)}`.catch(() => {})
+		await event.context.pgPostPool`INSERT INTO chartsettings ${event.context.pgPostPool(chartsettingsIN)} ON CONFLICT (botid, chartid) DO NOTHING`.catch(() => {})
 	}
 
 	if (body.topCommands?.length !==0){
 		const topCommands = body.topCommands?.map(item => {return {botid: path.botID, command: item.name, amount: isNanOrInfinity(Number(item.count)), timestamp: date}})??[]
-		if (topCommands.length !==0) await event.context.pgPool()`INSERT INTO commandsrun ${event.context.pgPool(topCommands)}`.catch(() => {})
+		if (topCommands.length !==0) await event.context.pgPostPool`INSERT INTO commandsrun ${event.context.pgPostPool(topCommands)}`.catch(() => {})
 	}
 
-	await event.context.pgPool()`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
+	await event.context.pgPostPool`INSERT INTO mainstats(botid, guildcount, usercount, members, ramusage, totalram, cpuusage, shardcount, timestamp) VALUES (${path.botID}, ${isNanOrInfinity(Number(body.guildCount ?? 0))}, ${isNanOrInfinity(Number(body.userCount ?? 0))}, ${isNanOrInfinity(Number(body.members ?? 0))}, ${isNanOrInfinity(Number(body.ramUsage ?? 0))}, ${isNanOrInfinity(Number(body.totalRam ?? 0))}, ${isNanOrInfinity(Number(body.cpuUsage ?? 0))}, ${isNanOrInfinity(Number(body.shardCount ?? 0))}, ${date})`.catch(() => {})
 
 	sendNoContent(event, 200)
 
-	await event.context.pgPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
+	await event.context.pgPostPool`UPDATE bots SET lastact = now() where botid = ${path.botID}`.catch(() => {})
 	if (typeof prox === 'undefined') await event.context.redis.del(`legacyRouteTracking:${path.botID}`);
 })
 
