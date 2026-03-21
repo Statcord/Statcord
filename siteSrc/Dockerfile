@@ -12,7 +12,6 @@ RUN apk update && \
 # for node-gyp
 RUN apk add --no-cache \
     python3 \
-    python \
     make \
     g++ \
     cairo-dev \
