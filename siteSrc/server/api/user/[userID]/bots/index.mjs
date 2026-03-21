@@ -5,9 +5,9 @@ export default defineEventHandler(async event => {
 
 	const bo = await event.context.pgPool`SELECT lastact, username, avatar, botid, nsfw, shortdesc FROM bots WHERE ownerid = ${path.userID} LIMIT 30 OFFSET 30*${Number(getQuery(event).page ?? 0)}`.catch().catch(() => {})
 	
-    const a = await event.context.pgPool.begin(async sql => bo.map(async b => {
-        return sql`select guildcount from mainstats WHERE botid = ${b.botid} order by timestamp desc limit 1`
-	}))
+    const a = await Promise.all(bo.map(async b => {
+        return event.context.pgPool`select guildcount from mainstats WHERE botid = ${b.botid} order by timestamp desc limit 1`
+    }))
 	
 	return await Promise.all(a.map(async (b, i) => {
 		const waitedB = await b

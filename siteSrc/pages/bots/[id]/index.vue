@@ -182,7 +182,11 @@
 
         const commandStatsJson = await $fetch(`/api/bots/${route.params.id}/stats/commands?t=${timeChoiceSelection.value}`)
         commandStats.value = commandStatsJson?.map(t=>{
-            if (t.name==="Command usage over time") t.data.labels = t.labels.map(d=>formatDate(d))
+            if (t.name==="Command usage over time") {
+                console.log(t)
+                t.data.labels = t.labels.map(d=>formatDate(d))
+
+            } 
             return t
         })
         refreshKeyCmd = genRand();

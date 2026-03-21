@@ -1,15 +1,14 @@
 import { defineEventHandler, getQuery, createError, getRouterParams, sendError } from "h3"
 import { formatTime, validateTimes } from "~/server/utils/times.mjs"
 
-const genTemp = (type ,botStats) => {
+const genTemp = (type, botStats) => {
 	return {
 		name: type.name,
 		type: type.type,
-		labels: botStats.map(a=>a.t),
 		data: {
 			datasets: [
 				{
-					label: type.label
+					data: botStats.map(a=>a.sum)
 				}
 			]
 		}
@@ -42,7 +41,9 @@ export default defineEventHandler(async event => {
 	return await Promise.all(a.map(async (type, i) => {
 		const waitedType = await type
 		const d = genTemp(sdafsdf[i], waitedType)
-		d.data.datasets[0].data = waitedType.map(a=>a.sum)
+		if (sdafsdf[i].name === "Command usage over time") d.labels = waitedType.map(a=>a.t)
+		else d.data.labels = waitedType.map(a=>a.t)
+
 		return d
 	}))
 })

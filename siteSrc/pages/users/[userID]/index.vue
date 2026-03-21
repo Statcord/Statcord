@@ -39,7 +39,7 @@
   
   const user = {
     ...userFetch,
-    avatarURL: `https://cdn.discordapp.com/avatars/${userFetch.avatar ? `${route.params.userID}/${userFetch.avatar}.webp${bot.avatar?.startsWith('a_')?'?animated=true':''}`: `${(route.params.userID >>> 22) % 5}.png`}`
+    avatarURL: `https://cdn.discordapp.com/avatars/${userFetch.avatar ? `${route.params.userID}/${userFetch.avatar}.webp${userFetch .avatar?.startsWith('a_')?'?animated=true':''}`: `${(route.params.userID >>> 22) % 5}.png`}`
   }
   
   const botListBotsFetch = await $authRequest(`/api/user/${route.params.userID}/bots/`)

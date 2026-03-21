@@ -28,7 +28,7 @@
 
   const headers = useRequestHeaders(['cookie'])
 
-  const { data: userFetch } = await useAsyncData(async () => {
+  const { data: userFetch } = await useAsyncData("userFetch", async () => {
     const [user] = await Promise.all([
         $fetch(`/api/oauth/user`, { headers })
     ])
