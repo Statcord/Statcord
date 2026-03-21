@@ -11,6 +11,15 @@ export default defineNuxtConfig({
     }
   },
 
+   vite: {
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+      ]
+    }
+  },
+
   umami: {
     id: 'f1a7b62f-bcde-4dbf-9fbc-b04b1af2fb48',
     host: 'https://insights.numselli.xyz/',
