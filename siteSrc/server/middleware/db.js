@@ -4,6 +4,7 @@ const {configFile} = useRuntimeConfig()
 
 const pgPool = postgres({
     ...configFile.postgres,
+    prepare: false,
     types: {
         // bigint: postgres.BigInt,
         rect: {
