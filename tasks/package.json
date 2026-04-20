@@ -3,6 +3,6 @@
     "ioredis": "^5.10.1",
     "node-cron": "github:counting-bot/node-cron",
     "oceanic.js": "^1.14.0",
-    "postgres": "^3.4.8"
+    "postgres": "^3.4.9"
   }
 }
