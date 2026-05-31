@@ -13,18 +13,18 @@
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/seo": "^5.1.3",
     "chart.js": "^4.5.1",
-    "nuxt": "^4.4.2"
+    "nuxt": "^4.4.6"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.6.1",
-    "@types/node": "^25.6.0",
-    "ioredis": "^5.10.1",
+    "@nuxt/ui": "^4.8.1",
+    "@types/node": "^25.9.1",
+    "ioredis": "^5.11.0",
     "nuxt-umami": "^3.2.1",
     "oceanic.js": "github:counting-bot/Oceanic#build",
-    "playwright-core": "^1.59.1",
+    "playwright-core": "^1.60.0",
     "postgres": "^3.4.9",
-    "swagger-ui-dist": "^5.32.4",
-    "tailwindcss": "^4.2.2",
-    "zod": "^4.3.6"
+    "swagger-ui-dist": "^5.32.6",
+    "tailwindcss": "^4.3.0",
+    "zod": "^4.4.3"
   }
 }
