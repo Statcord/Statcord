@@ -44,7 +44,22 @@ export default defineNuxtConfig({
     configFile: settings
   },
 
-  modules: ['@nuxt/ui', "@nuxtjs/seo", "@nuxtjs/sitemap", "@nuxt/image", "nuxt-umami"],
+  modules: [
+    '@nuxt/ui',
+    "@nuxtjs/seo",
+    "@nuxtjs/sitemap",
+    "@nuxt/image",
+    "nuxt-umami",
+    "nuxt-echarts"
+  ],
+
+  echarts: {
+    renderer: [
+      //'svg',
+       'canvas'],
+    charts: ['BarChart', 'LineChart'],
+    components: ['DatasetComponent', 'GridComponent', 'TooltipComponent'],
+  },
 
   site: {
     url: 'https://statcord.com',
