@@ -17,9 +17,9 @@
     "nuxt-echarts": "^1.0.1"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.8.1",
-    "@types/node": "^25.9.1",
-    "ioredis": "^5.11.0",
+    "@nuxt/ui": "^4.8.2",
+    "@types/node": "^25.9.2",
+    "ioredis": "^5.11.1",
     "nuxt-umami": "^3.2.1",
     "oceanic.js": "github:counting-bot/Oceanic#build",
     "playwright-core": "^1.60.0",
