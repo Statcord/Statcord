@@ -62,6 +62,7 @@ export default defineNuxtConfig({
   },
 
   site: {
+    name: "Statcord",
     url: 'https://statcord.com',
     trailingSlash: true,
     indexable: true
