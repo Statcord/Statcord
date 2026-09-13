@@ -11,22 +11,22 @@
   "devDependencies": {
     "@nuxt/devtools": "^3.4.2",
     "@nuxt/image": "^2.1.0",
-    "@nuxtjs/seo": "^5.3.14",
+    "@nuxtjs/seo": "^5.3.16",
     "chart.js": "^4.5.1",
     "nuxt": "^4.5.2",
     "nuxt-echarts": "^1.0.1"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.11.0",
+    "@nuxt/ui": "^4.11.1",
     "@types/node": "^26.2.0",
     "ioredis": "^6.0.0",
     "nuxt-og-image": "^6.7.8",
     "nuxt-umami": "^3.2.1",
     "oceanic.js": "github:counting-bot/Oceanic#build",
-    "playwright-core": "^1.62.1",
+    "playwright-core": "^1.63.0",
     "postgres": "^3.4.9",
-    "swagger-ui-dist": "^5.32.14",
+    "swagger-ui-dist": "^5.32.15",
     "tailwindcss": "^4.3.3",
-    "zod": "^4.4.3"
+    "zod": "^4.6.4"
   }
 }
