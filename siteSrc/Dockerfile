@@ -1,4 +1,4 @@
-FROM node:26.3.0-alpine3.22 as build-stage
+FROM node:26.12.1-alpine3.24 as build-stage
 
 # setup working dir
 WORKDIR /preApp
@@ -19,7 +19,7 @@ ENV NODE_ENV production
 RUN npm run build
 
 
-FROM node:26.3.0-alpine3.22 as production-stage
+FROM node:26.12.1-alpine3.24 as production-stage
 
 RUN mkdir /app
 COPY --from=build-stage /preApp/.output /app/.output
