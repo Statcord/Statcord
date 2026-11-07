@@ -10,7 +10,7 @@ RUN apk update && \
     apk add --update openssh 
 
 # install npm pacages
-RUN npm install
+RUN npm install --force
 
 # env args
 ENV NODE_ENV production
