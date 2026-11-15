@@ -23,9 +23,9 @@
     "nuxt-og-image": "^7.0.7",
     "nuxt-umami": "^3.2.1",
     "oceanic.js": "github:counting-bot/Oceanic#build",
-    "playwright-core": "^1.65.0",
-    "postgres": "^4.1.0",
-    "swagger-ui-dist": "^5.34.1",
+    "playwright-core": "^1.65.1",
+    "postgres": "^4.1.1",
+    "swagger-ui-dist": "^5.35.0",
     "tailwindcss": "^4.3.5",
     "zod": "^4.6.7"
   }
